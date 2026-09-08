@@ -1,0 +1,29 @@
+{
+  "name": "edupyramids-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EduPyramids Gamified Learning Companion — API and database (Week 3 skeleton)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "psql -h ${DB_HOST:-127.0.0.1} -U ${DB_USER:-postgres} -d ${DB_NAME:-edupyramids_dev} -f migrations/001_init.sql -f migrations/002_attempt_idempotency.sql",
+    "seed": "node scripts/seed.js",
+    "test": "jest --runInBand",
+    "import": "node scripts/import-questions.js"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.0",
+    "jsonwebtoken": "^9.0.0",
+    "pg": "^8.8.0"
+  },
+  "devDependencies": {
+    "jest": "^30.5.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^7.2.2"
+  }
+}

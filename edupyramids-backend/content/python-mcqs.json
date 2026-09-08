@@ -1,0 +1,1413 @@
+[
+  {
+    "topic": "Bronze Level",
+    "level": 1,
+    "quizzes": [
+      {
+        "title": "Bronze Level questions",
+        "difficulty": 1,
+        "questions": [
+          {
+            "text": "What gets printed? print type(1/2)",
+            "options": {
+              "a": "<type 'int'>",
+              "b": "<type 'number'>",
+              "c": "<type 'float'>",
+              "d": "<type 'double'>",
+              "e": "<type 'tuple'>"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the following code? print type([1,2])",
+            "options": {
+              "a": "<type 'list'>",
+              "b": "<type 'tuple'>",
+              "c": "<type 'int'>",
+              "d": "<type 'set'>",
+              "e": "<type 'complex'>"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the largest integer value that can be represented in Python?",
+            "options": {
+              "a": "No Limit",
+              "b": "2**32",
+              "c": "2**32 - 1",
+              "d": "None of the above"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? name = \"snow storm\" name[5] = 'X' print name",
+            "options": {
+              "a": "ERROR, this code will not run",
+              "b": "snow storm",
+              "c": "snowXstorm",
+              "d": "snow Xtorm"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? print \"hello\" 'world'",
+            "options": {
+              "a": "on one line the text: helloworld",
+              "b": "on one line the text: hello world",
+              "c": "hello on one line and world on the next line",
+              "d": "syntax error, this python program will not run"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the below program? a = [1,2,3,None,(),[],] print len(a)",
+            "options": {
+              "a": "6",
+              "b": "syntax error",
+              "c": "4",
+              "d": "5",
+              "e": "7"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following data structures can be used with the \"in\" operator to check if an item is in the data structure?",
+            "options": {
+              "a": "All of the above",
+              "b": "list",
+              "c": "set",
+              "d": "dictionary",
+              "e": "None of the above"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? a = 1 b = 2 a,b = b,a print \"%d %d\" % (a,b)",
+            "options": {
+              "a": "2 1",
+              "b": "1 2",
+              "c": "An exception is thrown",
+              "d": "This program has undefined behavior"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "True or false? Code indentation must be 4 spaces when creating a code block?",
+            "options": {
+              "a": "FALSE",
+              "b": "TRUE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which character is used at and end of the command in iptyhon to see the documentation of that command ?",
+            "options": {
+              "a": "question mark (?)",
+              "b": "underscore(_)",
+              "c": "exclamation mark (!)",
+              "d": "ampersand (&)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What will the command linspace(-pi,pi,100) do ?",
+            "options": {
+              "a": "return 100 evenly spaced samples from -pi to pi including both -pi and pi",
+              "b": "return 100 evenly spaced samples from -pi to pi",
+              "c": "return 100 evenly spaced samples from -pi to pi but excluding pi and including -pi.",
+              "d": "return 100 evenly spaced samples from -pi to pi but excluding -pi and including pi."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which command is used to save a plot in ipython ?",
+            "options": {
+              "a": "savefig()",
+              "b": "saveplot()",
+              "c": "savepicture()",
+              "d": "saveplt()"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "savefig('sine.png') saves the plot in which directory ?",
+            "options": {
+              "a": "the current working directory",
+              "b": "the root directory \"/\" (on GNU/linux, unix based system), \"c:\" on windows",
+              "c": "will result in error as full path is not supplied",
+              "d": "predefined directory like \"/documents\""
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following is correct ?",
+            "options": {
+              "a": "subplot(numRows, numCols, plotNum)",
+              "b": "subplot(numRows,numCols)",
+              "c": "subplot(numCols,numRows)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What statement can be issued in ipython to generate a bar chart with vertical line hatching ?",
+            "options": {
+              "a": "bar(x,y,fill=False,hatch=\"|\")",
+              "b": "bar(x,y,color='w',hatch=\"/\")",
+              "c": "bar(x,y,fill=False,hatch=\"//\")",
+              "d": "bar(x,y,color=\"w\",hatch=')"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following is not a valid data type in python?",
+            "options": {
+              "a": "double",
+              "b": "int",
+              "c": "float",
+              "d": "str"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "To print out the text as shown below, what code should we execute? I love to take a ride in his sport's car!",
+            "options": {
+              "a": "print \"I love to take a ride in his sport's car!\"",
+              "b": "print 'I love to take a ride in his sport's car!'",
+              "c": "print 'I love to take a ride in his sport\"s car!'",
+              "d": "print I love to take a ride in his sport's car!"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What paradigm does Python (programming language) belong to?",
+            "options": {
+              "a": "Imperative programming",
+              "b": "Scripting language",
+              "c": "Constraint programming",
+              "d": "Event-driven programming"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Why was the language called \"Python \"?",
+            "options": {
+              "a": "The inventor is a fan of \"Monty Python's Flying Circus\".",
+              "b": "The inventor's best friend suggested him the name.",
+              "c": "As a kid, the inventor liked to play the snake-and-ladder game.",
+              "d": "The inventor was once attacked by a python in the Amazons."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of these languages does Python resemble in its class syntax?",
+            "options": {
+              "a": "C++",
+              "b": "Eiffel",
+              "c": "Perl",
+              "d": "Smalltalk"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which languages does Python owe its origin to?",
+            "options": {
+              "a": "ABC, Modula-3",
+              "b": "ABC, Eiffel",
+              "c": "Perl, Modula-3",
+              "d": "ABC, Smalltalk"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "In Python, the body of a decision is indicated by",
+            "options": {
+              "a": "indentation",
+              "b": "parenthesis",
+              "c": "curly braces",
+              "d": "a colon"
+            },
+            "correct": "a"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Silver Level",
+    "level": 2,
+    "quizzes": [
+      {
+        "title": "Silver Level questions",
+        "difficulty": 2,
+        "questions": [
+          {
+            "text": "What does the following do? def myfunc(str, integer, flt): pass",
+            "options": {
+              "a": "defines a function, which does nothing",
+              "b": "defines a list and initializes it",
+              "c": "defines a function, which passes its parameters through",
+              "d": "defines an empty class"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? x = 4.5 y = 2 print x//y",
+            "options": {
+              "a": "2",
+              "b": "2.25",
+              "c": "9",
+              "d": "20.25"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? nums = set([1,1,2,3,3,3,4]) print len(nums)",
+            "options": {
+              "a": "4",
+              "b": "1",
+              "c": "2",
+              "d": "5",
+              "e": "7"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? print r\"\\nwoow\"",
+            "options": {
+              "a": "the text like exactly like this: \\nwoow",
+              "b": "new line then the string: woow",
+              "c": "the text exactly like this: r\"\\nwoow\"",
+              "d": "the letter r and then newline then the text: woow",
+              "e": "the letter r then the text like this: nwoow"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? x = sum(range(5)) print x",
+            "options": {
+              "a": "10",
+              "b": "4",
+              "c": "5",
+              "d": "15",
+              "e": "An exception is thrown"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which numbers are printed? for i in range(3): print i for i in range(8,10): print i",
+            "options": {
+              "a": "1, 2, 8, 9",
+              "b": "1,2,3,4,5,6,7,8,9,10",
+              "c": "0, 1, 2, 8, 9, 10",
+              "d": "0, 1, 2, 3, 8, 9, 10",
+              "e": "1, 2, 3, 8, 9, 10"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? kvps = {\"user\",\"bill\", \"password\",\"hillary\"} print kvps['password']",
+            "options": {
+              "a": "Nothing. Python syntax error",
+              "b": "user",
+              "c": "bill",
+              "d": "password",
+              "e": "hillary"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? name = \"snow storm\" print \"%s\" % name[6:8]",
+            "options": {
+              "a": "to",
+              "b": "st",
+              "c": "sto",
+              "d": "tor",
+              "e": "Syntax Error"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed by the code snippet below? import math print math.floor(5.5)",
+            "options": {
+              "a": "5",
+              "b": "5",
+              "c": "5.5",
+              "d": "6",
+              "e": "6"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following print statements will print all the names in the list on a separate line names = ['Ramesh', 'Rajesh', 'Roger', 'Ivan', 'Nico']",
+            "options": {
+              "a": "print \"\\n\".join(names)",
+              "b": "print names.join(\"\\n\")",
+              "c": "print names.concatenate(\"\\n\")",
+              "d": "print names.append(\"\\n\")",
+              "e": "print names.join(\"%s\\n\", names)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Wat gets printed? list1 = [1, 2, 3, 4] list2 = [5, 6, 7, 8] print len(list1 + list2)",
+            "options": {
+              "a": "8",
+              "b": "2",
+              "c": "4",
+              "d": "5"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Complete the code to print the following numbers: 1 3 5 7 9 for i in range(1, 10, __): print i",
+            "options": {
+              "a": "2",
+              "b": "1",
+              "c": "3",
+              "d": "0"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Complete the code to print the following patterns: 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 4 4 4 4 4 5 5 5 5 5 for i in range(1, 6, 1): print ____ * 5",
+            "options": {
+              "a": "str(i)",
+              "b": "int(i)",
+              "c": "i",
+              "d": "i*i*i*i*i"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Study the code below: for i in x: print i Which of the option below is incorrect?",
+            "options": {
+              "a": "x is an int",
+              "b": "x is a str",
+              "c": "x is an list",
+              "d": "x is a tuple"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the value of x after executing the code shown below? x = 'hello world' x = x.upper() Value of x is ______",
+            "options": {
+              "a": "HELLO WORLD'",
+              "b": "HELLO'",
+              "c": "Hello World'",
+              "d": "None of these"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "a_list = range(2, 11, 2) a_list = a_list[1: -1] Look at the options given, which number is not contained in a_list?",
+            "options": {
+              "a": "2",
+              "b": "4",
+              "c": "6",
+              "d": "8"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which line of code will add a new element 10 to the end of the list? a_list = [2,4,6,8]",
+            "options": {
+              "a": "a_list.append(10)",
+              "b": "a_list.insert(10)",
+              "c": "a_list += 10",
+              "d": "a_list.add(10)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following is not a valid function name?",
+            "options": {
+              "a": "1function",
+              "b": "function_1",
+              "c": "func_1_tion",
+              "d": "_function1"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Study the code below. x = 1 y = 3 In Python, x/y returns you 0, which is wrong. Which of the solutions below will fix this.",
+            "options": {
+              "a": "Use float(x)/y instead.",
+              "b": "Use float(x/y) instead.",
+              "c": "Use x.0 / y.0 instead.",
+              "d": "Use x // y instead."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "my_list = [1,3,5,7,9,11] Which of the following code will produce the same contents for my_list_2 as that stored in my_list?",
+            "options": {
+              "a": "my_list_2 = range(1,13,2)",
+              "b": "my_list2 = range(1,3,5,7,9,11)",
+              "c": "my_list2 = range(1,11,2)",
+              "d": "my_list2 = range(1,12,1)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "x = \"1\" y = 10 Pick the code which will produce an error when executed.",
+            "options": {
+              "a": "print x + y",
+              "b": "print int(x) + y",
+              "c": "print str(x) + str(y)",
+              "d": "print int(x) + float(y)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "def fun_A(): print 1 def fun_B(): return 1 Which of the following code will output the value 2?",
+            "options": {
+              "a": "print fun_B() + fun_B()",
+              "b": "print fun_A() + fun_A()",
+              "c": "print fun_A() + fun_B()",
+              "d": "print fun_B() + fun_A()"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "The x % y operator is used to check for remainders when x is divided by y. We can use it to check for even or odd numbers. To check for even numbers, what should the condition be like? if _______: print \"x is an even number\"",
+            "options": {
+              "a": "x % 2 == 0",
+              "b": "x % 2 == 1",
+              "c": "x % 1 == 2",
+              "d": "x % x == 0"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following will NOT produce an error?",
+            "options": {
+              "a": "a = [1,2,3] a.append(4)",
+              "b": "a = [1,2,3] a.append[4]",
+              "c": "a = \"123\" a[3] = 4",
+              "d": "a=[1,2,3] a[3] = 4"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following will print the number of 'A' in the word: \"HOW ARE YOU\"? word = \"HOW ARE YOU\"?",
+            "options": {
+              "a": "print word.count('A')",
+              "b": "print count('A')",
+              "c": "print word.count(A)",
+              "d": "print count(word['A'])"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Complete the code to print the following patterns: 5 5 5 5 5 4 4 4 4 4 3 3 3 3 3 2 2 2 2 2 1 1 1 1 1 for i in range(5, 0, ____ ): print str(i) * 5",
+            "options": {
+              "a": "-1",
+              "b": "1",
+              "c": "0",
+              "d": "2"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Write down the value of x after executing the code shown below: x = 0 for i in range(2, 10, 2): x = x + i print x x is ______.",
+            "options": {
+              "a": "20",
+              "b": "22",
+              "c": "21",
+              "d": "28"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of these languages has Python NOT borrowed its features from?",
+            "options": {
+              "a": "Fortran",
+              "b": "Java",
+              "c": "C++",
+              "d": "CLISP (Common Lisp)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What the right way to increment the value of i by 1 in Python without i being evaluated twice?",
+            "options": {
+              "a": "i += 1",
+              "b": "i = 1",
+              "c": "++i",
+              "d": "i++"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "In a mixed-type expression involving ints and floats, Python will convert",
+            "options": {
+              "a": "ints to floats",
+              "b": "floats to ints",
+              "c": "floats and ints to string",
+              "d": "mixed-type expression are illegal"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What should the below code print? print type(1J)",
+            "options": {
+              "a": "<type 'complex'>",
+              "b": "<type 'unicode'>",
+              "c": "<type 'int'>",
+              "d": "<type 'float'>"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "In Python, which of the following is NOT a legal identifier?",
+            "options": {
+              "a": "2spam",
+              "b": "spam",
+              "c": "This_is_spam",
+              "d": "spam4U"
+            },
+            "correct": "a"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Gold Level",
+    "level": 3,
+    "quizzes": [
+      {
+        "title": "Gold Level questions",
+        "difficulty": 3,
+        "questions": [
+          {
+            "text": "What gets printed? class Account: def __init__(self, id): self.id = id id = 666 acc = Account(123) print acc.id",
+            "options": {
+              "a": "123",
+              "b": "None",
+              "c": "666",
+              "d": "SyntaxError, this program will not run"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? def simpleFunction(): \"This is a cool simple function that returns 1\" return 1 print simpleFunction.__doc__[10:14]",
+            "options": {
+              "a": "cool",
+              "b": "simpleFunction",
+              "c": "simple",
+              "d": "func",
+              "e": "funtion"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Does Python support short-circuiting in boolean expressions?",
+            "options": {
+              "a": "Both",
+              "b": "Only AND operator",
+              "c": "Only OR operator",
+              "d": "Not support"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What does the code below do? sys.path.append('/root/mods')",
+            "options": {
+              "a": "Adds a new directory to search for python modules that are imported",
+              "b": "Changes the location that the python executable is run from",
+              "c": "Changes the current working directory",
+              "d": "Removes all directories for mods",
+              "e": "Changes the location where sub-processes are searched for after they are launched"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? names1 = ['Amir', 'Barry', 'Chales', 'Dao'] loc = names1.index(\"Edward\") print loc",
+            "options": {
+              "a": "An exception is thrown",
+              "b": "-1",
+              "c": "0",
+              "d": "4",
+              "e": "Edward"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? def myfunc(x, y, z, a): print x + y nums = [1, 2, 3, 4] myfunc(*nums)",
+            "options": {
+              "a": "3",
+              "b": "1",
+              "c": "6",
+              "d": "10",
+              "e": "An exception is thrown"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "How do you create a package so that the following reference will work? p = mytools.myparser.MyParser()",
+            "options": {
+              "a": "Inside the mytools dir create __init__.py",
+              "b": "Declare the myparser package in mytools.py",
+              "c": "Create an __init__.py in the home dir",
+              "d": "Create a myparser.py directory inside the mytools directory",
+              "e": "This can not be done"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed assuming the user enters the following at the prompt? #: foo a = input(\"#: \") print a",
+            "options": {
+              "a": "foo",
+              "b": "f",
+              "c": "Not a number",
+              "d": "An exception is thrown"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? counter = 1 def doLotsOfStuff(): global counter for i in (1, 2, 3): counter += 1 doLotsOfStuff() print counter",
+            "options": {
+              "a": "4",
+              "b": "1",
+              "c": "3",
+              "d": "7",
+              "e": "none of the above"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? one = chr(104) two = chr(105) print \"%s%s\" % (one, two)",
+            "options": {
+              "a": "hi",
+              "b": "h",
+              "c": "104105",
+              "d": "104"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "def funA(a, b): return a * b def funB(c, d): return a + b x = funA(funB(3,4), 5) What is the value of x after executing the code shown above?",
+            "options": {
+              "a": "35",
+              "b": "60",
+              "c": "12",
+              "d": "32"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is wrong with the function below? def square(x): x = x**2 return x print \"The value of x has been squared\" squared_value = square(10) print sqared_value",
+            "options": {
+              "a": "We should put the return x at the last line of code in the function square because any code within the function after return will not get executed.",
+              "b": "**2 is not a valid syntax.",
+              "c": "We should use print x instead of return x",
+              "d": "We should not be modifying x which is the argument passed into the function."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the value of x after executing the code shown below? def funA(x): return str(x) def funB(y): return str(2 * y) x = funA(1) + funB(2)",
+            "options": {
+              "a": "14",
+              "b": "12",
+              "c": "Error",
+              "d": "21"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Study the code given below, and choose the most appropriate answer: a = [1, 4, 20, 2, 5] x = a[0] for i in a: if i > x: x = i print x",
+            "options": {
+              "a": "The value of x is the largest number in the list.",
+              "b": "The value of x is the average of all the number in the list.",
+              "c": "The value of x is the smallest number in the list.",
+              "d": "The value of x is the sum of all the number in the list."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? names1 = ['Amir', 'Barry', 'Charles', 'Dao'] if 'amir' in names1: print 1 else: print 2",
+            "options": {
+              "a": "2",
+              "b": "1",
+              "c": "Amir",
+              "d": "An exception is thrown"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What gets printed? names1 = ['Amir', 'Barry', 'Chales', 'Dao'] names2 = [name.lower() for name in names1] print names2[2][0]",
+            "options": {
+              "a": "c",
+              "b": "i",
+              "c": "C",
+              "d": "An exception is thrown"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "To what values a and b are bound to after the following assignment is executed? a, b = 'xy'",
+            "options": {
+              "a": "x' and 'y' respectively.",
+              "b": "a is bound to the value 'xy' and b is not bound at all.",
+              "c": "Both a and b are bound to 'xy'.",
+              "d": "ValueError: more than 1 value to unpack"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Under what circumstances assert statements are not executed?",
+            "options": {
+              "a": "When optimization is requested using the command line option -O",
+              "b": "During unit testing.",
+              "c": "When you execute the command: __debug__ = False",
+              "d": "Assertions are always executed."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "In Python, actual parameters are passed to functions",
+            "options": {
+              "a": "by value",
+              "b": "by reference",
+              "c": "at random",
+              "d": "by magic"
+            },
+            "correct": "a"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Post-test",
+    "level": 4,
+    "quizzes": [
+      {
+        "title": "Post-test questions",
+        "difficulty": 4,
+        "questions": [
+          {
+            "text": "Which of the following creates 100 equally spaced points between -pi/2 and pi/2?",
+            "options": {
+              "a": "linspace(-pi/2, pi/2, 100)",
+              "b": "linespace(-pi/2, pi/2, 100)",
+              "c": "linespace(pi/2, 100, -pi/2)",
+              "d": "linspace(-pi/2, 100, pi/2)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "How do you set the title as x^2-5x+6 in LaTeX style formatting?",
+            "options": {
+              "a": "title(“$x^2-5x+6$”)",
+              "b": "title(“x**2-5*x+6”)",
+              "c": "title(“x^2-5x+6”)",
+              "d": "title(“#x^2-5x+6#”)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What happens when the following code is executed:: xlabel(\"First label\") xlabel(\"Second label\")",
+            "options": {
+              "a": "The label of x-axis is set to “Second label”",
+              "b": "The label of x-axis is set to “First label”",
+              "c": "The label of x-axis is set to “First label Second label”",
+              "d": "The label of x-axis is “First label” and the label of y-axis is “Second label”"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which marker is used to get circles...?",
+            "options": {
+              "a": "\"0\"",
+              "b": "\"-\"",
+              "c": "\"^\"",
+              "d": "\"--\""
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Indentation is not mandatory in Python?",
+            "options": {
+              "a": "FALSE",
+              "b": "TRUE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given a file ``data.txt`` with three columns of data separated by spaces, read it into one complex sequence.?",
+            "options": {
+              "a": "x = loadtxt(\"data.txt\")",
+              "b": "x = loadscript(‘data.txt’)",
+              "c": "x = loadtext(\"data.txt\")",
+              "d": "x = load(\"data.txt\")"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "To use the loadtxt command, each row should have the same number of values?",
+            "options": {
+              "a": "TRUE",
+              "b": "FALSE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "``x = array([1, 2, 3], [5, 6, 7])`` is a valid statement?",
+            "options": {
+              "a": "FALSE",
+              "b": "TRUE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given the array, ``A = array([12, 15, 18, 21])``, how do we access the element ``18``?",
+            "options": {
+              "a": "A[2]",
+              "b": "A[18]",
+              "c": "A[0]",
+              "d": "A[3]"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Predict the output for ones_like([12, 13, 14, 15]) ?",
+            "options": {
+              "a": "array([1, 1, 1, 1])",
+              "b": "array[12, 13, 14, 15]",
+              "c": "array([1.0, 1.0, 1.0, 1.0])",
+              "d": "array([12, 13, 14, 15])"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "The function ``lstsq`` returns the least-squares solution to an equation?",
+            "options": {
+              "a": "TRUE",
+              "b": "FALSE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given two arrays A and B where ``A`` which contains co-efficients of a system of equations and ``B`` which contains it’s constants. How will you solve the given system of equations?",
+            "options": {
+              "a": "solve(A,B)",
+              "b": "solve(A.B)",
+              "c": "solve(A*B)",
+              "d": "solve(AB)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which method can be used to find out the roots of any arbitrary function?",
+            "options": {
+              "a": "fsolve()",
+              "b": "func()",
+              "c": "roots()",
+              "d": "arb()"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the value assigned as index to the first element in a list?",
+            "options": {
+              "a": "0",
+              "b": "1",
+              "c": "-1",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the correct way of creating an array?",
+            "options": {
+              "a": "a = array([ 1, 2, 3, 4 ])",
+              "b": "a = array[ 1, 2, 3, 4 ]",
+              "c": "a = array( 1, 2, 3, 4 )",
+              "d": "a = array[( 1, 2, 3, 4)]"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "How do you save a figure in png format with the name sine-curve?",
+            "options": {
+              "a": "savefig(‘sine-curve.png’)",
+              "b": "save(‘sine-curve.png’)",
+              "c": "savefigure(‘sine-curve.png’)",
+              "d": "savefig(‘sine-curve’, ‘png’)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "How large can an integer in Python be?",
+            "options": {
+              "a": "Any Size",
+              "b": "2^32",
+              "c": "2^32 for a 32-bit system and 2^64 for a 64-bit system",
+              "d": "None of the above"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "How do you obtain the real and imaginary parts of a complex number ‘’p’’ as separate?",
+            "options": {
+              "a": "p.real , p.imag",
+              "b": "real(p) , imag(p)",
+              "c": "p.real( ) , p.imag( )",
+              "d": "p.real(0),p.imag(0)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given strings s and t, ``s = \"Hello\"`` and ``t = \"World\"`` and an integer r, ``r = 2``. What is the output of s * r + s * t?",
+            "options": {
+              "a": "HelloHelloWorldWorld",
+              "b": "Hello Hello World World",
+              "c": "HelloHello WorldWorld",
+              "d": "HelloWorldHelloWorld"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given the string ``s = \"Hello\"``, we wish to change it to ``hello``. what is the result of s[0] = 'h' ?",
+            "options": {
+              "a": "Error--'str' object does not support item assignment.",
+              "b": "s changes to ‘hello’",
+              "c": "s remains unchanged",
+              "d": "Depends on the version of Python being used."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "The following function is used to integrate a system of ODEs.",
+            "options": {
+              "a": "odeint",
+              "b": "odepack",
+              "c": "quad",
+              "d": "None of the Above"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following imports the odeint function.?",
+            "options": {
+              "a": "from scipy.integrate import odeint",
+              "b": "we can import from scipy import odeint",
+              "c": "import odeint from integration",
+              "d": "import odeint from scipy.integrate"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given the list primes, ``primes = [2, 3, 5, 7, 11]``, Which of the following code will produce the reverse of the list ``primes``: (A) primes.reverse() (B) primes[::-1] ?",
+            "options": {
+              "a": "Both (A) and (B) are correct",
+              "b": "Only (A) is correct",
+              "c": "Only (B) is correct",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the below code snippet? x=0for y in range(21): x+=y print x",
+            "options": {
+              "a": "Sum of numbers up to 20(including)",
+              "b": "Sum of numbers up to 21(including)",
+              "c": "Error",
+              "d": "None of the Above"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "If ``a = [1, 1, 2, 3, 3, 5, 5, 8]``What is set(a)?",
+            "options": {
+              "a": "set([1, 2, 3, 5, 8])",
+              "b": "set([1, 1, 2, 3, 3, 5, 5, 8])",
+              "c": "set([1, 2, 3, 3, 5, 5])",
+              "d": "Error"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given the list primes, ``primes = [2, 3, 5, 7, 11, 13, 17, 19, 23,29]``, How do you obtain the primes 2 and 13?",
+            "options": {
+              "a": "primes[::5]",
+              "b": "primes[::6]",
+              "c": "primes[::4]",
+              "d": "primes[::13]"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Given ``odd = set([1, 3, 5, 7, 9])`` ``squares = set([1, 4, 9, 16])``. What is the value of ``odd ^ squares``?",
+            "options": {
+              "a": "set([3, 4, 5, 7, 16])",
+              "b": "set([1, 3, 4, 5, 7, 9, 16])",
+              "c": "set([3, 5, 7])",
+              "d": "set([1, 3, 4, 5, 7, 9, 16])"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "If ``a = [1, 1, 2, 3, 3, 6,6,4]``. What is set(a)",
+            "options": {
+              "a": "set([1, 2, 3, 6, 4])",
+              "b": "set([1, 1, 2, 3, 3, 6,6,4])",
+              "c": "set([1, 2, 3, 3, 6,6])",
+              "d": "Error"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What will the following function do? def what(x) return x*x ?",
+            "options": {
+              "a": "Error",
+              "b": "Returns the square of x",
+              "c": "Returns x",
+              "d": "Function doesn't have docstring"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "When calling a function, the arguments?",
+            "options": {
+              "a": "only keyword arguments can be in any order, but should be called at the end.",
+              "b": "should always be in the order in which they are defined.",
+              "c": "can be in any order",
+              "d": "only keyword arguments can be in any order, but should be called at the beginning."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What should be the command if we want to get help about \"apply\" function.",
+            "options": {
+              "a": "apply?",
+              "b": "?apply",
+              "c": "help(apply)",
+              "d": "??apply"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following is false?",
+            "options": {
+              "a": "The output of round(3.11321,1) is 3.2",
+              "b": "We type ctrl+d to quit the ipython interpreter",
+              "c": "We type ctrl+c to interrupt when we make an error",
+              "d": "Ipython has tab-completion feature"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Whih command is used to clear the plot?",
+            "options": {
+              "a": "clf()",
+              "b": "clear()",
+              "c": "clr()",
+              "d": "closefig()"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "You should keep open the plot while saving the it.",
+            "options": {
+              "a": "TRUE",
+              "b": "FALSE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Suppose I made 2 plots overlaid on one another. I am using legend command to distinguish between the two. I used legend([log(x) , log(y)]) to add legend to plot.",
+            "options": {
+              "a": "The command is wrong, log(x) and log(y) should be in inverted commas, rest is fine",
+              "b": "The command is correct",
+              "c": "The command is wrong, there should not be any square bracket []",
+              "d": "The command is wrong, there should not be any square bracket and log(x) and log(y) should be single inverted commas"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "The % in %hist exist in all python interpreters.",
+            "options": {
+              "a": "FALSE",
+              "b": "TRUE"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Suppose from different commands we type, we just want to save the first 5 and then 8th and 13th command. What we should do?",
+            "options": {
+              "a": "Type the command %save /home/fossee/new_plot_script.py 1-5 8 13",
+              "b": "Type the command %save /home/fossee/new_plot_script.py 1:5 8 13",
+              "c": "Type the command %save /home/fossee/new_plot_script.py 1:5, 8, 13",
+              "d": "Type the command %save /home/fossee/new_plot_script.py 1-5, 8, 13"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "%hist command is used to",
+            "options": {
+              "a": "To retrieve the commands which we used till now",
+              "b": "To retrieve the variables used till now",
+              "c": "To make histograms",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "I made a .txt file containing squares of first 10 elements. Which of the following statements are correct ?",
+            "options": {
+              "a": "It can be loaded by command squares = loadtxt('/home/fossee/squares.txt') and printed by print squares. This prints a list of floating objects.",
+              "b": "It can be loaded by command squares = load.txt('/home/fossee/squares.txt') and printed by print'squares'. This prints a list of floating objects.",
+              "c": "It can be loaded by command squares = loadtext('/home/fossee/squares.txt') and printed by print squares. This prints a list of integers.",
+              "d": "It can be loaded by command squares = load.text('/home/fossee/squares.txt') and printed by print(squares). This prints a list of floating objects."
+            },
+            "correct": "a"
+          },
+          {
+            "text": "I have a list sample_data = [1,2,3,4,5,6,7,8,9,10], and I want [1,4,9,16,25,36,49,64,81,100] from it. What should be the possible solution?",
+            "options": {
+              "a": "square(sample_data)",
+              "b": "sq(sample_data)",
+              "c": "sqaure(sample_data)",
+              "d": "sample_data.squared"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "I have a list sample_data = [1,2,3,4,5,6,7,8,9,10], and I want [1,4,9,16,25,36,49,64,81,100] from it. What should be the possible solution?",
+            "options": {
+              "a": "square(sample_data)",
+              "b": "sq(sample_data)",
+              "c": "sqaure(sample_data)",
+              "d": "sample_data.squared"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What should be the syntax if we want to flip coordinates of bar plot (variables on y and values in x )?",
+            "options": {
+              "a": "barh()",
+              "b": "bar(coord_flip = True)",
+              "c": "bary()",
+              "d": "bar(flip = True)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following syntax is wrong?",
+            "options": {
+              "a": "pie(obs, explode = explode_sample, labels = variables, colors = colors, autopct = 1.1f)",
+              "b": "bar([1,3,5,7,9],[2,4,6,8,10], label = “Sample 1”, color = ‘b’)",
+              "c": "scatter(x,y,c = “b”, mark = “^”, alpha = 0.5)",
+              "d": "loglog(x, y, basex = e, basey = e)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "I write 4/3 on first line, 4-3*5 on second line and 3+(4-6)*5 on third line, and now what will be the output when I click evaluate in sage notebook?",
+            "options": {
+              "a": "-7",
+              "b": "1.333 -11 -7",
+              "c": "1.3333",
+              "d": "1 -11 -7"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Consider 4 statements. Which of the following is false regarding sage ? 1. It is an open source software.2. we can evaluate a cell using Ctrl+Enter3. To make a HTML editable cell, on the blue line click Shift and Enter.4. sage has auto completion option of commands.",
+            "options": {
+              "a": "line number 2,3",
+              "b": "line number 1 and 3",
+              "c": "line number 1 and 2",
+              "d": "line number 1, 2 and 3"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Consider the following statements. Which of the following are correct ?1. diff(f(x),x,3), first differentiates f(x) and then computes the differentiated function at 3.2. simply_trig(f) simplifies the trigonometric part of f(x)3. f_integral() computes the integral of f(x)4. f.substitute(theta = 45) computes the value of f(theta) at theta = 45",
+            "options": {
+              "a": "4",
+              "b": "1 and 4",
+              "c": "1",
+              "d": "1, 2 and 4"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What will be the output of the below code?list1 = [1, 2, 3]list1.append([4, 5, 6])print(len(list1))",
+            "options": {
+              "a": "4",
+              "b": "5",
+              "c": "6",
+              "d": "3"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What will be the output for the below code?list1 = [“abc”, “bcd”, “def”]print(list1[-1][-1])",
+            "options": {
+              "a": "f",
+              "b": "a",
+              "c": "d",
+              "d": "def"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What will be the output of following?x = ‘abcd’for i in range(len(x)): print(x[i])",
+            "options": {
+              "a": "a b c d",
+              "b": "a",
+              "c": "error",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of following?x = 12345for i in x : print(i)",
+            "options": {
+              "a": "error",
+              "b": "1 2 2003",
+              "c": "123",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What arithmetic operators cannot be used with strings ?",
+            "options": {
+              "a": "-",
+              "b": "+",
+              "c": "*",
+              "d": "All of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of following?print(“abcabcab”.split(‘c’))",
+            "options": {
+              "a": "[‘ab’, ‘ab’, ‘ab’]",
+              "b": "[‘ab’, ‘ab’, ‘ab’, ”]",
+              "c": "(‘ab’, ‘ab’, ‘ab’)",
+              "d": "(‘ab’, ‘ab’, ‘ab’, ”)"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of following?print(“abcabcab”.split(‘c’, 0))",
+            "options": {
+              "a": "[‘abcabcab’]",
+              "b": "‘abcabcab’",
+              "c": "Error",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of following? list = [1,2,3,4,5,6,7,8,9,10]l = sum(list[::2])print(l)",
+            "options": {
+              "a": "25",
+              "b": "30",
+              "c": "2",
+              "d": "55"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of following?list = [1,2,3,4,5,6,7,8,9,10]l = mean(list[1::2])print(l)",
+            "options": {
+              "a": "6",
+              "b": "5",
+              "c": "5",
+              "d": "6"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the following?a = array([1,2,3,'string'])print(a)",
+            "options": {
+              "a": "Error",
+              "b": "1 2 3 string",
+              "c": "1 2 3 “string”",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the following?a1 = array([[1,2,3,4],[5,6,7,8],[9,10,11,12]])print(a1[:,1])",
+            "options": {
+              "a": "[2,6,10]",
+              "b": "[5,6,7,8]",
+              "c": "Error",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the function to get both eigen values and eigen vectors of a matrix?",
+            "options": {
+              "a": "eig()",
+              "b": "eig[]",
+              "c": "eigval()",
+              "d": "eigval[]"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What does ones_like() function do?",
+            "options": {
+              "a": "Return an array of ones with the same shape and type as a given array",
+              "b": "Return an array of ones with the same shape as a given array",
+              "c": "Return an array of ones with the same type as a given array",
+              "d": "None of them"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the expression, 7*1**7 ?",
+            "options": {
+              "a": "7",
+              "b": "49",
+              "c": "1",
+              "d": "343"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What is the output of the expression, 7*1**7 ?",
+            "options": {
+              "a": "7",
+              "b": "49",
+              "c": "1",
+              "d": "343"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "What error occurs when you execute?a = b",
+            "options": {
+              "a": "NameError",
+              "b": "SyntaxError",
+              "c": "ValueError",
+              "d": "TypeError"
+            },
+            "correct": "a"
+          },
+          {
+            "text": "Which of the following functions does exactly the opposite of split() function ?",
+            "options": {
+              "a": "join()",
+              "b": "merge()",
+              "c": "concat()",
+              "d": "None of them"
+            },
+            "correct": "a"
+          }
+        ]
+      }
+    ]
+  }
+]

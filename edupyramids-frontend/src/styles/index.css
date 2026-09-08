@@ -1,0 +1,1195 @@
+/*
+ * Design tokens, taken from the EduPyramids logo itself.
+ *
+ * The two colours are sampled from the client's artwork rather than guessed:
+ * #2B3491 for the pyramids and the "Pyramids" wordmark, #E9511F for the figure
+ * above them and the "Edu". Blue carries structure — headers, buttons, the hero
+ * card. Orange carries progress and anything earned, which is the same job it
+ * does in the logo: the part that rises above the pyramids.
+ *
+ * These supersede the blue palette named in the Week 3 specification, which
+ * cited "design tokens from Week 2" that never existed.
+ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --brand: #2B3491;
+  --brand-dark: #232B78;
+  --brand-deep: #1A2160;
+  --brand-tint: #ECEDF7;
+  --brand-tint-2: #D9DBEF;
+
+  --accent: #E9511F;
+  --accent-dark: #C8410F;
+  --accent-tint: #FDECE5;
+
+  --xp: #E9511F;
+  --xp-tint: #FDECE5;
+
+  --light-bg: #F5F6FA;
+  --surface: #ffffff;
+  --border: #E5E7F0;
+  --text-dark: #1A1F35;
+  --text-light: #767C93;
+  --danger: #C8301F;
+  --danger-tint: #FDECEA;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 22px;
+  --gap: 1rem;
+  --gap-lg: 1.5rem;
+  --gap-xl: 2rem;
+
+  --shadow: 0 1px 2px rgb(26 31 53 / 5%), 0 6px 20px rgb(26 31 53 / 7%);
+  --shadow-lg: 0 10px 30px rgb(26 31 53 / 12%);
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: var(--light-bg);
+  color: var(--text-dark);
+}
+
+h1 { font-size: 22px; line-height: 1.3; }
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--light-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+/* Visible only to screen readers. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.muted { color: var(--text-light); }
+.small { font-size: 14px; }
+
+/* ---------------------------------------------------------------- login */
+.auth {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--gap-lg) var(--gap);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap-xl);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 6%), 0 8px 24px rgb(15 23 42 / 6%);
+}
+
+.auth-card { width: 100%; max-width: 26rem; }
+
+.auth-head { margin-bottom: var(--gap-lg); }
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--brand);
+  margin-bottom: 0.35rem;
+}
+
+/* ---------------------------------------------------------------- tabs */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--light-bg);
+  padding: 0.25rem;
+  margin-bottom: var(--gap-lg);
+}
+
+.tab {
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab--on { background: var(--surface); color: var(--brand); box-shadow: 0 1px 2px rgb(15 23 42 / 10%); }
+
+/* Keyboard focus lands on the hidden radio, so the label has to show it. */
+.tab:focus-within { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+/* ---------------------------------------------------------------- fields */
+.field { margin-bottom: var(--gap); }
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.field input {
+  width: 100%;
+  font: inherit;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: inherit;
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+  border-color: var(--brand);
+}
+
+.field input[aria-invalid='true'] { border-color: var(--danger); }
+.field input:disabled { background: var(--light-bg); color: var(--text-light); }
+
+.field-error { color: var(--danger); font-size: 14px; margin-top: 0.3rem; }
+
+.alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--danger);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.75rem;
+  font-size: 14px;
+  margin-bottom: var(--gap);
+}
+
+/* ---------------------------------------------------------------- buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover:not(:disabled) { background: var(--brand-dark); }
+.btn:focus-visible { outline: 2px solid var(--text-dark); outline-offset: 2px; }
+.btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.btn--ghost {
+  width: auto;
+  background: transparent;
+  color: var(--text-dark);
+  border-color: var(--border);
+}
+
+.btn--ghost:hover:not(:disabled) { background: var(--light-bg); }
+
+.spinner {
+  width: 1em; height: 1em;
+  border: 2px solid rgb(255 255 255 / 45%);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Respect a request for less movement (HLD Section 6.3, test X08). */
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2.4s; }
+  * { transition: none !important; }
+}
+
+/* ---------------------------------------------------------------- shell */
+.shell { min-height: 100dvh; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--gap) var(--gap-lg);
+}
+
+.topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+
+.who { font-size: 14px; display: inline-flex; align-items: center; gap: 0.5rem; }
+
+.role-chip {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--brand);
+  background: #ecfdf5;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+.page { max-width: 60rem; margin: 0 auto; padding: var(--gap-xl) var(--gap-lg); }
+.page h1 { margin-bottom: 0.5rem; }
+
+.trace {
+  margin-top: var(--gap);
+  font-size: 12px;
+  white-space: pre-wrap;
+  color: var(--danger);
+}
+
+/* The target is 360px and up. */
+@media (max-width: 400px) {
+  .card { padding: var(--gap-lg); }
+  .tab { font-size: 13px; padding: 0.5rem 0.15rem; }
+}
+
+/* ---------------------------------------------------------------- student */
+.h2 { font-size: 17px; margin: var(--gap-xl) 0 var(--gap); }
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: var(--gap-lg);
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+}
+
+.stat-label { font-size: 13px; color: var(--text-light); }
+.stat-value { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.stat-value.big { font-size: 40px; }
+.stat-note { font-size: 12px; color: var(--text-light); }
+
+.bar-wrap { margin-bottom: var(--gap-lg); }
+
+.bar {
+  height: 10px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.bar span { display: block; height: 100%; background: var(--brand); border-radius: 999px; }
+.bar--sm { height: 7px; }
+
+.revisit {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-left: 3px solid var(--xp);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.8rem;
+  font-size: 14px;
+  margin-bottom: var(--gap);
+}
+
+.topics {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--gap);
+}
+
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap);
+}
+
+.topic-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.topic-head h3 { font-size: 15px; }
+.topic-meta { margin: 0.4rem 0 0.7rem; }
+
+.btn--sm { width: auto; padding: 0.4rem 0.8rem; font-size: 14px; }
+.btn--off { background: var(--light-bg); color: var(--text-light); border-color: var(--border); cursor: default; }
+
+.badges { list-style: none; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.badge {
+  background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius);
+  padding: 0.5rem 0.8rem; display: grid; font-size: 14px;
+}
+
+.result-score { margin-bottom: var(--gap-lg); }
+
+.feedback { list-style: none; display: grid; gap: 0.75rem; margin-bottom: var(--gap-lg); }
+
+.fb {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+}
+
+.fb--ok { border-left-color: var(--brand); }
+.fb--no { border-left-color: var(--danger); }
+.fb-head { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem; }
+.fb-mark { font-size: 13px; font-weight: 700; }
+.fb--ok .fb-mark { color: var(--brand); }
+.fb--no .fb-mark { color: var(--danger); }
+.fb-q { font-size: 15px; white-space: pre-wrap; margin-bottom: 0.4rem; }
+.fb-a { font-size: 14px; margin-bottom: 0.3rem; }
+.fb-why { font-size: 14px; color: var(--text-light); }
+
+/* ---------------------------------------------------------------- reports */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+}
+
+.field--inline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: var(--gap-lg);
+}
+
+.field--inline label { margin: 0; }
+
+.field--inline select {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: inherit;
+}
+
+.chart { list-style: none; display: grid; gap: 0.45rem; }
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr 5.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chart-label { font-size: 14px; }
+
+.chart-track {
+  height: 14px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.chart-fill { display: block; height: 100%; background: var(--brand); }
+.chart-value { text-align: right; }
+
+.needs { list-style: none; display: grid; gap: 0.4rem; }
+
+.needs li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap);
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+}
+
+/* Questions the class got wrong, and one student's attempts under their name. */
+.reteach { display: grid; gap: 0.4rem; padding-left: 1.15rem; }
+
+.reteach li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.4rem 0 0.4rem 0.25rem;
+  font-size: 14px;
+}
+
+.reteach-q { font-weight: 600; }
+
+.linkish {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--brand);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.linkish:hover { text-decoration: underline; }
+
+tr.is-open > td { border-bottom-color: transparent; }
+
+.drill > td { padding-top: 0; }
+
+.history { list-style: none; display: grid; gap: 0.3rem; margin: 0 0 0.35rem; }
+
+.history li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap);
+  background: var(--surface-2, #f6f7fb);
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.4rem 0.6rem;
+  font-size: 13px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.table th {
+  text-align: left;
+  font-size: 13px;
+  color: var(--text-light);
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--light-bg);
+}
+
+.table td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); }
+.table tr:last-child td { border-bottom: 0; }
+.cell-sub { display: block; }
+
+.drill {
+  margin-top: var(--gap-xl);
+  padding-top: var(--gap);
+  border-top: 2px solid var(--border);
+}
+
+.note-foot { margin-top: var(--gap-xl); }
+
+/* Tables scroll rather than squashing the page on a narrow screen. */
+@media (max-width: 560px) {
+  .table { display: block; overflow-x: auto; }
+  .chart-row { grid-template-columns: 5.5rem 1fr 4rem; }
+}
+
+/* ================================================================
+   The reference design: green hero, rounded cards, XP, topic tiles.
+   ================================================================ */
+
+.card, .stat, .topic, .quiz, .fb, .table, .badge {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.topbar {
+  border-bottom: 0;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.brand { color: var(--brand); }
+
+.role-chip {
+  color: var(--brand-dark);
+  background: var(--brand-tint);
+}
+
+/* ---- the pills in the header: points, and topics finished ---- */
+.pills { display: flex; align-items: center; gap: 0.5rem; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--light-bg);
+  color: var(--text-dark);
+  white-space: nowrap;
+}
+
+.pill--xp { background: var(--xp-tint); color: #8a6100; }
+.pill--done { background: var(--brand-tint); color: var(--brand-dark); }
+.pill-icon { font-size: 14px; line-height: 1; }
+
+/* ---- the hero: pick up where you left off ---- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color: #fff;
+  padding: var(--gap-lg);
+  margin-bottom: var(--gap-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* A soft highlight, the way the reference cards catch the light. */
+.hero::after {
+  content: '';
+  position: absolute;
+  right: -70px;
+  top: -90px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 10%);
+  pointer-events: none;
+}
+
+.hero-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+}
+
+.hero-eyebrow {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 0.2rem;
+}
+
+.hero-title { font-size: 20px; font-weight: 700; line-height: 1.25; }
+.hero-sub { font-size: 14px; opacity: 0.9; margin-top: 0.15rem; }
+
+.hero .bar {
+  background: rgb(255 255 255 / 25%);
+  margin-top: 0.9rem;
+  margin-bottom: 0;
+}
+
+.hero .bar span { background: #fff; }
+
+.btn--onbrand {
+  width: auto;
+  background: #fff;
+  color: var(--brand-dark);
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  white-space: nowrap;
+}
+
+.btn--onbrand:hover:not(:disabled) { background: #f2fff7; }
+
+/* ---- topic tiles, as a grid ---- */
+.tiles {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.85rem;
+}
+
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+a.tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+a.tile:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+.tile--locked { opacity: 0.62; }
+
+.tile-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  background: var(--brand-tint);
+}
+
+.tile--locked .tile-icon { background: var(--light-bg); }
+
+.tile-name { font-size: 15px; font-weight: 700; line-height: 1.2; }
+.tile-meta { font-size: 12px; color: var(--text-light); }
+
+.tile-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.tile-bar span { display: block; height: 100%; background: var(--brand); border-radius: 999px; }
+
+/* ---- how you compare, from the reference's progress card ---- */
+.compare { display: grid; gap: 0.6rem; margin-top: 0.4rem; }
+
+.compare-row { display: grid; grid-template-columns: 8.5rem 1fr 3rem; align-items: center; gap: 0.6rem; }
+.compare-label { font-size: 13px; color: var(--text-light); }
+.compare-value { font-size: 13px; font-weight: 700; text-align: right; }
+
+.compare-track {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--light-bg);
+  overflow: hidden;
+}
+
+.compare-fill { display: block; height: 100%; border-radius: 999px; background: var(--brand); }
+.compare-fill--muted { background: var(--xp); }
+
+.callout {
+  margin-top: 0.9rem;
+  background: var(--brand-tint);
+  color: var(--brand-dark);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.8rem;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---- badges, as the reward cards in the reference ---- */
+.badges { gap: 0.75rem; }
+
+.badge {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  align-items: center;
+  text-align: center;
+  padding: 0.85rem 1rem;
+  gap: 0.15rem;
+}
+
+.badge-emblem {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: linear-gradient(135deg, var(--brand-tint) 0%, var(--brand-tint-2) 100%);
+  margin: 0 auto 0.35rem;
+}
+
+.empty {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap-lg);
+  text-align: center;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* ---- quiz options, rounded to match ---- */
+.option { border-radius: var(--radius-sm); }
+.option--on { border-color: var(--brand); background: var(--brand-tint); }
+.fb--ok { border-left-color: var(--brand); }
+
+.revisit {
+  background: var(--xp-tint);
+  border-color: #f6e3b0;
+  border-left-color: var(--xp);
+  border-radius: var(--radius-sm);
+}
+
+.chart-fill { background: var(--brand); }
+.needs li { background: var(--xp-tint); border-color: #f6e3b0; border-radius: var(--radius-sm); }
+
+/* ---- the logo, in place of a typed wordmark ---- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+
+.brand img { height: 34px; width: auto; display: block; }
+.auth-head .brand img { height: 44px; margin-bottom: 0.6rem; }
+
+/* Progress is orange: in the logo it is the part that rises above the
+   pyramids, and here it is the part the student builds up. */
+.bar span,
+.tile-bar span,
+.compare-fill,
+.chart-fill { background: var(--accent); }
+
+.compare-fill--muted { background: var(--brand); opacity: 0.45; }
+
+.hero .bar span { background: #fff; }
+
+.pill--xp { background: var(--accent-tint); color: var(--accent-dark); }
+.pill--done { background: var(--brand-tint); color: var(--brand-dark); }
+
+.role-chip { color: var(--brand-dark); background: var(--brand-tint); }
+
+.tile-icon { background: var(--brand-tint); }
+.badge-emblem { background: linear-gradient(135deg, var(--accent-tint) 0%, #FBDCCE 100%); }
+
+.option--on { border-color: var(--brand); background: var(--brand-tint); }
+.fb--ok { border-left-color: var(--brand); }
+
+.revisit {
+  background: var(--accent-tint);
+  border-color: #F7CDBA;
+  border-left-color: var(--accent);
+}
+
+.needs li { background: var(--accent-tint); border-color: #F7CDBA; }
+
+.callout { background: var(--brand-tint); color: var(--brand-dark); }
+
+.btn--onbrand { color: var(--brand-dark); }
+.btn--onbrand:hover:not(:disabled) { background: #F4F5FC; }
+
+/* ---- immediate marking, one question at a time ---- */
+.option--right { border-color: var(--brand); background: var(--brand-tint); }
+.option--wrong { border-color: var(--danger); background: var(--danger-tint); }
+.option input:disabled { cursor: default; }
+.option:has(input:disabled) { cursor: default; }
+
+.option-tag {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+}
+
+.option--right .option-tag { color: var(--brand-dark); }
+.option--wrong .option-tag { color: var(--danger); }
+
+.verdict {
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.8rem;
+  font-size: 14px;
+  margin-bottom: var(--gap);
+}
+
+.verdict--ok { background: var(--brand-tint); color: var(--brand-dark); }
+.verdict--no { background: var(--danger-tint); color: var(--danger); }
+
+.resumed {
+  display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+  font-size: 13px; color: var(--text-light); margin-top: 0.5rem;
+}
+
+.linkish {
+  font: inherit; font-weight: 600; padding: 0;
+  background: none; border: 0; cursor: pointer;
+  color: var(--brand); text-decoration: underline;
+}
+
+/* ================================================================
+   The quiz, played rather than filled in.
+
+   The question sits on colour rather than in a white card: it stops looking
+   like a form the moment the page is not white. Brand navy, with the options
+   as white pills over it and orange for the answer you picked.
+   ================================================================ */
+
+.quiz {
+  background: linear-gradient(160deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--gap-xl);
+  width: 100%;
+}
+
+.quiz-top {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--gap); margin-bottom: 0.7rem;
+}
+
+.quiz-topic { font-weight: 700; font-size: 14px; color: rgb(255 255 255 / 88%); }
+.quiz-count { font-weight: 700; font-size: 14px; color: rgb(255 255 255 / 65%); }
+.quiz-count span { font-weight: 500; }
+
+/* one dash per question */
+.pips { list-style: none; display: flex; gap: 5px; margin-bottom: var(--gap-xl); }
+
+.pip {
+  height: 7px; flex: 1; border-radius: 999px;
+  background: rgb(255 255 255 / 22%);
+}
+
+.pip--right { background: #fff; }
+.pip--wrong { background: var(--accent); }
+.pip--done  { background: rgb(255 255 255 / 60%); }
+.pip--now   { background: rgb(255 255 255 / 55%); }
+
+.quiz-q { border: 0; margin: 0 0 var(--gap-lg); }
+
+.quiz-text {
+  font-size: 28px;
+  line-height: 1.22;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  white-space: pre-wrap;
+  margin-bottom: var(--gap-lg);
+}
+
+/* two across, like the reference, dropping to one on a narrow screen */
+.quiz-q .option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+/* An odd last option runs the full width rather than leaving a gap beside it. */
+.option-grid > .option:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+@media (max-width: 620px) {
+  .quiz-q .option-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.option {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #fff;
+  color: var(--text-dark);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  padding: 0.75rem 1.1rem;
+  margin: 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.12s ease;
+}
+
+.option:hover:not(:has(input:disabled)) { transform: translateY(-1px); }
+.option input { position: absolute; opacity: 0; pointer-events: none; }
+.option-text { flex: 1; }
+
+/* the letter reads inline — "A. 5 apples" — rather than as a badge */
+.option-letter {
+  flex: none;
+  width: 1.4rem;              /* fixed, or "E." sits 1px left of "A." */
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-light);
+}
+.option-letter::after { content: '.'; }
+
+.option--on { background: var(--accent); color: #fff; }
+.option--on .option-letter { color: rgb(255 255 255 / 80%); }
+
+.option--right { background: #fff; border-color: var(--accent); }
+.option--right .option-letter { color: var(--brand); }
+
+.option--wrong { background: var(--accent); color: #fff; }
+.option--wrong .option-letter { color: rgb(255 255 255 / 80%); }
+
+.option-tag { margin-left: auto; font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em; }
+.option--right .option-tag { color: var(--brand); }
+.option--wrong .option-tag { color: rgb(255 255 255 / 85%); }
+
+/* white focus ring: the navy would vanish against the card */
+.option:focus-within { outline: 3px solid #fff; outline-offset: 2px; }
+
+.verdict {
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  font-size: 15px;
+  font-weight: 600;
+  margin: var(--gap) 0;
+}
+
+.verdict--no { background: rgb(233 81 31 / 30%); }
+
+.quiz-nav { display: flex; justify-content: space-between; gap: var(--gap); margin-top: var(--gap-lg); }
+
+.quiz-nav .btn {
+  border-radius: 999px; padding: 0.7rem 1.5rem; font-weight: 700;
+  background: #fff; color: var(--brand); border-color: #fff;
+}
+
+.quiz-nav .btn:hover:not(:disabled) { background: #F1F2FA; }
+.quiz-nav .btn--ghost { background: transparent; color: #fff; border-color: rgb(255 255 255 / 45%); }
+.quiz-nav .btn--ghost:hover:not(:disabled) { background: rgb(255 255 255 / 12%); }
+.quiz-nav .btn:disabled { opacity: 0.4; }
+
+.quiz > p.muted { color: rgb(255 255 255 / 62%); margin-top: 0.9rem; }
+.resumed { color: rgb(255 255 255 / 70%); }
+.linkish { color: #fff; }
+
+/* the result, as a scoreboard */
+.result-score {
+  background: linear-gradient(160deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl) var(--gap-lg);
+  text-align: center;
+  margin-bottom: var(--gap-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.result-score .stat-value.big { font-size: 56px; color: #fff; letter-spacing: -0.03em; }
+.result-score .muted { color: rgb(255 255 255 / 78%); }
+
+@media (max-width: 480px) {
+  .quiz-text { font-size: 22px; }
+  .quiz { padding: var(--gap); }
+}
+
+/* The quiz is the whole task, so it gets the whole page. */
+/* Sized so the card and the heading above it share the same right edge. Any
+   wider and a 28px question runs to a line nobody can read back. */
+.page--wide { max-width: 65rem; }
+
+/* Back and Next sit on the same gutters as the options above them. */
+.quiz-nav { align-items: center; }
+.quiz-nav .btn { min-width: 8rem; }
+
+/* The lines under the nav line up with everything else, and stay together. */
+.quiz .resumed { margin: 0.9rem 0 0.3rem; }
+.quiz > p.muted { margin-top: 0; }
+
+/* Way out of a quiz, on the same gutter as the card below it. */
+.quiz-back {
+  display: flex; align-items: baseline; gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-back a {
+  font-weight: 600; font-size: 14px;
+  color: var(--brand); text-decoration: none;
+}
+
+.quiz-back a:hover { text-decoration: underline; }
+.quiz-back a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 4px; }
+
+/* ================================================================
+   Making it feel played rather than filled in.
+
+   All of this is motion and feedback, not more decoration. Every animation
+   below is switched off under prefers-reduced-motion, which HLD Section 6.3
+   requires: the overstimulation guard is the reason the app can use motion at
+   all.
+   ================================================================ */
+
+.quiz-meta { display: flex; align-items: center; gap: 0.75rem; }
+
+/* the running tally: what turns a form into a run */
+.tally {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgb(255 255 255 / 16%);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 13px; font-weight: 800;
+  animation: tally-pop 0.32s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+@keyframes tally-pop {
+  0%   { transform: scale(0.7); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* the option you are about to pick should feel pressable */
+.option { will-change: transform; }
+.option:active:not(:has(input:disabled)) { transform: scale(0.985); }
+
+/* and the answer should land */
+.option--right { animation: pop 0.34s cubic-bezier(0.2, 1.5, 0.4, 1); }
+.option--wrong { animation: shake 0.34s ease; }
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-5px); }
+  45%      { transform: translateX(4px); }
+  70%      { transform: translateX(-2px); }
+}
+
+.verdict { animation: rise 0.26s ease; }
+
+@keyframes rise {
+  from { transform: translateY(6px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* the question you are on, breathing */
+.pip--now { animation: breathe 1.6s ease-in-out infinite; }
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
+}
+
+/* the finish */
+.result-score { animation: land 0.4s cubic-bezier(0.2, 1.2, 0.4, 1); }
+
+@keyframes land {
+  from { transform: scale(0.96); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.result-score .stat-value.big { font-variant-numeric: tabular-nums; }
+
+/* Nothing above runs for anyone who asked for less movement. */
+@media (prefers-reduced-motion: reduce) {
+  .tally, .option--right, .option--wrong, .verdict, .pip--now, .result-score {
+    animation: none;
+  }
+  .option:active:not(:has(input:disabled)) { transform: none; }
+}
+
+/* ================================================================
+   The rest of the app, played rather than administered.
+
+   Same idea as the quiz screen: depth, weight and colour that means
+   something, rather than a white form on grey. The tile colours are the
+   medal the level already is — bronze, silver, gold — so they carry
+   information instead of being decoration.
+   ================================================================ */
+
+body {
+  background:
+    radial-gradient(circle at 1px 1px, rgb(43 52 145 / 6%) 1px, transparent 0)
+      0 0 / 22px 22px,
+    var(--light-bg);
+}
+
+.page h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+.h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.015em; }
+
+/* cards get weight */
+.stat, .card, .table {
+  border-radius: var(--radius-lg);
+  border-width: 1px;
+  box-shadow: var(--shadow);
+}
+
+.stat-value { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
+
+/* ---- topic tiles: the board you are playing across ---- */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: var(--gap);
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  gap: 0.55rem;
+  padding: var(--gap-lg) var(--gap);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+}
+
+/* a wash of the level's own colour, so the board is not four identical cards */
+.tile::before {
+  content: '';
+  position: absolute; inset: 0 0 auto 0;
+  height: 5px;
+  background: var(--tile, var(--brand));
+}
+
+.tile--l1 { --tile: #C88A48; }   /* bronze  */
+.tile--l2 { --tile: #94A0AE; }   /* silver  */
+.tile--l3 { --tile: #D2A63C; }   /* gold    */
+.tile--l4 { --tile: var(--brand); }
+
+a.tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--tile); }
+a.tile:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+
+.tile-icon {
+  width: 3.2rem; height: 3.2rem;
+  display: grid; place-items: center;
+  font-size: 28px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--tile) 16%, #fff);
+}
+
+.tile-name { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; }
+.tile-bar { height: 8px; }
+.tile-bar span { background: var(--tile); }
+.tile-meta { font-size: 13px; font-weight: 600; }
+
+.tile--locked { opacity: 1; background: var(--light-bg); border-style: dashed; }
+.tile--locked .tile-icon { filter: grayscale(1); opacity: 0.55; }
+.tile--locked .tile-meta { color: var(--text-light); }
+
+/* ---- the hero, bigger ---- */
+.hero { border-radius: var(--radius-lg); padding: var(--gap-xl); }
+.hero-title { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+
+/* ---- the sign-in screen should invite, not process ---- */
+.auth-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  /* Padding stays on the card, so anything width:100% inside it — the sign-in
+     button — measures against the padded box instead of overflowing. */
+  padding: 0 var(--gap-xl) var(--gap-xl);
+}
+
+/* The header spans the full card by cancelling that padding, rather than the
+   children each carrying a margin. */
+.auth-head {
+  background: linear-gradient(160deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color: #fff;
+  margin: 0 calc(-1 * var(--gap-xl)) var(--gap-lg);
+  padding: var(--gap-xl) var(--gap-xl) var(--gap-lg);
+  text-align: center;
+}
+
+.auth-head .brand { justify-content: center; }
+.auth-head .brand img { background: #fff; border-radius: 14px; padding: 6px 10px; }
+.auth-head h1 { font-size: 26px; font-weight: 800; margin-top: 0.6rem; }
+.auth-head .muted { color: rgb(255 255 255 / 80%); }
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  a.tile:hover { transform: none; }
+}
