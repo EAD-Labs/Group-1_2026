@@ -45,9 +45,3 @@ Weeks 3 and 4 of the plan in the approved HLD are complete: login for the three
 roles, the database, and the quiz module marking the client's 136 questions.
 Games (weeks 5–6), gamification (week 7) and dashboards (weeks 8–9) follow.
 
-## Waiting on the client
-
-- Explanations for the 136 questions — none of them carry one yet.
-- The grade range, and who assigns students to a class.
-- The address of the school authentication API, so real school passwords can be
-  checked instead of local test accounts.
