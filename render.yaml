@@ -1,0 +1,41 @@
+# Render Blueprint: one web service and one PostgreSQL database.
+#
+# The API serves the built React app from the same address (see src/app.js),
+# so there is no separate static site and no cross-origin setup.
+#
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repository.
+
+services:
+  - type: web
+    name: edupyramids
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    healthCheckPath: /api/health
+    buildCommand: >-
+      cd edupyramids-frontend && npm ci --include=dev && VITE_API_URL=/api npm run build &&
+      cd ../edupyramids-backend && npm ci --omit=dev
+    startCommand: cd edupyramids-backend && sh scripts/render-start.sh
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: edupyramids-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRY
+        value: 7d
+      # Loads the test accounts and the client's questions on boot. Set to
+      # false before real students use it.
+      - key: SEED_DEMO_DATA
+        value: "true"
+
+databases:
+  - name: edupyramids-db
+    plan: free
+    region: singapore
+    databaseName: edupyramids
+    user: edupyramids

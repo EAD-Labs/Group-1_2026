@@ -1,11 +1,26 @@
 const { Pool } = require('pg');
 
+/*
+ * DATABASE_URL wins when it is set, because that is the one value a host such
+ * as Render hands over. Locally the separate DB_* variables still work.
+ * DB_SSL=true is only needed for a connection string from outside the host's
+ * own network; Render's internal URL does not use SSL.
+ */
+const connection = process.env.DATABASE_URL
+  ? {
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+  }
+  : {
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: Number(process.env.DB_PORT) || 5432,
+    database: process.env.DB_NAME || 'edupyramids_dev',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || undefined,
+  };
+
 const pool = new Pool({
-  host: process.env.DB_HOST || '127.0.0.1',
-  port: Number(process.env.DB_PORT) || 5432,
-  database: process.env.DB_NAME || 'edupyramids_dev',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || undefined,
+  ...connection,
   max: 10,
   idleTimeoutMillis: 30_000,
 });

@@ -15,8 +15,12 @@ const PORT = Number(process.env.PORT) || 5000;
 async function start() {
   try {
     await pool.query('SELECT 1');
-    console.log(`[db] connected to ${process.env.DB_NAME} on ` +
-      `${process.env.DB_HOST}:${process.env.DB_PORT}`);
+    // Named from the URL when there is one, so the password never reaches the log.
+    const url = process.env.DATABASE_URL && new URL(process.env.DATABASE_URL);
+    const where = url
+      ? `${url.pathname.slice(1)} on ${url.hostname}`
+      : `${process.env.DB_NAME} on ${process.env.DB_HOST}:${process.env.DB_PORT}`;
+    console.log(`[db] connected to ${where}`);
   } catch (err) {
     console.error('[db] cannot connect:', err.message);
     console.error('Is PostgreSQL running, and does the database exist?');

@@ -39,6 +39,22 @@ npm run dev                   # http://localhost:5173
 `npm test` in the backend rebuilds a separate `edupyramids_test` database and
 runs the suite.
 
+## Deploying on Render
+
+`render.yaml` at the root is a Render Blueprint: one free web service and one
+free PostgreSQL database. The API serves the built React app from the same
+address, so there is only one URL.
+
+1. Render dashboard → **New** → **Blueprint** → connect this repository.
+2. Apply. The first build takes a few minutes.
+
+On every start the service applies the migrations, and while `SEED_DEMO_DATA`
+is `true` it also loads the test accounts (password `password123`) and the
+client's 136 questions. Set it to `false` before real students use the app.
+
+Free plan limits: the service sleeps after 15 minutes idle (the next visit
+takes about a minute to wake it), and a free database expires after 30 days.
+
 ## Status
 
 Weeks 3 and 4 of the plan in the approved HLD are complete: login for the three
