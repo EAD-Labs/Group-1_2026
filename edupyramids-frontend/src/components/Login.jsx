@@ -68,13 +68,30 @@ export default function Login() {
 
   return (
     <main className="auth">
-      <form className="card auth-card" onSubmit={submit} noValidate>
+      {/* The school site's sign-in layout: brand panel left, form right. */}
+      <section className="auth-panel" aria-label="About EduPyramids">
+        <p className="auth-logo">
+          <img src="/edupyramids-logo.png" alt="EduPyramids" width="440" height="336" />
+        </p>
+        <h2>Python practice, powered by EduPyramids.</h2>
+        <ul className="auth-points">
+          <li>
+            <span className="auth-point-icon" aria-hidden="true">🧩</span>
+            Short quizzes on the Spoken Tutorial Python course, marked as you go.
+          </li>
+          <li>
+            <span className="auth-point-icon" aria-hidden="true">📈</span>
+            See your progress by topic, and what is worth another look.
+          </li>
+        </ul>
+        <p className="auth-foot">Powered by Spoken Tutorial, EduPyramids, IIT Bombay</p>
+      </section>
+
+      <div className="auth-side">
+      <form className="auth-card" onSubmit={submit} noValidate>
         <header className="auth-head">
-          <p className="brand">
-            <img src="/edupyramids-logo.png" alt="EduPyramids" width="440" height="336" />
-          </p>
-          <h1>Sign in</h1>
-          <p className="muted">Python practice for Grades 9&ndash;12</p>
+          <h1>Welcome back</h1>
+          <p className="muted">Sign in to your account to continue</p>
         </header>
 
         {/* Radios, not buttons: a radio group is what a screen reader and the
@@ -153,6 +170,7 @@ export default function Login() {
           coordinator@school.com &mdash; password <code>password123</code>
         </p>
       </form>
+      </div>
     </main>
   );
 }
