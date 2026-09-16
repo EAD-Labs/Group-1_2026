@@ -6,11 +6,15 @@ set -e
 
 node scripts/migrate.js
 
-# Test accounts (password123) and the client's questions, only when asked for.
+# The client's questions and the games. Content already loaded is left alone,
+# so this only adds what is new.
+node scripts/import-questions.js content/python-mcqs.json > /dev/null
+node scripts/import-games.js content/python-games.json
+
+# Test accounts (password123), only when asked for.
 # Leave SEED_DEMO_DATA unset on anything real.
 if [ "$SEED_DEMO_DATA" = "true" ]; then
   node scripts/seed.js
-  node scripts/import-questions.js content/python-mcqs.json
 fi
 
 exec node src/server.js

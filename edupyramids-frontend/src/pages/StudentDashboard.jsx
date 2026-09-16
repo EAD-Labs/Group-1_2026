@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 import { auth } from '../utils/auth';
+import { KINDS } from './Game';
 
 /*
  * The student's own view, following the reference design: a green hero card
@@ -26,13 +27,20 @@ export default function StudentDashboard() {
   const user = auth.getCurrentUser();
   const [state, setState] = useState({ loading: true, error: null, data: null });
   const [quizzes, setQuizzes] = useState([]);
+  const [games, setGames] = useState([]);
 
   useEffect(() => {
     let live = true;
-    Promise.all([client.get(`/progress/${user.id}`), client.get('/quizzes')])
-      .then(([progress, quizList]) => {
+    Promise.all([
+      client.get(`/progress/${user.id}`),
+      client.get('/quizzes'),
+      // Games are extra: if they fail to load, the quizzes still show.
+      client.get('/games').catch(() => ({ data: [] })),
+    ])
+      .then(([progress, quizList, gameList]) => {
         if (!live) return;
         setQuizzes(quizList.data);
+        setGames(gameList.data);
         setState({ loading: false, error: null, data: progress.data });
       })
       .catch((err) => live && setState({ loading: false, error: err.message, data: null }));
@@ -127,6 +135,32 @@ export default function StudentDashboard() {
         })}
       </ul>
 
+      {games.length > 0 && (
+        <>
+          <h2 className="h2">Games</h2>
+          <ul className="tiles">
+            {games.map((g) => {
+              const kind = KINDS[g.kind];
+              return (
+                <li key={g.id}>
+                  <Link className={`tile tile--l${g.level}`} to={`/game/${g.id}`}>
+                    <span className="tile-icon" aria-hidden="true">{kind.icon}</span>
+                    <span className="tile-name">{g.title}</span>
+                    <span className="tile-meta">{kind.label} · {g.topic}</span>
+                    <span className="tile-bar">
+                      <span style={{ width: `${g.attempts ? g.bestPercent : 0}%` }} />
+                    </span>
+                    <span className="tile-meta">
+                      {g.attempts ? `Best ${g.bestPercent}%` : 'Not played yet'}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
+
       <h2 className="h2">Your progress</h2>
       <div className="card" style={{ padding: '1.15rem' }}>
         <div className="compare">
@@ -137,8 +171,8 @@ export default function StudentDashboard() {
         </div>
         <p className="callout">
           {summary.attempts === 0
-            ? 'Finish your first quiz to start filling this in.'
-            : `${summary.attempts} quiz${summary.attempts > 1 ? 'zes' : ''} taken so far. `
+            ? 'Finish your first quiz or game to start filling this in.'
+            : `${summary.attempts} quiz${summary.attempts > 1 ? 'zes and games' : ' or game'} finished so far. `
               + 'This follows topics learnt, not time spent.'}
         </p>
       </div>

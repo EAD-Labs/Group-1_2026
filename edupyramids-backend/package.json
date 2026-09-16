@@ -10,7 +10,8 @@
     "migrate": "psql -h ${DB_HOST:-127.0.0.1} -U ${DB_USER:-postgres} -d ${DB_NAME:-edupyramids_dev} -f migrations/001_init.sql -f migrations/002_attempt_idempotency.sql",
     "seed": "node scripts/seed.js",
     "test": "jest --runInBand",
-    "import": "node scripts/import-questions.js"
+    "import": "node scripts/import-questions.js",
+    "import:games": "node scripts/import-games.js"
   },
   "dependencies": {
     "axios": "^1.20.0",

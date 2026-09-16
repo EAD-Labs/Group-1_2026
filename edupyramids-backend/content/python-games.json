@@ -1,0 +1,178 @@
+[
+  {
+    "topic": "Bronze Level",
+    "level": 1,
+    "games": [
+      {
+        "title": "Name the type",
+        "kind": "matching",
+        "instructions": "Match each expression to the type Python gives it.",
+        "pairs": [
+          { "left": "type(7)", "right": "int", "explanation": "A whole number with no decimal point is an int." },
+          { "left": "type(3.5)", "right": "float", "explanation": "A decimal point makes it a float." },
+          { "left": "type(\"7\")", "right": "str", "explanation": "Quotes make it a string, even when it looks like a number." },
+          { "left": "type([7])", "right": "list", "explanation": "Square brackets make a list." },
+          { "left": "type((7,))", "right": "tuple", "explanation": "The trailing comma is what makes (7,) a tuple; (7) is just 7." },
+          { "left": "type(True)", "right": "bool", "explanation": "True and False are the two bool values." }
+        ]
+      },
+      {
+        "title": "Can it change?",
+        "kind": "drag_drop",
+        "instructions": "Sort each value by whether it can be changed in place.",
+        "buckets": ["Can be changed", "Cannot be changed"],
+        "items": [
+          { "text": "[1, 2, 3]", "bucket": "Can be changed", "explanation": "Lists are mutable: nums[0] = 9 works." },
+          { "text": "{\"a\": 1}", "bucket": "Can be changed", "explanation": "Dictionaries are mutable: you can add and replace keys." },
+          { "text": "{1, 2}", "bucket": "Can be changed", "explanation": "Sets are mutable: add() and remove() change them." },
+          { "text": "\"snow storm\"", "bucket": "Cannot be changed", "explanation": "Strings are immutable: name[5] = 'X' raises a TypeError." },
+          { "text": "(1, 2)", "bucket": "Cannot be changed", "explanation": "Tuples are immutable once made." },
+          { "text": "42", "bucket": "Cannot be changed", "explanation": "Numbers are immutable; x = x + 1 makes a new number." }
+        ]
+      },
+      {
+        "title": "Output pairs",
+        "kind": "memory",
+        "instructions": "Flip two tiles at a time to find each piece of code and its output.",
+        "pairs": [
+          { "a": "len([1, 2, 3, None])", "b": "4", "explanation": "None is still an item, so the list has four." },
+          { "a": "7 // 2", "b": "3", "explanation": "// divides and rounds down to a whole number." },
+          { "a": "2 ** 3", "b": "8", "explanation": "** raises to a power: 2 × 2 × 2." },
+          { "a": "\"ab\" * 2", "b": "abab", "explanation": "Multiplying a string repeats it." },
+          { "a": "\"hello\" + \"world\"", "b": "helloworld", "explanation": "+ joins strings with nothing in between." },
+          { "a": "a, b = 1, 2\na, b = b, a\nprint(a)", "b": "2", "explanation": "a, b = b, a swaps the two values." }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Silver Level",
+    "level": 2,
+    "games": [
+      {
+        "title": "Ranges and slices",
+        "kind": "matching",
+        "instructions": "Match each expression to its value.",
+        "pairs": [
+          { "left": "list(range(3))", "right": "[0, 1, 2]", "explanation": "range stops one before the end value." },
+          { "left": "list(range(8, 10))", "right": "[8, 9]", "explanation": "Starts at 8 and stops before 10." },
+          { "left": "list(range(1, 10, 2))", "right": "[1, 3, 5, 7, 9]", "explanation": "The third value is the step." },
+          { "left": "sum(range(5))", "right": "10", "explanation": "0 + 1 + 2 + 3 + 4 = 10." },
+          { "left": "len(set([1, 1, 2, 3, 3]))", "right": "3", "explanation": "A set keeps one of each value: {1, 2, 3}." },
+          { "left": "\"snow storm\"[6:8]", "right": "to", "explanation": "Characters 6 and 7; the slice stops before 8." }
+        ]
+      },
+      {
+        "title": "Sort by type",
+        "kind": "drag_drop",
+        "instructions": "Put each expression under the type of value it produces.",
+        "buckets": ["int", "float", "str", "list"],
+        "items": [
+          { "text": "7 // 2", "bucket": "int", "explanation": "// on two ints gives an int: 3." },
+          { "text": "len(\"abc\")", "bucket": "int", "explanation": "len always returns an int." },
+          { "text": "7 / 2", "bucket": "float", "explanation": "/ always gives a float in Python 3: 3.5." },
+          { "text": "4.5 // 2", "bucket": "float", "explanation": "// with a float involved gives a float: 2.0." },
+          { "text": "2 ** 0.5", "bucket": "float", "explanation": "A fractional power gives a float." },
+          { "text": "\"7\" * 2", "bucket": "str", "explanation": "Repeating a string gives a string: \"77\"." },
+          { "text": "str(10)", "bucket": "str", "explanation": "str() turns a value into text." },
+          { "text": "[1] * 3", "bucket": "list", "explanation": "Repeating a list gives a list: [1, 1, 1]." },
+          { "text": "list(\"ab\")", "bucket": "list", "explanation": "list() on a string splits it into characters." }
+        ]
+      },
+      {
+        "title": "Loop outputs",
+        "kind": "memory",
+        "instructions": "Find each loop and what it prints.",
+        "pairs": [
+          { "a": "for i in range(1, 4):\n    print(i, end=\" \")", "b": "1 2 3", "explanation": "range(1, 4) gives 1, 2 and 3." },
+          { "a": "for c in \"hey\":\n    print(c, end=\"-\")", "b": "h-e-y-", "explanation": "A for loop over a string visits each character." },
+          { "a": "print(list(range(10, 0, -3)))", "b": "[10, 7, 4, 1]", "explanation": "A negative step counts down." },
+          { "a": "print(len(range(5, 10)))", "b": "5", "explanation": "5, 6, 7, 8 and 9: five numbers." },
+          { "a": "print([1, 2] + [3])", "b": "[1, 2, 3]", "explanation": "+ joins two lists into one." },
+          { "a": "print(max([4, 9, 2]))", "b": "9", "explanation": "max returns the largest item." }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Gold Level",
+    "level": 3,
+    "games": [
+      {
+        "title": "What does it return?",
+        "kind": "matching",
+        "instructions": "Match each function call to the value it returns.",
+        "pairs": [
+          { "left": "def f(x):\n    return x * 2\nf(4)", "right": "8", "explanation": "4 * 2 = 8." },
+          { "left": "def f(a, b=10):\n    return a + b\nf(5)", "right": "15", "explanation": "b was not given, so it takes its default of 10." },
+          { "left": "def f(*nums):\n    return len(nums)\nf(1, 2, 3)", "right": "3", "explanation": "*nums gathers every argument into a tuple." },
+          { "left": "def f():\n    pass\nf()", "right": "None", "explanation": "A function with no return statement returns None." },
+          { "left": "def f(x):\n    return str(x) + \"!\"\nf(7)", "right": "7!", "explanation": "str(7) is \"7\", then \"!\" is joined on." },
+          { "left": "(lambda x: x ** 2)(5)", "right": "25", "explanation": "A lambda is a one-line function: 5 ** 2." }
+        ]
+      },
+      {
+        "title": "Error or fine?",
+        "kind": "drag_drop",
+        "instructions": "Sort each line by whether it runs or raises an error.",
+        "buckets": ["Runs fine", "Raises an error"],
+        "items": [
+          { "text": "[\"Amir\", \"Dao\"].index(\"Edward\")", "bucket": "Raises an error", "explanation": "index raises ValueError when the item is not in the list." },
+          { "text": "{\"a\": 1}[\"b\"]", "bucket": "Raises an error", "explanation": "A missing key raises KeyError." },
+          { "text": "int(\"twelve\")", "bucket": "Raises an error", "explanation": "int only reads digits: ValueError." },
+          { "text": "\"abc\"[5]", "bucket": "Raises an error", "explanation": "Index 5 is past the end: IndexError." },
+          { "text": "(1, 2)[0] = 5", "bucket": "Raises an error", "explanation": "Tuples cannot be changed: TypeError." },
+          { "text": "int(\"12\")", "bucket": "Runs fine", "explanation": "\"12\" is all digits, so it becomes 12." },
+          { "text": "\"abc\"[1:10]", "bucket": "Runs fine", "explanation": "Slices past the end are allowed; this gives \"bc\"." },
+          { "text": "{}.get(\"x\")", "bucket": "Runs fine", "explanation": "get returns None for a missing key instead of raising." }
+        ]
+      },
+      {
+        "title": "Dictionaries and scope",
+        "kind": "memory",
+        "instructions": "Find each piece of code and what it prints.",
+        "pairs": [
+          { "a": "d = {\"a\": 1, \"b\": 2}\nprint(len(d))", "b": "2", "explanation": "len counts the keys." },
+          { "a": "d = {\"a\": 1}\nprint(d.get(\"z\", 0))", "b": "0", "explanation": "get returns the default when the key is missing." },
+          { "a": "print(list({\"x\": 1, \"y\": 2}.keys()))", "b": "['x', 'y']", "explanation": "keys() gives the keys in the order they were added." },
+          { "a": "print(chr(104) + chr(105))", "b": "hi", "explanation": "104 and 105 are the character codes for h and i." },
+          { "a": "counter = 1\ndef add():\n    global counter\n    counter += 3\nadd()\nprint(counter)", "b": "4", "explanation": "global lets the function change the outer counter." },
+          { "a": "print(\"-\".join([\"a\", \"b\", \"c\"]))", "b": "a-b-c", "explanation": "join puts the string between each item." }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Post-test",
+    "level": 4,
+    "games": [
+      {
+        "title": "Commands and what they do",
+        "kind": "matching",
+        "instructions": "Match each IPython command to what it does.",
+        "pairs": [
+          { "left": "linspace(-pi, pi, 100)", "right": "100 evenly spaced points from -π to π", "explanation": "linspace(start, stop, count) includes both ends." },
+          { "left": "savefig(\"sine.png\")", "right": "Saves the plot as an image", "explanation": "The file goes in the current working directory." },
+          { "left": "xlabel(\"time\")", "right": "Labels the x-axis", "explanation": "Calling it again replaces the label." },
+          { "left": "plot(x, y, \"o\")", "right": "Draws the points as circles", "explanation": "\"o\" is the circle marker." },
+          { "left": "ones_like([1, 2, 3])", "right": "array([1, 1, 1])", "explanation": "Same shape as the input, filled with ones." },
+          { "left": "loadtxt(\"data.txt\")", "right": "Reads numbers from a text file", "explanation": "Every row needs the same number of values." }
+        ]
+      },
+      {
+        "title": "True or false?",
+        "kind": "drag_drop",
+        "instructions": "Sort each statement into true or false.",
+        "buckets": ["True", "False"],
+        "items": [
+          { "text": "Indentation is part of Python's syntax", "bucket": "True", "explanation": "The indentation marks where a block starts and ends." },
+          { "text": "\"in\" works on lists, tuples, strings and dicts", "bucket": "True", "explanation": "For a dict, in checks the keys." },
+          { "text": "7 / 2 gives 3.5 in Python 3", "bucket": "True", "explanation": "/ is true division; // is floor division." },
+          { "text": "The first item in a list is at index 1", "bucket": "False", "explanation": "Python counts from 0." },
+          { "text": "range(5) includes 5", "bucket": "False", "explanation": "range(5) is 0 to 4." },
+          { "text": "Indentation must be exactly 4 spaces", "bucket": "False", "explanation": "Any consistent indentation works; 4 spaces is the convention." }
+        ]
+      }
+    ]
+  }
+]

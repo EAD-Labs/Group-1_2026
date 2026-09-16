@@ -10,7 +10,9 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 
-const MIGRATIONS = ['001_init.sql', '002_attempt_idempotency.sql', '003_option_e.sql'];
+// Every migration, in name order, the same set scripts/migrate.js applies.
+const MIGRATIONS = fs.readdirSync(path.join(__dirname, '..', 'migrations'))
+  .filter((f) => f.endsWith('.sql')).sort();
 
 module.exports = async function globalSetup() {
   const pool = new Pool({
@@ -75,5 +77,12 @@ module.exports = async function globalSetup() {
     fs.readFileSync(path.join(__dirname, '..', 'content', 'sample-questions.json'), 'utf8'),
   );
   await load(content, { replace: false });
+
+  // And the games, through their importer, for the same reason.
+  const games = require('../scripts/import-games');
+  await games.load(
+    JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'content', 'python-games.json'), 'utf8')),
+    { replace: false },
+  );
   await require('../src/config/database').pool.end();
 };

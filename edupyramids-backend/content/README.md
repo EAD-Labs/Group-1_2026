@@ -101,3 +101,43 @@ Two things the converter does not do, on purpose:
 - **It does not write explanations.** The export has no column for one. Every
   question imports with a warning, and the result screen can only say right or
   wrong until the client supplies them.
+
+# Game content format
+
+Games live in `python-games.json`, loaded with
+`node scripts/import-games.js content/python-games.json` (`--dry-run` to check,
+`--replace` to update games already loaded). Same rule as questions: the whole
+file loads, or nothing does.
+
+A list of topics, each with a list of games. Every game has a `title`, a
+`kind` and optional `instructions`. The rest depends on the kind:
+
+```json
+[
+  {
+    "topic": "Silver Level",
+    "level": 2,
+    "games": [
+      { "title": "Ranges", "kind": "matching",
+        "pairs": [{ "left": "list(range(3))", "right": "[0, 1, 2]", "explanation": "…" }] },
+
+      { "title": "Sort by type", "kind": "drag_drop",
+        "buckets": ["int", "float"],
+        "items": [{ "text": "7 / 2", "bucket": "float", "explanation": "…" }] },
+
+      { "title": "Loop outputs", "kind": "memory",
+        "pairs": [{ "a": "print(max([4, 9, 2]))", "b": "9", "explanation": "…" }] }
+    ]
+  }
+]
+```
+
+| Kind | What the student does | Score |
+| --- | --- | --- |
+| `matching` | Pairs each `left` with its `right` | One point per correct pair |
+| `drag_drop` | Sorts each item into a bucket | One point per item in the right bucket |
+| `memory` | Flips tiles to find each `a` and its `b` | One point per pair found; two free misses per pair, then a point off for every two misses |
+
+The importer refuses a file where two answers or tiles in one game have the
+same text (a right answer could be marked wrong), an item names a bucket the
+game does not have, or a game has fewer than two pairs, buckets or items.
