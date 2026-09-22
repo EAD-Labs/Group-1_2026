@@ -70,8 +70,41 @@ async function request(method, path, body) {
   return payload;
 }
 
+/*
+ * The last good answer to the requests a student's pages load, kept per user,
+ * so that with no connection a page shows what it saw last instead of an
+ * error. Only these paths: nothing a teacher sees, and nothing that would be
+ * wrong to show old (a quiz itself comes from the offline pack instead).
+ */
+const REMEMBERED = [/^\/progress\/\d+$/, /^\/quizzes$/, /^\/games$/, /^\/practice\/mastery$/];
+
+function memoryKey(path) {
+  let userId = 'anon';
+  try { userId = JSON.parse(localStorage.getItem('edupyramids.user'))?.id ?? 'anon'; } catch { /* anon */ }
+  return `edupyramids.${userId}.cache.${path}`;
+}
+
+async function get(path) {
+  const remembered = REMEMBERED.some((re) => re.test(path));
+  try {
+    const payload = await request('GET', path);
+    if (remembered) {
+      try { localStorage.setItem(memoryKey(path), JSON.stringify(payload)); } catch { /* full: skip */ }
+    }
+    return payload;
+  } catch (err) {
+    if (err.status === 0 && remembered) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(memoryKey(path)));
+        if (saved) return { ...saved, fromDevice: true };
+      } catch { /* nothing saved */ }
+    }
+    throw err;
+  }
+}
+
 export const client = {
-  get: (path) => request('GET', path),
+  get,
   post: (path, body) => request('POST', path, body),
   put: (path, body) => request('PUT', path, body),
   patch: (path, body) => request('PATCH', path, body),

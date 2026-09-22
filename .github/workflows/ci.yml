@@ -59,6 +59,8 @@ jobs:
           cache: npm
           cache-dependency-path: edupyramids-frontend/package-lock.json
       - run: npm ci
+      # The device's offline marking against the server's, for every game.
+      - run: npm test
       - run: npm run build
         env:
           VITE_API_URL: /api

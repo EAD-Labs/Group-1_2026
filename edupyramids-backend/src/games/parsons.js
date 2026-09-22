@@ -71,6 +71,16 @@ module.exports = {
     };
   },
 
+  /** The solution in the browser's tokens, for marking offline. */
+  offlineKey(game) {
+    const { lines, distractors, explanation } = game.content;
+    return {
+      solution: lines.map((l, i) => ({ id: token(game.id, `p${i}`), indent: l.indent })),
+      distractors: distractors.map((_, j) => token(game.id, `x${j}`)),
+      explanation: explanation ?? null,
+    };
+  },
+
   /** answers: { program: [{ id, indent }, ...] } in the order the student built it */
   mark(game, answers) {
     const { lines, distractors, explanation } = game.content;

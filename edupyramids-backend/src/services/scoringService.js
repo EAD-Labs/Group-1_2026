@@ -1,5 +1,6 @@
 const { pool } = require('../config/database');
 const { recordResponse, summariseChanges } = require('./masteryService');
+const { attemptTime } = require('./attemptTime');
 
 /*
  * Marking a quiz attempt.
@@ -29,7 +30,7 @@ class ScoringError extends Error {
  * @param {object}  input.answers          { [questionId]: 'a' | 'b' | 'c' | 'd' }
  * @param {string} [input.clientAttemptId] UUID made by the client when it opened the quiz
  */
-async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptId }) {
+async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptId, answeredAt }) {
   const client = await pool.connect();
 
   try {
@@ -77,13 +78,13 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
     // rows that carry a client id, so an attempt sent without one still saves.
     const inserted = await client.query(
       `INSERT INTO attempts
-         (student_id, kind, quiz_id, topic_id, score, max_score, answers, client_attempt_id)
-       VALUES ($1, 'quiz', $2, $3, $4, $5, $6, $7)
+         (student_id, kind, quiz_id, topic_id, score, max_score, answers, client_attempt_id, created_at)
+       VALUES ($1, 'quiz', $2, $3, $4, $5, $6, $7, COALESCE($8, now()))
        ON CONFLICT (client_attempt_id) WHERE client_attempt_id IS NOT NULL
        DO NOTHING
        RETURNING id, created_at`,
       [studentId, quizId, topicId, score, maxScore,
-        JSON.stringify(answers), clientAttemptId ?? null],
+        JSON.stringify(answers), clientAttemptId ?? null, attemptTime(answeredAt)],
     );
 
     let attempt = inserted.rows[0];

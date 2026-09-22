@@ -63,6 +63,18 @@ module.exports = {
     return { match, explanation: match ? game.content.pairs[index.get(first)].explanation ?? null : null };
   },
 
+  /** What the device needs to check pairs and mark offline. */
+  offlineKey(game) {
+    const { pairs } = game.content;
+    const pairOf = {};
+    const side = {};
+    pairs.forEach((_, i) => {
+      pairOf[token(game.id, `a${i}`)] = i; side[token(game.id, `a${i}`)] = 'a';
+      pairOf[token(game.id, `b${i}`)] = i; side[token(game.id, `b${i}`)] = 'b';
+    });
+    return { pairOf, side, explanation: pairs.map((p) => p.explanation ?? null) };
+  },
+
   /** answers: { moves: [[tileId, tileId], ...] } */
   mark(game, answers) {
     const index = pairIndex(game);

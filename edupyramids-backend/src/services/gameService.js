@@ -2,6 +2,7 @@ const { pool } = require('../config/database');
 const Game = require('../models/Game');
 const { kindOf } = require('../games');
 const { GameError, token } = require('../games/common');
+const { attemptTime } = require('./attemptTime');
 
 /*
  * Delivering and marking games, for every kind.
@@ -42,7 +43,7 @@ async function checkMove(gameId, body) {
   return kind.check(game, body || {});
 }
 
-async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptId }) {
+async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptId, answeredAt }) {
   const { game, kind } = await load(gameId);
   const { feedback, score, maxScore, extra = {} } = kind.mark(game, answers);
 
@@ -51,13 +52,13 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
     await client.query('BEGIN');
     const inserted = await client.query(
       `INSERT INTO attempts
-         (student_id, kind, game_id, topic_id, score, max_score, answers, client_attempt_id)
-       VALUES ($1, 'game', $2, $3, $4, $5, $6, $7)
+         (student_id, kind, game_id, topic_id, score, max_score, answers, client_attempt_id, created_at)
+       VALUES ($1, 'game', $2, $3, $4, $5, $6, $7, COALESCE($8, now()))
        ON CONFLICT (client_attempt_id) WHERE client_attempt_id IS NOT NULL
        DO NOTHING
        RETURNING id`,
       [studentId, game.id, game.topicId, score, maxScore,
-        JSON.stringify(answers), clientAttemptId ?? null],
+        JSON.stringify(answers), clientAttemptId ?? null, attemptTime(answeredAt)],
     );
 
     let attemptId = inserted.rows[0]?.id;

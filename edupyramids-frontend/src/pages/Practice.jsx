@@ -33,7 +33,9 @@ export default function Practice() {
       setPick(res.data);
     } catch (err) {
       if (err.status === 404) setFinished(true);
-      else setError(err.message);
+      else if (err.status === 0) {
+        setError('Practice picks each question from your whole record, so it needs a connection. Quizzes and games you have downloaded still work offline.');
+      } else setError(err.message);
     } finally {
       setBusy(false);
     }

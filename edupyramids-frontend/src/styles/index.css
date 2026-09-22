@@ -1835,3 +1835,26 @@ tr.is-open > td { border-bottom-color: transparent; }
 
 /* A centred grid item shrinks to its content unless told to fill the column. */
 .app--nav .page { width: 100%; }
+
+/* ---- offline ---- */
+.sync {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.3rem 0.8rem; margin-bottom: 0.75rem;
+  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+}
+.sync-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #2F9E5B; }
+.sync--off { background: #FFF3DC; border-color: #F5D38F; }
+.sync--off .sync-dot { background: var(--amber); }
+.sync-now { font-size: 13px; }
+
+.offline-note {
+  background: #FFF3DC; border-left: 3px solid var(--amber);
+  border-radius: var(--radius-sm); padding: 0.55rem 0.8rem;
+  font-size: 14px; margin-bottom: var(--gap);
+}
+
+.offline-card { display: grid; gap: 0.75rem; margin-top: var(--gap); }
+.offline-head { display: flex; gap: 0.9rem; align-items: flex-start; }
+.offline-icon { font-size: 26px; width: 2.8rem; height: 2.8rem; flex: none; display: grid; place-items: center; border-radius: var(--radius); background: var(--brand-tint); }
+.offline-title { font-size: 18px; margin: 0 0 0.2rem; }

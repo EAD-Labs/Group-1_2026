@@ -35,6 +35,15 @@ module.exports = {
     items: game.content.items.map((it, i) => ({ id: token(game.id, `o${i}`), code: it.code })),
   }),
 
+  /** What the device needs to mark offline, in the same tokens the browser sends. */
+  offlineKey(game) {
+    const { items } = game.content;
+    return {
+      output: Object.fromEntries(items.map((it, i) => [token(game.id, `o${i}`), normaliseOutput(it.output)])),
+      explanation: Object.fromEntries(items.map((it, i) => [token(game.id, `o${i}`), it.explanation ?? null])),
+    };
+  },
+
   /** answers: { [itemId]: "typed output" } */
   mark(game, answers) {
     const feedback = game.content.items.map((it, i) => {

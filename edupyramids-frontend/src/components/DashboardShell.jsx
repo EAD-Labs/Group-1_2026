@@ -1,5 +1,6 @@
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { auth } from '../utils/auth';
+import SyncStatus from '../offline/SyncStatus';
 
 /*
  * The frame every signed-in page shares.
@@ -93,6 +94,7 @@ export default function DashboardShell({ title, children, wide, back, note, acti
             {note && <span className="muted small">{note}</span>}
           </p>
         )}
+        {user?.role === 'student' && <SyncStatus />}
         <div className="page-head">
           <h1>{title}</h1>
           {actions && <div className="page-actions">{actions}</div>}

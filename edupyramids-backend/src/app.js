@@ -30,6 +30,7 @@ app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/school', require('./routes/school'));
 app.use('/api/practice', require('./routes/practice'));
 app.use('/api/content', require('./routes/content'));
+app.use('/api/offline', require('./routes/offline'));
 
 /*
  * The built interface, served from the same origin as the API.
@@ -47,7 +48,9 @@ if (fs.existsSync(path.join(distDir, 'index.html'))) {
   // on naming the previous build's hashes long after those files are gone.
   app.use(express.static(distDir, {
     setHeaders: (res, filePath) => {
-      if (filePath.endsWith('index.html')) res.setHeader('Cache-Control', 'no-cache');
+      if (filePath.endsWith('index.html') || filePath.endsWith('sw.js')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      }
     },
   }));
 

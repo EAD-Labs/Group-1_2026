@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { client } from '../../api/client';
+import { checkMemory } from '../../offline/markers';
 
 /*
  * Flip two tiles at a time to find each piece of code and its output.
@@ -38,7 +39,15 @@ export default function MemoryBoard({ game, onFinish, sending }) {
     setMoves((m) => [...m, [first, id]]);
 
     try {
-      const { data } = await client.post(`/games/${game.id}/check`, { first, second: id });
+      // Online, the server says; offline, the downloaded key does.
+      let data;
+      try {
+        if (game.offline) throw Object.assign(new Error('offline'), { status: 0 });
+        ({ data } = await client.post(`/games/${game.id}/check`, { first, second: id }));
+      } catch (err) {
+        if (err.status !== 0 || !game.key) throw err;
+        data = checkMemory(game, first, id);
+      }
       if (data.match) {
         setMatched((s) => new Set([...s, first, id]));
         setUp([]);

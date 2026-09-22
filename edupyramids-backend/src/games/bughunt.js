@@ -47,6 +47,16 @@ module.exports = {
     })),
   }),
 
+  /** What the device needs to mark offline, in the same tokens the browser sends. */
+  offlineKey(game) {
+    const { items } = game.content;
+    return {
+      bugLine: Object.fromEntries(items.map((it, i) => [token(game.id, `b${i}`), it.bugLine])),
+      fix: Object.fromEntries(items.map((it, i) => [token(game.id, `b${i}`), token(game.id, `b${i}f${it.fix}`)])),
+      explanation: Object.fromEntries(items.map((it, i) => [token(game.id, `b${i}`), it.explanation ?? null])),
+    };
+  },
+
   /** answers: { [itemId]: { line: 1-based number, fix: fixId } } */
   mark(game, answers) {
     let score = 0;

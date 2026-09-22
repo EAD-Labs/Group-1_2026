@@ -3,6 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 import { kindOf } from '../games/registry';
+import { findGame } from '../offline/pack';
+import { markGame } from '../offline/markers';
+import { enqueue } from '../offline/outbox';
 
 /*
  * One game, start to finish, whatever its kind.
@@ -23,26 +26,45 @@ export default function Game() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const clientAttemptId = useMemo(() => crypto.randomUUID(), [round]);
 
+  // The downloaded copy, with its marking key, if offline use is on.
+  const offlineGame = useMemo(() => findGame(id), [id]);
+
   useEffect(() => {
     let live = true;
     setGame(null);
     client.get(`/games/${id}`)
       .then((res) => live && setGame(res.data))
-      .catch((err) => live && setError(err.message));
+      .catch((err) => {
+        if (!live) return;
+        if (err.status === 0 && offlineGame) setGame({ ...offlineGame, offline: true });
+        else {
+          setError(err.status === 0
+            ? 'You are offline, and this game has not been downloaded. Turn on offline use under Progress while connected.'
+            : err.message);
+        }
+      });
     return () => { live = false; };
-  }, [id, round]);
+  }, [id, round, offlineGame]);
 
   const finish = useCallback(async (answers) => {
     setSending(true);
+    const body = { answers, clientAttemptId, answeredAt: new Date().toISOString() };
     try {
-      const res = await client.post(`/games/${id}/results`, { answers, clientAttemptId });
+      if (game?.offline) throw Object.assign(new Error('offline'), { status: 0 });
+      const res = await client.post(`/games/${id}/results`, body);
       setResult(res.data);
     } catch (err) {
-      setError(err.message);
+      if (err.status === 0 && offlineGame) {
+        // Marked here for the student now; uploaded and marked again later.
+        enqueue({ path: `/games/${id}/results`, body, title: offlineGame.title });
+        setResult({ ...markGame(offlineGame, answers), savedOffline: true });
+      } else {
+        setError(err.message);
+      }
     } finally {
       setSending(false);
     }
-  }, [id, clientAttemptId]);
+  }, [id, clientAttemptId, game, offlineGame]);
 
   function playAgain() {
     setResult(null);
@@ -107,6 +129,11 @@ function GameResult({ result, onAgain }) {
 
   return (
     <DashboardShell title={`${result.title} — your result`} back={{ to: '/play', label: 'All games' }}>
+      {result.savedOffline && (
+        <p className="offline-note" role="status">
+          Marked on this device. It will be saved to your record when you are next online.
+        </p>
+      )}
       <div className="result-score">
         <p className="stat-value big">{result.score} / {result.maxScore}</p>
         <p className="muted">

@@ -75,7 +75,7 @@ router.post('/:id/results', async (req, res, next) => {
   const id = idFrom(req, res);
   if (id === null) return undefined;
 
-  const { answers, clientAttemptId } = req.body || {};
+  const { answers, clientAttemptId, answeredAt } = req.body || {};
   if (answers !== undefined && (typeof answers !== 'object' || answers === null || Array.isArray(answers))) {
     return res.status(400).json({ error: 'answers must be an object' });
   }
@@ -85,7 +85,7 @@ router.post('/:id/results', async (req, res, next) => {
 
   try {
     const result = await markGameAttempt({
-      gameId: id, studentId: req.user.userId, answers: answers || {}, clientAttemptId,
+      gameId: id, studentId: req.user.userId, answers: answers || {}, clientAttemptId, answeredAt,
     });
     return res.status(result.duplicate ? 200 : 201).json({ success: true, data: result });
   } catch (err) {

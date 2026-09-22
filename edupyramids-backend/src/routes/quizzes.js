@@ -82,7 +82,7 @@ router.post('/:id/attempts', async (req, res, next) => {
       return res.status(400).json({ error: 'Quiz id must be a number' });
     }
 
-    const { answers, clientAttemptId } = req.body || {};
+    const { answers, clientAttemptId, answeredAt } = req.body || {};
     if (answers !== undefined && (typeof answers !== 'object' || Array.isArray(answers))) {
       return res.status(400).json({ error: 'answers must be an object of questionId to letter' });
     }
@@ -95,6 +95,7 @@ router.post('/:id/attempts', async (req, res, next) => {
       studentId: req.user.userId,
       answers: answers || {},
       clientAttemptId,
+      answeredAt,
     });
 
     return res.status(result.duplicate ? 200 : 201).json({ success: true, data: result });

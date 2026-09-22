@@ -56,6 +56,22 @@ Test accounts, all with the password `password123`: `student1@school.com`,
 `npm test` in the backend rebuilds a separate `edupyramids_test` database and
 runs the suite. The same tests run on GitHub for every push.
 
+## Offline use
+
+Students can turn on **Use without internet** on their Progress page. That
+downloads every quiz and game, with the answers needed to mark them, about
+60 KB, and the app itself is kept on the device by a service worker, so it
+opens and runs with no connection. Quizzes and games are marked on the device
+for instant feedback; each finished attempt waits in a queue and uploads when
+the connection returns, where the server marks it again and records it with
+the time it was actually done. Practice, sign-in and the staff pages still need
+a connection.
+
+It is opt-in because it puts the answers on the device: fine for a lab tablet,
+and it cannot change a student's record, since the server re-marks every
+upload. `edupyramids-frontend/src/offline/markers.test.js` checks that the
+device marks every game exactly as the server does.
+
 ## Deploying on Render
 
 The service was created from the public repository URL, so Render does not

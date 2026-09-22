@@ -1,5 +1,6 @@
 import DashboardShell from '../components/DashboardShell';
 import ConceptMap from '../components/ConceptMap';
+import OfflineCard from '../offline/OfflineCard';
 import { auth } from '../utils/auth';
 import { useApi } from '../utils/useApi';
 
@@ -32,6 +33,8 @@ export default function Me() {
         <Stat label="Quizzes and games" value={summary.attempts} note="finished" />
         <Stat label="Badges" value={badges.length} />
       </div>
+
+      <OfflineCard />
 
       {practisable.length > 0 && (
         <>

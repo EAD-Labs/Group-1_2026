@@ -4,6 +4,9 @@ import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 import { auth } from '../utils/auth';
 import { MasteryMoves } from './Practice';
+import { findQuiz, quizForPlay } from '../offline/pack';
+import { checkQuestion, markQuiz } from '../offline/markers';
+import { enqueue } from '../offline/outbox';
 
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 
@@ -67,13 +70,28 @@ export default function Quiz() {
   // double submit record one attempt instead of two.
   const clientAttemptId = useMemo(() => crypto.randomUUID(), []);
 
+  // Set when the quiz came from the offline pack: marking then happens on
+  // the device, and the attempt waits in the outbox until there is a network.
+  const offlineQuiz = useMemo(() => findQuiz(id), [id]);
+  const [offline, setOffline] = useState(false);
+
   useEffect(() => {
     let live = true;
     client.get(`/quizzes/${id}`)
       .then((res) => live && setQuiz(res.data))
-      .catch((err) => live && setError(err.message));
+      .catch((err) => {
+        if (!live) return;
+        if (err.status === 0 && offlineQuiz) {
+          setOffline(true);
+          setQuiz(quizForPlay(offlineQuiz));
+        } else {
+          setError(err.status === 0
+            ? 'You are offline, and this quiz has not been downloaded. Turn on offline use under Progress while connected.'
+            : err.message);
+        }
+      });
     return () => { live = false; };
-  }, [id]);
+  }, [id, offlineQuiz]);
 
   if (error) {
     return (
@@ -98,14 +116,18 @@ export default function Quiz() {
   async function choose(letter) {
     if (verdicts[question.id]) return;                 // already answered
     setAnswers((a) => ({ ...a, [question.id]: letter }));
+    const onDevice = () => (offlineQuiz ? checkQuestion(offlineQuiz, question.id, letter) : null);
     try {
+      if (offline) throw Object.assign(new Error('offline'), { status: 0 });
       const res = await client.post(`/quizzes/${id}/check`,
         { questionId: question.id, answer: letter });
       setVerdicts((v) => ({ ...v, [question.id]: res.data }));
     } catch {
-      // If the check cannot be reached, the answer still stands and is marked
-      // on submit; the student just does not get told early.
-      setVerdicts((v) => ({ ...v, [question.id]: { unavailable: true } }));
+      // No connection: mark on the device if the quiz was downloaded. If not,
+      // the answer still stands and is marked on submit; the student just
+      // does not get told early.
+      const local = onDevice();
+      setVerdicts((v) => ({ ...v, [question.id]: local || { unavailable: true } }));
     }
   }
   const answered = Object.keys(answers).length;
@@ -113,12 +135,21 @@ export default function Quiz() {
 
   async function finish() {
     setSending(true);
+    const body = { answers, clientAttemptId, answeredAt: new Date().toISOString() };
     try {
-      const res = await client.post(`/quizzes/${id}/attempts`, { answers, clientAttemptId });
+      if (offline) throw Object.assign(new Error('offline'), { status: 0 });
+      const res = await client.post(`/quizzes/${id}/attempts`, body);
       try { localStorage.removeItem(progressKey(id)); } catch { /* ignore */ }
       setResult(res.data);
     } catch (err) {
-      setError(err.message);
+      if (err.status === 0 && offlineQuiz) {
+        // Marked here for the student now; uploaded and marked again later.
+        enqueue({ path: `/quizzes/${id}/attempts`, body, title: offlineQuiz.title });
+        try { localStorage.removeItem(progressKey(id)); } catch { /* ignore */ }
+        setResult({ ...markQuiz(offlineQuiz, answers), savedOffline: true });
+      } else {
+        setError(err.message);
+      }
     } finally {
       setSending(false);
     }
@@ -264,6 +295,11 @@ function Result({ quiz, result }) {
 
   return (
     <DashboardShell title={`${quiz.topic} — your result`} back={{ to: '/learn', label: 'All topics' }}>
+      {result.savedOffline && (
+        <p className="offline-note" role="status">
+          Marked on this device. It will be saved to your record when you are next online.
+        </p>
+      )}
       <div className="result-score">
         <p className="stat-value big">{shown} / {result.maxScore}</p>
         <p className="muted">{result.percent}%
