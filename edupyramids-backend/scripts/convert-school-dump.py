@@ -22,8 +22,13 @@ TABLES = [
     'stp_training_organization', 'stp_training_academiccenter',
     'stp_training_academicsession', 'stp_training_grade', 'stp_training_section',
     'stp_training_category', 'stp_training_batch',
-    'accounts_user', 'accounts_profile',
+    # Roles: school sign-in reads them from here, so without it every school
+    # login fails. accounts_profile (phone, date of birth, address) is left out:
+    # nothing here reads it.
+    'accounts_user', 'accounts_userrolemapping',
     'stp_training_student', 'stp_training_studentenrollment',
+    # Who is on which course (Python), per the client's schema.
+    'stp_training_fosscategory', 'stp_training_training', 'stp_training_trainingenrollment',
 ]
 
 TYPES = [
@@ -42,6 +47,17 @@ TYPES = [
     (re.compile(r'\bdouble\b', re.I), 'double precision'),
     (re.compile(r'\bdecimal\(', re.I), 'numeric('),
 ]
+
+INDEXES = """
+CREATE INDEX IF NOT EXISTS school_user_email ON accounts_user (lower(email) text_pattern_ops);
+CREATE INDEX IF NOT EXISTS school_user_username ON accounts_user (lower(username) text_pattern_ops);
+CREATE INDEX IF NOT EXISTS school_user_spk ON accounts_user (spk_user_id);
+CREATE INDEX IF NOT EXISTS school_role_user ON accounts_userrolemapping (user_id);
+CREATE INDEX IF NOT EXISTS school_student_user ON stp_training_student (user_id);
+CREATE INDEX IF NOT EXISTS school_enrol_student ON stp_training_studentenrollment (student_id);
+CREATE INDEX IF NOT EXISTS school_enrol_batch ON stp_training_studentenrollment (batch_id);
+ANALYZE;
+"""
 
 DROP_LINE = re.compile(r'^\s*(KEY|UNIQUE KEY|CONSTRAINT|FULLTEXT KEY|INDEX)\b', re.I)
 
@@ -139,6 +155,11 @@ def main():
                 if line.rstrip().endswith(';'):
                     mode = None
                     emitting = False
+
+        # The dump's own KEY lines are dropped with the MySQL syntax, so add
+        # back the indexes the app's lookups use. Without them a sign-in scans
+        # a million accounts.
+        out.write('\n' + INDEXES)
 
     print('converted:')
     for t in TABLES:

@@ -20,3 +20,10 @@ coverage/
 .idea/
 .DS_Store
 *.swp
+
+# The client's school database dump and its converted copy hold real people's
+# data. They stay on the machine that uses them and are never committed.
+school_db*.sql
+school_pg*.sql
+*.dump
+__pycache__/

@@ -46,6 +46,43 @@ A cluster you own, needing no root, works fine:
   -o "-p 5432 -k /tmp/edupg-sock -c listen_addresses=127.0.0.1" start
 ```
 
+## Using the school data locally
+
+The client's decision (22 September) is to use their school data locally for
+now, with no changes to their APIs. The app reads it from a read-only copy of
+their database dump, in a separate database it never writes to. That powers
+school sign-in, roster search and the coordinator's school panel. The hosted
+pilot on Render does not have it.
+
+```bash
+# 1. Convert the MySQL dump to PostgreSQL, keeping only the tables the app reads
+#    (accounts, roles, schools, batches, students, enrolments, trainings) and
+#    adding the indexes its lookups need. Profiles, OTPs and sessions are left out.
+python scripts/convert-school-dump.py /path/to/school_db-2026-09-01.sql school_pg.sql
+
+# 2. Load it into its own database: about two minutes for 1.18M accounts
+createdb school_db
+psql -d school_db -f school_pg.sql
+
+# 3. Point the app at it in .env, then restart
+SCHOOL_DB_NAME=school_db
+SCHOOL_DB_HOST=127.0.0.1
+SCHOOL_DB_USER=postgres
+SCHOOL_DB_PASSWORD=
+```
+
+At startup the server logs `[school-db] read-only mirror: … accounts`. The
+connection is opened read-only, so a mistaken write fails instead of changing
+the client's records. Neither SQL file may be committed; `.gitignore` excludes
+them.
+
+Roles come from `accounts_userrolemapping`, counting only approved mappings in
+date. In the September dump that is 68,062 students, 536 school coordinators
+(`main_school_coord`), 178 invigilators (treated as teachers; the one `teacher`
+mapping is still pending), 5 national coordinators and 2 organisation
+partners. The training tables are empty, so the dump does not yet say who is
+on the Python course.
+
 ## The endpoints
 
 All under `/api`. Everything except `POST /auth/login` and `GET /health` needs
