@@ -1,21 +1,24 @@
 # EduPyramids — backend
 
-API and database for the EduPyramids Gamified Learning Companion.
-Week 3 deliverable: **Milestone 1, Working App Skeleton**, plus the Week 4 quiz
-module and the analytics the Week 8 and 9 dashboards run on.
+API and database for the EduPyramids Gamified Learning Companion: sign-in for
+three roles, the quiz module, seven kinds of game, adaptive practice driven by
+Bayesian Knowledge Tracing, class analytics, and question generation from
+Spoken Tutorial videos.
 
-Node.js + Express + PostgreSQL. Games (Week 5) and the points, levels and badges
-rules engine (Week 7) are the parts still to come.
+Node.js + Express + PostgreSQL. Still to come: the Week 7 points, levels and
+badges rules, and coordinator content editing.
 
 ## Running it
 
 ```bash
 npm install
-cp .env.example .env          # then set JWT_SECRET
-createdb edupyramids_dev      # or: psql -U postgres -c "CREATE DATABASE edupyramids_dev;"
-psql -U postgres -d edupyramids_dev -f migrations/001_init.sql
+cp .env.example .env                              # then set JWT_SECRET
+createdb edupyramids_dev
+npm run migrate                                   # every file in migrations/, safe to repeat
+npm run import content/python-mcqs.json           # loads content/concepts.json first
+npm run import:games content/python-games.json
 npm run seed
-npm run dev                   # http://localhost:5000
+npm run dev                                       # http://localhost:5000
 ```
 
 `npm run seed` prints the test accounts. All of them use the password
@@ -45,29 +48,25 @@ A cluster you own, needing no root, works fine:
 
 ## The endpoints
 
-Twelve, all under `/api`. Everything except `POST /auth/login` needs
+All under `/api`. Everything except `POST /auth/login` and `GET /health` needs
 `Authorization: Bearer <token>`.
 
-| # | Method | Path | Who | Notes |
-| --- | --- | --- | --- | --- |
-| 1 | POST | `/auth/login` | anyone | Returns the user and a JWT |
-| 2 | POST | `/auth/logout` | signed in | The client drops the token |
-| 3 | GET | `/auth/me` | signed in | Who this token belongs to |
-| 4 | GET | `/quizzes` | signed in | Real query; empty until Week 4 content |
-| 5 | GET | `/quizzes/:id` | signed in | Questions without the answer key |
-| 6 | POST | `/quizzes/:id/attempts` | signed in | Marks and stores the attempt |
-| 7 | GET | `/games` | signed in | Real query; empty until Week 5 |
-| 8 | GET | `/games/:id` | signed in | |
-| 9 | POST | `/games/:id/results` | signed in | `implemented: false` until Week 5 |
-| 10 | GET | `/progress/:studentId` | self, or staff | Students may read only their own |
-| 11 | GET | `/analytics/classes/:classId` | teacher, coordinator | A teacher only gets their own class |
-| 12 | GET | `/classes` | signed in | Scoped by role: own class, or all of them |
+| Area | Routes | Who |
+| --- | --- | --- |
+| Sign-in | `POST /auth/login`, `POST /auth/logout`, `GET /auth/me` | anyone / signed in |
+| Quizzes | `GET /quizzes`, `GET /quizzes/:id`, `POST /quizzes/:id/check`, `POST /quizzes/:id/attempts` | signed in |
+| Games | `GET /games`, `GET /games/:id`, `POST /games/:id/check`, `POST /games/:id/results` | signed in |
+| Practice | `GET /practice/mastery`, `GET /practice/next`, `POST /practice/answer` | students |
+| Progress | `GET /progress/:studentId` | self, or staff |
+| Classes | `GET /classes` | scoped by role |
+| Analytics | `GET /analytics/classes/:id`, `GET /analytics/classes/:id/mastery`, `GET /analytics/students/:id` | a teacher's own class, or a coordinator |
+| School database | `GET /school/stats`, `GET /school/students?q=` | coordinators |
+| Question generator | `GET /content/videos`, `POST /content/videos/:slug/generate`, `POST /content/generate`, `GET/PATCH /content/drafts…`, `POST /content/drafts/:id/approve`, `…/reject` | teachers, coordinators |
 
-`GET /api/health` also exists for deployment checks and is not counted.
+`GET /api/health` answers without a token, for the deploy's health check.
 
-`POST /games/:id/results` still answers `200` with `implemented: false` rather
-than pretending to have saved something — game marking is Week 5. It is wired so
-the client can be built against it now.
+Games are one module per kind in `src/games`; how to add a kind is in
+[`content/README.md`](content/README.md).
 
 ## Loading questions
 
@@ -107,21 +106,24 @@ createdb edupyramids_test     # once
 npm test
 ```
 
-42 tests over the sign-in rules, access control and the quiz module. They run
+111 tests over sign-in, access control, quizzes, every game kind, the mastery
+model, question generation (with Gemini faked) and the migrations. They run
 against `edupyramids_test`, which is dropped and rebuilt on every run, so
-development data is never touched and no test can pass on a leftover row.
+development data is never touched and no test can pass on a leftover row. The
+same suite runs on GitHub for every push (`.github/workflows/ci.yml`).
 
-Test names carry the HLD test number they cover, so a failure points straight at
-the acceptance criterion it breaks:
+Test names carry the HLD test number they cover where there is one, so a
+failure points straight at the acceptance criterion it breaks:
 
 | Suite | Covers |
 | --- | --- |
-| `auth.test.js` | A1, A2 — signing in, and every failure looking identical |
-| `access.test.js` | A3, C5, C7, C8 — who may read what, and which classes are offered |
-| `quiz.test.js` | A4, A5, A6, A7, C9 — loading content, marking, double submits |
-
-The suite has been checked against the defect it exists to catch: putting the
-draft's distinct `Role mismatch` message back fails exactly one test.
+| `auth.test.js` | A1, A2: signing in, and every failure looking identical |
+| `access.test.js` | A3, C5, C7, C8: who may read what, and which classes are offered |
+| `quiz.test.js` | A4, A5, A6, A7, C9: loading content, marking, double submits |
+| `games.test.js`, `gameKinds.test.js` | every game of every kind: no answers sent, full and empty marks, partial credit |
+| `mastery.test.js` | knowledge tracing arithmetic, spaced review, practice selection, the class heatmap |
+| `content.test.js` | subtitles to transcript, checking Gemini's output, draft review and approval |
+| `migrations.test.js` | every migration re-runs on a database that already has data |
 
 ## Checking it works
 
@@ -185,9 +187,12 @@ logged.
 
 ## Still outstanding
 
-- The school authentication endpoint and API key, from the client.
-- The student roster, for seeding real accounts.
-- The MCQ content file, needed before Week 4.
+- School sign-in and roster APIs from the client's Django project, to replace
+  the direct reads in `src/models/School.js` (proposal shared 18 September).
+- The mapping from the school's roles to ours, and how teachers link to batches.
+- Explanations for the client's 136 questions; the importer warns about each
+  one missing.
 
-The login throttle is in memory, which is correct for one process at pilot
-scale. A second instance needs it moved into the database or a cache.
+The login and generation throttles are in memory, which is correct for one
+process at pilot scale. A second instance needs them moved into the database
+or a cache.

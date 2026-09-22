@@ -6,7 +6,7 @@
  * single row is written, and the write is one transaction, so a mistake in the
  * last game leaves the database exactly as it was.
  *
- *   node scripts/import-games.js <file> [--replace] [--dry-run]
+ *   node scripts/import-games.js <file> [--replace] [--dry-run] [--quiet]
  *
  * The format is in content/README.md.
  */
@@ -127,9 +127,12 @@ async function main() {
   const file = args.find((a) => !a.startsWith('--'));
   const replace = args.includes('--replace');
   const dryRun = args.includes('--dry-run');
+  // --quiet drops the per-item warnings (a boot log does not need 136 of them);
+  // errors are still printed and still stop the import.
+  const quiet = args.includes('--quiet');
 
   if (!file) {
-    console.error('Usage: node scripts/import-games.js <file> [--replace] [--dry-run]');
+    console.error('Usage: node scripts/import-games.js <file> [--replace] [--dry-run] [--quiet]');
     process.exit(2);
   }
 
@@ -143,7 +146,7 @@ async function main() {
   }
 
   const { errors, warnings, topics } = validate(raw);
-  warnings.forEach((w) => console.warn(`  warning  ${w}`));
+  if (!quiet) warnings.forEach((w) => console.warn(`  warning  ${w}`));
 
   if (errors.length) {
     console.error(`\nRefused ${path.basename(full)} — ${errors.length} problem(s). ` +

@@ -8,8 +8,8 @@ node scripts/migrate.js
 
 # The client's questions and the games. Content already loaded is left alone,
 # so this only adds what is new.
-node scripts/import-questions.js content/python-mcqs.json > /dev/null
-node scripts/import-games.js content/python-games.json
+node scripts/import-questions.js content/python-mcqs.json --quiet
+node scripts/import-games.js content/python-games.json --quiet
 
 # Test accounts (password123), only when asked for.
 # Leave SEED_DEMO_DATA unset on anything real.

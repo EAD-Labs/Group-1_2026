@@ -1,12 +1,8 @@
 # EduPyramids — frontend
 
-Web client for the EduPyramids Gamified Learning Companion.
-Week 3 deliverable: **Milestone 1, Working App Skeleton**.
-
-React + Vite + React Router. This week covers signing in, keeping the session
-and routing each role to its own dashboard. The dashboards themselves are
-placeholders: topics and quizzes arrive in Week 4, games in Week 5, class
-analytics in Week 8.
+Web client for the EduPyramids Gamified Learning Companion, for students,
+teachers and coordinators. React + Vite + React Router, no UI framework. The
+look follows the EduPyramids School website (school.edupyramids.org).
 
 ## Running it
 
@@ -27,21 +23,33 @@ part was wrong.
 
 ```
 src/
-├── api/client.js              fetch wrapper: base URL, JWT header, 401 handling
+├── api/client.js            fetch wrapper: base URL, JWT header, 401 handling
 ├── components/
-│   ├── Login.jsx              role tabs, validation, the sign-in call
-│   ├── ProtectedRoute.jsx     route guard
-│   ├── DashboardShell.jsx     shared header and log out
-│   └── ErrorBoundary.jsx      catches a render crash
-├── pages/                     three dashboard placeholders
-├── styles/index.css           design tokens and every style
-├── utils/auth.js              session state on top of localStorage
-├── App.jsx                    routes
-└── main.jsx                   entry point
+│   ├── DashboardShell.jsx   the frame for every page: sidebar on wide screens,
+│   │                        tab bar on phones, tabs chosen by role
+│   ├── Login.jsx            role tabs, validation, the sign-in call
+│   ├── ClassReport.jsx      a class's figures, shared by teacher and coordinator
+│   ├── MasteryHeatmap.jsx   students by concept, for teachers
+│   ├── ConceptMap.jsx       a student's concepts
+│   ├── GameTile.jsx         one game as a tile
+│   └── …                    ProtectedRoute, ErrorBoundary, SchoolPanel
+├── games/
+│   ├── registry.js          every game kind: label, icon, skill, Board
+│   └── <kind>/Board.jsx     one board per kind (matching, sort, memory,
+│                            fillblank, predict, parsons, bughunt)
+├── pages/
+│   ├── StudentHome, Learn, Play, Me    the student tabs
+│   ├── Quiz, Game, Practice            the activities
+│   ├── TeacherDashboard, CoordinatorDash
+│   └── QuestionGenerator               staff
+├── styles/index.css         design tokens and every style
+├── utils/auth.js            session state on top of localStorage
+├── utils/useApi.js          load a page's data in one call
+└── App.jsx                  routes
 ```
 
-`DashboardShell.jsx` is not in the Week 3 file list. The alternative was the
-same header copied into three placeholder pages that are about to be rewritten.
+A new game kind needs a folder in `games/` and one line in `registry.js`; the
+server side is described in `edupyramids-backend/content/README.md`.
 
 ## How the session works
 
@@ -71,11 +79,10 @@ student who mistypes a URL gets a clear message instead of a broken screen.
 - Layout holds down to 360px.
 - The spinner slows right down under `prefers-reduced-motion`.
 
-## A note on the colours
+## Colours and type
 
-The tokens in `styles/index.css` — `#1e40af`, `#059669`, `#f97316` — are the
-ones named in the Week 3 specification. Worth knowing: the Week 2 deliverables
-are low-fidelity grayscale wireframes and define no palette, so despite the
-specification saying "use design tokens from Week 2", this file is the first
-place these colours have been written down. They are worth a look from the
-client before more screens are built on them.
+Taken from school.edupyramids.org and kept as tokens at the top of
+`styles/index.css`: navy `#2E3494` for structure and links, orange `#F26321`
+for the main action on a screen and for progress, amber `#F59E24` for
+highlights, lavender `#EFF0FF` for the page. Roboto for text, DM Sans for
+buttons and navigation. Bronze, silver and gold mark the three levels.

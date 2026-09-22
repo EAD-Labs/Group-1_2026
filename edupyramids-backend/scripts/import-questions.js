@@ -7,7 +7,7 @@
  * the database exactly as it was, which is what HLD test A4 checks: a partly
  * loaded quiz is worse than no quiz, because nothing tells you it is partial.
  *
- *   node scripts/import-questions.js <file> [--replace] [--dry-run]
+ *   node scripts/import-questions.js <file> [--replace] [--dry-run] [--quiet]
  */
 require('dotenv').config();
 const fs = require('fs');
@@ -209,9 +209,12 @@ async function main() {
   const file = args.find((a) => !a.startsWith('--'));
   const replace = args.includes('--replace');
   const dryRun = args.includes('--dry-run');
+  // --quiet drops the per-item warnings (a boot log does not need 136 of them);
+  // errors are still printed and still stop the import.
+  const quiet = args.includes('--quiet');
 
   if (!file) {
-    console.error('Usage: node scripts/import-questions.js <file> [--replace] [--dry-run]');
+    console.error('Usage: node scripts/import-questions.js <file> [--replace] [--dry-run] [--quiet]');
     process.exit(2);
   }
 
@@ -226,7 +229,7 @@ async function main() {
 
   const { errors, warnings, topics } = validate(raw);
 
-  warnings.forEach((w) => console.warn(`  warning  ${w}`));
+  if (!quiet) warnings.forEach((w) => console.warn(`  warning  ${w}`));
 
   if (errors.length) {
     console.error(`\nRefused ${path.basename(full)} — ${errors.length} problem(s). ` +
@@ -255,7 +258,7 @@ async function main() {
   const counts = await load(topics, { replace });
   console.log(`\nLoaded ${path.basename(full)}: ${counts.topics} topic(s), ` +
     `${counts.quizzes} quiz(zes), ${counts.questions} question(s).`);
-  if (warnings.length) console.log(`${warnings.length} warning(s) above.`);
+  if (warnings.length && !quiet) console.log(`${warnings.length} warning(s) above.`);
   await pool.end();
 }
 

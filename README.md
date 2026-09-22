@@ -7,26 +7,40 @@ Spoken Tutorial / IIT Bombay.
 **Team:** Karan Bansal (24B3003) · Aditya Koli (24B3024) ·
 Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 
+**Live pilot:** https://edupyramids.onrender.com (test accounts below)
+
+## What it does
+
+| For | What they get |
+|---|---|
+| Students | Quizzes on the client's 136 questions, 21 games of 7 kinds (matching, sorting, memory tiles, fill the blank, predict the output, Parsons puzzles, bug hunt), adaptive practice that picks the next question, and a view of their progress by concept |
+| Teachers | Their class: averages by topic, students who need help, the questions the class got wrong, and a students-by-concept mastery heatmap |
+| Coordinators | Every class, the school database (when connected), and the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve |
+
 ## Layout
 
 | Folder | What it is |
 |---|---|
-| `edupyramids-backend/` | Node/Express API, PostgreSQL schema and migrations, question importer, tests |
-| `edupyramids-frontend/` | React + Vite interface for students, teachers and coordinators |
+| `edupyramids-backend/` | Node/Express API, PostgreSQL migrations, content files and importers, tests |
+| `edupyramids-frontend/` | React + Vite interface for all three roles |
+| `render.yaml` | Render Blueprint for the hosted pilot |
+| `.github/workflows/ci.yml` | Tests and a build on every push and pull request |
 
 ## Running it
 
-Both halves need their own `.env`. Copy the example and fill it in — the real
-files are deliberately not committed.
+Both halves need their own `.env`. Copy the example and fill it in; the real
+files are never committed.
 
 ```bash
 # Backend
 cd edupyramids-backend
-cp .env.example .env          # then set DB_* and JWT_SECRET
+cp .env.example .env          # set DB_* and JWT_SECRET (GEMINI_API_KEY is optional)
 npm install
-psql -d edupyramids_dev -f migrations/001_init.sql   # then 002, 003
-node scripts/seed.js
-node scripts/import-questions.js content/python-mcqs.json
+createdb edupyramids_dev
+npm run migrate               # every file in migrations/, safe to repeat
+npm run import content/python-mcqs.json         # also loads content/concepts.json
+npm run import:games content/python-games.json
+npm run seed                  # test accounts
 npm start                     # http://localhost:5000
 
 # Frontend
@@ -36,28 +50,38 @@ npm install
 npm run dev                   # http://localhost:5173
 ```
 
+Test accounts, all with the password `password123`: `student1@school.com`,
+`teacher1@school.com`, `coordinator@school.com`.
+
 `npm test` in the backend rebuilds a separate `edupyramids_test` database and
-runs the suite.
+runs the suite. The same tests run on GitHub for every push.
 
 ## Deploying on Render
 
-`render.yaml` at the root is a Render Blueprint: one free web service and one
-free PostgreSQL database. The API serves the built React app from the same
-address, so there is only one URL.
+The service was created from the public repository URL, so Render does not
+redeploy on its own: after pushing to `main`, open the **edupyramids** service
+and choose **Manual Deploy → Deploy latest commit**. Wait for the green tick on
+the commit in GitHub first; a red cross means the tests failed.
 
-1. Render dashboard → **New** → **Blueprint** → connect this repository.
-2. Apply. The first build takes a few minutes.
-
-On every start the service applies the migrations, and while `SEED_DEMO_DATA`
-is `true` it also loads the test accounts (password `password123`) and the
-client's 136 questions. Set it to `false` before real students use the app.
+On every start the service applies the migrations and loads any new questions
+and games; content already loaded is left alone. `SEED_DEMO_DATA=true` also
+creates the test accounts. Set it to `false` before real students use the app.
+Question generation needs `GEMINI_API_KEY` set in the service's environment.
 
 Free plan limits: the service sleeps after 15 minutes idle (the next visit
-takes about a minute to wake it), and a free database expires after 30 days.
+takes about a minute), and the free database expires after 30 days.
 
 ## Status
 
-Weeks 3 and 4 of the plan in the approved HLD are complete: login for the three
-roles, the database, and the quiz module marking the client's 136 questions.
-Games (weeks 5–6), gamification (week 7) and dashboards (weeks 8–9) follow.
+| HLD plan | State |
+|---|---|
+| Weeks 3–4: sign-in for three roles, database, quiz module | Done |
+| Weeks 5–6: games | Done: 7 kinds, 21 games |
+| Week 7: points, levels and badges | Next |
+| Weeks 8–9: dashboards, content management | Class report, concept heatmap and question generator done; content editing to come |
 
+Adaptive practice and generated questions go beyond the approved HLD (v2.0,
+Section 13.2) and need the client's sign-off in an updated version.
+
+Waiting on the client: school sign-in and roster APIs (see the proposal shared
+on 18 September), and the mapping from their roles to ours.

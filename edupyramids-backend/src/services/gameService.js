@@ -91,9 +91,6 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
   }
 }
 
-/** Kept for existing callers: a memory tile check. */
-const checkMemoryPair = (gameId, first, second) => checkMove(gameId, { first, second });
-
 module.exports = {
-  getGameForStudent, checkMove, checkMemoryPair, markGameAttempt, GameError, token,
+  getGameForStudent, checkMove, markGameAttempt, GameError, token,
 };

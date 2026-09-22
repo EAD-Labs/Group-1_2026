@@ -315,7 +315,6 @@ code {
 .btn--ghost:hover:not(:disabled) { background: var(--brand-tint); box-shadow: none; }
 
 .btn--sm { width: auto; padding: 0.45rem 0.95rem; font-size: 14px; }
-.btn--off { background: var(--surface-2); color: var(--text-light); border-color: var(--border); cursor: default; box-shadow: none; }
 
 .btn--onbrand {
   width: auto;
@@ -354,24 +353,6 @@ code {
 /* ---------------------------------------------------------------- shell
    The school site's header: white, logo on the left, navy DM Sans on the
    right. */
-.shell { min-height: 100dvh; }
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap);
-  flex-wrap: wrap;
-  background: var(--surface);
-  box-shadow: 0 1px 0 var(--line), 0 4px 20px rgb(0 0 0 / 4%);
-  padding: 0.6rem clamp(1rem, 4vw, 2.5rem);
-}
-
-.topbar-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-.topbar .btn { padding: 0.45rem 0.95rem; font-size: 14px; }
 
 .who {
   font-family: var(--font-ui);
@@ -393,24 +374,6 @@ code {
   border-radius: 999px;
   padding: 0.1rem 0.6rem;
 }
-
-.pills { display: flex; align-items: center; gap: 0.5rem; }
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.pill--xp { background: var(--accent-tint); color: var(--accent-dark); }
-.pill--done { background: var(--brand-tint); color: var(--brand); }
-.pill-icon { font-size: 14px; line-height: 1; }
 
 .page { max-width: 60rem; margin: 0 auto; padding: var(--gap-xl) var(--gap-lg); }
 .page--wide { max-width: 65rem; }
@@ -446,8 +409,6 @@ code {
 .stat-value.big { font-size: 40px; }
 .stat-note { font-size: 12px; color: var(--text-light); }
 
-.bar-wrap { margin-bottom: var(--gap-lg); }
-
 .bar {
   height: 10px;
   background: var(--brand-tint);
@@ -457,7 +418,6 @@ code {
 }
 
 .bar span { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
-.bar--sm { height: 7px; }
 
 .revisit {
   background: var(--accent-tint);
@@ -477,9 +437,6 @@ code {
 }
 
 .topic { padding: var(--gap); }
-.topic-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
-.topic-head h3 { font-size: 15px; }
-.topic-meta { margin: 0.4rem 0 0.7rem; }
 
 /* ---- the hero: pick up where you left off, on the site's gradient ---- */
 .hero {
@@ -577,14 +534,6 @@ a.tile:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
 .tile--locked .tile-icon { filter: grayscale(1); opacity: 0.55; }
 
 /* ---- how you compare ---- */
-.compare { display: grid; gap: 0.6rem; margin-top: 0.4rem; }
-.compare-row { display: grid; grid-template-columns: 8.5rem 1fr 3rem; align-items: center; gap: 0.6rem; }
-.compare-label { font-size: 13px; color: var(--text-light); }
-.compare-value { font-size: 13px; font-weight: 700; text-align: right; }
-
-.compare-track { height: 12px; border-radius: 999px; background: var(--brand-tint); overflow: hidden; }
-.compare-fill { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
-.compare-fill--muted { background: var(--brand); opacity: 0.55; }
 
 .callout {
   margin-top: 0.9rem;
@@ -801,20 +750,6 @@ tr.is-open > td { border-bottom-color: transparent; }
   padding: var(--gap-xl);
   width: 100%;
 }
-
-.quiz-back {
-  display: flex; align-items: baseline; gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.quiz-back a {
-  font-family: var(--font-ui);
-  font-weight: 600; font-size: 14px;
-  color: var(--brand); text-decoration: none;
-}
-
-.quiz-back a:hover { text-decoration: underline; }
-.quiz-back a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 4px; }
 
 .quiz-top {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -1208,20 +1143,6 @@ tr.is-open > td { border-bottom-color: transparent; }
    ================================================================ */
 
 /* ---- the practice invitation on the dashboard ---- */
-.practice-cta {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--gap);
-  flex-wrap: wrap;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-left: 5px solid var(--brand);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: var(--gap) var(--gap-lg);
-  margin-bottom: var(--gap);
-}
-
-.practice-title { font-size: 18px; font-weight: 600; color: var(--text-heading); }
-.practice-sub { font-size: 14px; color: var(--text-light); }
 
 /* ---- why this question ---- */
 .why {

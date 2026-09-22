@@ -1,0 +1,64 @@
+# Runs on every push and pull request: the backend tests against a real
+# PostgreSQL, and a production build of the frontend. A red cross on GitHub
+# means do not deploy.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: edupyramids_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: edupyramids-backend
+    env:
+      TEST_DB_HOST: 127.0.0.1
+      TEST_DB_PORT: '5432'
+      TEST_DB_USER: postgres
+      TEST_DB_PASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: edupyramids-backend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      # Every content file must still load: a broken question or game file
+      # should fail here, not on the next deploy.
+      - run: node -e "const e=require('./scripts/import-concepts').validate(require('./content/concepts.json'));if(e.length){console.error(e.join('\n'));process.exit(1)}"
+      - run: node -e "const v=require('./scripts/import-games').validate(require('./content/python-games.json'));if(v.errors.length){console.error(v.errors.join('\n'));process.exit(1)}"
+        env:
+          JWT_SECRET: ci
+      - run: node -e "const v=require('./scripts/import-questions').validate(require('./content/python-mcqs.json'));if(v.errors.length){console.error(v.errors.join('\n'));process.exit(1)}"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: edupyramids-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: edupyramids-frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_API_URL: /api
