@@ -2,7 +2,7 @@ const express = require('express');
 const Game = require('../models/Game');
 const { authMiddleware } = require('../middleware/auth');
 const {
-  getGameForStudent, checkMemoryPair, markGameAttempt, GameError,
+  getGameForStudent, checkMove, markGameAttempt, GameError,
 } = require('../services/gameService');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -45,16 +45,15 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-/** POST /api/games/:id/check — do two memory tiles match? Records nothing. */
+/**
+ * POST /api/games/:id/check — an instant check during play, for kinds that
+ * have one (memory tiles: { first, second }). Records nothing.
+ */
 router.post('/:id/check', async (req, res, next) => {
   const id = idFrom(req, res);
   if (id === null) return undefined;
-  const { first, second } = req.body || {};
-  if (typeof first !== 'string' || typeof second !== 'string') {
-    return res.status(400).json({ error: 'first and second tile ids are required' });
-  }
   try {
-    return res.json({ success: true, data: await checkMemoryPair(id, first, second) });
+    return res.json({ success: true, data: await checkMove(id, req.body) });
   } catch (err) {
     return handle(err, res, next);
   }
@@ -67,6 +66,7 @@ router.post('/:id/check', async (req, res, next) => {
  *   matching   answers = { [leftId]: rightId }
  *   drag_drop  answers = { [itemId]: bucketName }
  *   memory     answers = { moves: [[tileId, tileId], ...] }
+ *   (every kind documents its own shape in src/games/<kind>.js)
  *
  * Written to the same attempts table as quizzes, with kind = 'game'. The
  * student id comes from the token, never the body.
