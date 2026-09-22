@@ -6,9 +6,10 @@
 -- them — the whole game is read, shuffled and marked in one piece.
 BEGIN;
 
+-- The list of kinds this migration once added is gone: migrations run on
+-- every boot, and re-adding a three-kind list after 007 had let newer kinds
+-- in failed on any database already holding one. 007 now owns the check.
 ALTER TABLE games DROP CONSTRAINT IF EXISTS games_kind_check;
-ALTER TABLE games ADD CONSTRAINT games_kind_check
-  CHECK (kind IN ('drag_drop', 'matching', 'memory'));
 
 ALTER TABLE games ADD COLUMN IF NOT EXISTS instructions TEXT;
 ALTER TABLE games ADD COLUMN IF NOT EXISTS content JSONB NOT NULL DEFAULT '{}'::jsonb;
