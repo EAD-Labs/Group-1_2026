@@ -33,6 +33,22 @@ app.use('/api/content', require('./routes/content'));
 app.use('/api/offline', require('./routes/offline'));
 
 /*
+ * Proof for Android that the APK and this site belong together, so the app
+ * opens without Chrome's address bar. Set on the host, not in the code:
+ * ANDROID_PACKAGE is the APK's package id and ANDROID_CERT_SHA256 the signing
+ * key's SHA-256 fingerprint (both from PWABuilder; several, comma-separated).
+ */
+app.get('/.well-known/assetlinks.json', (req, res) => {
+  const pkg = process.env.ANDROID_PACKAGE;
+  const certs = (process.env.ANDROID_CERT_SHA256 || '').split(',').map((c) => c.trim()).filter(Boolean);
+  if (!pkg || !certs.length) return res.status(404).json({ error: 'Not set up' });
+  return res.json([{
+    relation: ['delegate_permission/common.handle_all_urls'],
+    target: { namespace: 'android_app', package_name: pkg, sha256_cert_fingerprints: certs },
+  }]);
+});
+
+/*
  * The built interface, served from the same origin as the API.
  *
  * One origin means the browser never makes a cross-origin request, so a tunnel

@@ -19,7 +19,8 @@ function serviceWorker() {
       const files = Object.keys(bundle).filter((f) => !f.endsWith('.map'));
       const shell = ['/', ...files.map((f) => `/${f}`),
         '/edupyramids-logo.png', '/favicon.svg', '/favicon.ico',
-        '/icon-192.png', '/icon-512.png', '/manifest.webmanifest'];
+        '/icon-192.png', '/icon-512.png', '/icon-maskable-192.png', '/icon-maskable-512.png',
+        '/manifest.webmanifest'];
       const version = createHash('sha256').update(shell.join('|')).digest('hex').slice(0, 12);
 
       this.emitFile({

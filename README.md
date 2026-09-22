@@ -72,6 +72,24 @@ and it cannot change a student's record, since the server re-marks every
 upload. `edupyramids-frontend/src/offline/markers.test.js` checks that the
 device marks every game exactly as the server does.
 
+## Android app
+
+The site installs as an app straight from Chrome ("Install app" in the menu).
+For an APK to hand out:
+
+1. On [pwabuilder.com](https://www.pwabuilder.com), enter the deployed URL and
+   choose **Android → Generate**. It builds a signed APK (and an AAB for the Play
+   Store) that opens the site full screen. Keep the signing key and its password
+   it gives you: every later update must be signed with the same key.
+2. From the same download, copy the package id and the key's SHA-256
+   fingerprint into the Render service's environment as `ANDROID_PACKAGE` and
+   `ANDROID_CERT_SHA256`. The server then answers
+   `/.well-known/assetlinks.json`, which lets the app open without Chrome's
+   address bar.
+
+The APK is only a shell around the site, so it updates with every deploy and
+works offline exactly as the site does.
+
 ## Deploying on Render
 
 The service was created from the public repository URL, so Render does not

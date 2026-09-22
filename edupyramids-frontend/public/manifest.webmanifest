@@ -1,14 +1,26 @@
 {
+  "id": "/",
   "name": "EduPyramids Python Practice",
   "short_name": "EduPyramids",
-  "description": "Python quizzes, games and practice for Grades 9 to 12",
+  "description": "Python quizzes, games and practice for Grades 9 to 12. Works without internet once downloaded.",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#EFF0FF",
   "theme_color": "#2E3494",
+  "categories": ["education"],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "/screenshots/home-phone.png", "sizes": "390x844", "type": "image/png", "form_factor": "narrow", "label": "Your levels and what to do next" },
+    { "src": "/screenshots/game-phone.png", "sizes": "390x844", "type": "image/png", "form_factor": "narrow", "label": "Python games that work offline" },
+    { "src": "/screenshots/home-wide.png", "sizes": "1280x800", "type": "image/png", "form_factor": "wide", "label": "Student home on a laptop" }
   ]
 }

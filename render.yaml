@@ -37,6 +37,12 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-3.8-flash
+      # For the Android app (see README "Android app"). Both come from
+      # PWABuilder; until they are set /.well-known/assetlinks.json is a 404.
+      - key: ANDROID_PACKAGE
+        sync: false
+      - key: ANDROID_CERT_SHA256
+        sync: false
 
 databases:
   - name: edupyramids-db
