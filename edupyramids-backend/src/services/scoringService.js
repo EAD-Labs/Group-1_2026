@@ -1,4 +1,5 @@
 const { pool } = require('../config/database');
+const { recordResponse, summariseChanges } = require('./masteryService');
 
 /*
  * Marking a quiz attempt.
@@ -98,11 +99,25 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
       )).rows[0];
     }
 
+    // Every answer is evidence for the mastery model, stored in the same
+    // transaction as the attempt. A duplicate submit adds no evidence.
+    let mastery = [];
+    if (!duplicate) {
+      const changes = [];
+      for (const f of feedback) {
+        changes.push(await recordResponse(client, {
+          studentId, questionId: f.questionId, correct: f.correct, source: 'quiz',
+        }));
+      }
+      mastery = summariseChanges(changes);
+    }
+
     await client.query('COMMIT');
 
     return {
       attemptId: attempt.id,
       duplicate,
+      mastery,
       quizId,
       topic,
       score,

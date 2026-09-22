@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { client } from '../api/client';
+import MasteryHeatmap from './MasteryHeatmap';
 
 /*
  * One class, reported on. Shared by the teacher dashboard (their own class) and
@@ -113,6 +114,11 @@ export default function ClassReport({ classId, className }) {
           </li>
         ))}
       </ul>
+
+      <div className="section-head">
+        <h2 className="h2">Concept mastery</h2>
+      </div>
+      <MasteryHeatmap classId={classId} />
 
       {struggling.length > 0 && (
         <>

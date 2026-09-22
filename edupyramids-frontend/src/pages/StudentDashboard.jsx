@@ -4,6 +4,7 @@ import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 import { auth } from '../utils/auth';
 import { KINDS } from './Game';
+import ConceptMap from '../components/ConceptMap';
 
 /*
  * The student's own view, following the reference design: a green hero card
@@ -28,6 +29,7 @@ export default function StudentDashboard() {
   const [state, setState] = useState({ loading: true, error: null, data: null });
   const [quizzes, setQuizzes] = useState([]);
   const [games, setGames] = useState([]);
+  const [concepts, setConcepts] = useState([]);
 
   useEffect(() => {
     let live = true;
@@ -36,9 +38,11 @@ export default function StudentDashboard() {
       client.get('/quizzes'),
       // Games are extra: if they fail to load, the quizzes still show.
       client.get('/games').catch(() => ({ data: [] })),
+      client.get('/practice/mastery').catch(() => ({ data: [] })),
     ])
-      .then(([progress, quizList, gameList]) => {
+      .then(([progress, quizList, gameList, mastery]) => {
         if (!live) return;
+        setConcepts(mastery.data);
         setQuizzes(quizList.data);
         setGames(gameList.data);
         setState({ loading: false, error: null, data: progress.data });
@@ -102,6 +106,21 @@ export default function StudentDashboard() {
         </section>
       )}
 
+      {concepts.some((c) => c.questions > 0) && (
+        <section className="practice-cta">
+          <div>
+            <p className="practice-title">Adaptive practice</p>
+            <p className="practice-sub">
+              {dueCount(concepts) > 0
+                ? `${dueCount(concepts)} concept${dueCount(concepts) > 1 ? 's are' : ' is'} due for review. `
+                : ''}
+              Ten questions, each picked for what you are ready to learn next.
+            </p>
+          </div>
+          <Link className="btn btn--sm" to="/practice">Start practice</Link>
+        </section>
+      )}
+
       <h2 className="h2">Topics</h2>
       <ul className="tiles">
         {topics.map((t) => {
@@ -161,6 +180,13 @@ export default function StudentDashboard() {
         </>
       )}
 
+      {concepts.some((c) => c.questions > 0) && (
+        <>
+          <h2 className="h2">Your concepts</h2>
+          <ConceptMap concepts={concepts} />
+        </>
+      )}
+
       <h2 className="h2">Your progress</h2>
       <div className="card" style={{ padding: '1.15rem' }}>
         <div className="compare">
@@ -197,6 +223,8 @@ export default function StudentDashboard() {
     </DashboardShell>
   );
 }
+
+const dueCount = (concepts) => concepts.filter((c) => c.status === 'review').length;
 
 function Row({ label, value, percent, muted }) {
   return (

@@ -85,6 +85,11 @@ function validate(raw) {
           );
         }
 
+        if (question.concepts !== undefined && (!Array.isArray(question.concepts)
+          || !question.concepts.every((c) => typeof c === 'string' && c.trim()))) {
+          errors.push(`${at3}: "concepts" must be a list of concept slugs`);
+        }
+
         if (!question.explanation || !String(question.explanation).trim()) {
           warnings.push(`${at3}: no explanation, so the student is told only right or wrong`);
         }
@@ -93,6 +98,39 @@ function validate(raw) {
   });
 
   return { errors, warnings, topics: raw };
+}
+
+/** Link one question to its concepts by slug. An unknown slug stops the import. */
+async function tagQuestion(client, questionId, slugs = []) {
+  for (const slug of slugs) {
+    const concept = await client.query('SELECT id FROM concepts WHERE slug = $1', [slug.trim()]);
+    if (!concept.rows.length) {
+      throw new Error(`Unknown concept "${slug}". Load content/concepts.json first.`);
+    }
+    await client.query(
+      `INSERT INTO question_concepts (question_id, concept_id) VALUES ($1, $2)
+       ON CONFLICT DO NOTHING`,
+      [questionId, concept.rows[0].id],
+    );
+  }
+}
+
+/**
+ * Tag the questions of a quiz that is already loaded. Questions are matched by
+ * their text, in order, so two questions with the same text each get a turn.
+ */
+async function syncConcepts(client, quizId, fileQuestions) {
+  const stored = (await client.query(
+    'SELECT id, text FROM questions WHERE quiz_id = $1 ORDER BY id', [quizId],
+  )).rows;
+  const used = new Set();
+  for (const q of fileQuestions) {
+    if (!q.concepts || !q.concepts.length) continue;
+    const match = stored.find((row) => !used.has(row.id) && row.text === q.text.trim());
+    if (!match) continue;
+    used.add(match.id);
+    await tagQuestion(client, match.id, q.concepts);
+  }
 }
 
 async function load(topics, { replace }) {
@@ -121,7 +159,13 @@ async function load(topics, { replace }) {
         let quizId;
         if (existing.rows.length) {
           quizId = existing.rows[0].id;
-          if (!replace) continue;          // already loaded, leave it alone
+          if (!replace) {
+            // Already loaded, so the questions are left alone, but their concept
+            // tags are brought up to date: tags added to the file later still
+            // reach a database that loaded the questions before tags existed.
+            await syncConcepts(client, quizId, quiz.questions);
+            continue;
+          }
           await client.query('DELETE FROM questions WHERE quiz_id = $1', [quizId]);
         } else {
           const inserted = await client.query(
@@ -135,14 +179,16 @@ async function load(topics, { replace }) {
 
         for (const q of quiz.questions) {
           const o = q.options;
-          await client.query(
+          const inserted = await client.query(
             `INSERT INTO questions
                (quiz_id, text, option_a, option_b, option_c, option_d, option_e,
                 correct_answer, explanation)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+             RETURNING id`,
             [quizId, q.text.trim(), o.a, o.b, o.c ?? null, o.d ?? null, o.e ?? null,
               q.correct, q.explanation ?? null],
           );
+          await tagQuestion(client, inserted.rows[0].id, q.concepts);
           counts.questions += 1;
         }
       }
@@ -195,6 +241,16 @@ async function main() {
     await pool.end();
     return;
   }
+
+  // The concept map comes first: questions name their concepts by slug.
+  const concepts = require('./import-concepts');
+  const conceptFile = JSON.parse(fs.readFileSync(concepts.DEFAULT_FILE, 'utf8'));
+  const conceptErrors = concepts.validate(conceptFile);
+  if (conceptErrors.length) {
+    conceptErrors.forEach((e) => console.error(`  error    concepts.json: ${e}`));
+    process.exit(1);
+  }
+  await concepts.load(conceptFile);
 
   const counts = await load(topics, { replace });
   console.log(`\nLoaded ${path.basename(full)}: ${counts.topics} topic(s), ` +

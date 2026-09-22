@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import StudentDashboard from './pages/StudentDashboard';
 import Quiz from './pages/Quiz';
 import Game from './pages/Game';
+import Practice from './pages/Practice';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CoordinatorDash from './pages/CoordinatorDash';
 import { auth } from './utils/auth';
@@ -36,6 +37,14 @@ export default function App() {
             element={(
               <ProtectedRoute role="student">
                 <Quiz />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/practice"
+            element={(
+              <ProtectedRoute role="student">
+                <Practice />
               </ProtectedRoute>
             )}
           />

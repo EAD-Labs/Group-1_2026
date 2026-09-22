@@ -1,6 +1,7 @@
 const express = require('express');
 const Attempt = require('../models/Attempt');
 const User = require('../models/User');
+const { classMastery } = require('../services/masteryService');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
@@ -50,6 +51,32 @@ router.get(
           hardestQuestions: hardest,
         },
       });
+    } catch (err) {
+      return next(err);
+    }
+  },
+);
+
+/**
+ * GET /api/analytics/classes/:classId/mastery
+ *
+ * Students against concepts, each cell the mastery model's estimate. Same
+ * access rule as the class report above.
+ */
+router.get(
+  '/classes/:classId/mastery',
+  requireRole('teacher', 'coordinator'),
+  async (req, res, next) => {
+    try {
+      const classId = Number(req.params.classId);
+      if (!Number.isInteger(classId)) {
+        return res.status(400).json({ error: 'Class id must be a number' });
+      }
+      if (req.user.role === 'teacher') {
+        const owned = await User.classIdsForTeacher(req.user.userId);
+        if (!owned.includes(classId)) return res.status(403).json({ error: 'Not allowed' });
+      }
+      return res.json({ success: true, data: await classMastery(classId) });
     } catch (err) {
       return next(err);
     }

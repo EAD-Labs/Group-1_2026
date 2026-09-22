@@ -9,21 +9,45 @@
         "questions": [
           {
             "text": "What is printed?\n\nx = 5\nx = x + 3\nprint(x)",
-            "options": { "a": "5", "b": "8", "c": "53", "d": "an error" },
+            "options": {
+              "a": "5",
+              "b": "8",
+              "c": "53",
+              "d": "an error"
+            },
             "correct": "b",
-            "explanation": "The right-hand side is worked out first, so x becomes 5 + 3."
+            "explanation": "The right-hand side is worked out first, so x becomes 5 + 3.",
+            "concepts": [
+              "basics"
+            ]
           },
           {
             "text": "Which of these is a valid variable name in Python?",
-            "options": { "a": "2nd_place", "b": "second place", "c": "second_place", "d": "class" },
+            "options": {
+              "a": "2nd_place",
+              "b": "second place",
+              "c": "second_place",
+              "d": "class"
+            },
             "correct": "c",
-            "explanation": "A name cannot start with a digit or contain a space, and class is reserved."
+            "explanation": "A name cannot start with a digit or contain a space, and class is reserved.",
+            "concepts": [
+              "basics"
+            ]
           },
           {
             "text": "What does type(3.0) return?",
-            "options": { "a": "int", "b": "float", "c": "str", "d": "decimal" },
+            "options": {
+              "a": "int",
+              "b": "float",
+              "c": "str",
+              "d": "decimal"
+            },
             "correct": "b",
-            "explanation": "Writing a decimal point makes it a float, even when the value is whole."
+            "explanation": "Writing a decimal point makes it a float, even when the value is whole.",
+            "concepts": [
+              "basics"
+            ]
           }
         ]
       }
@@ -39,21 +63,45 @@
         "questions": [
           {
             "text": "What does range(1, 5) produce?",
-            "options": { "a": "1, 2, 3, 4", "b": "1, 2, 3, 4, 5", "c": "0, 1, 2, 3, 4", "d": "5, 4, 3, 2, 1" },
+            "options": {
+              "a": "1, 2, 3, 4",
+              "b": "1, 2, 3, 4, 5",
+              "c": "0, 1, 2, 3, 4",
+              "d": "5, 4, 3, 2, 1"
+            },
             "correct": "a",
-            "explanation": "range stops one before the second number."
+            "explanation": "range stops one before the second number.",
+            "concepts": [
+              "loops"
+            ]
           },
           {
             "text": "How many times does the body run?\n\nfor i in range(3):\n    print(i)",
-            "options": { "a": "2", "b": "3", "c": "4", "d": "0" },
+            "options": {
+              "a": "2",
+              "b": "3",
+              "c": "4",
+              "d": "0"
+            },
             "correct": "b",
-            "explanation": "range(3) gives 0, 1 and 2, which is three passes."
+            "explanation": "range(3) gives 0, 1 and 2, which is three passes.",
+            "concepts": [
+              "loops"
+            ]
           },
           {
             "text": "Which keyword leaves a loop straight away?",
-            "options": { "a": "continue", "b": "pass", "c": "break", "d": "return" },
+            "options": {
+              "a": "continue",
+              "b": "pass",
+              "c": "break",
+              "d": "return"
+            },
             "correct": "c",
-            "explanation": "break exits the loop; continue only skips to the next pass."
+            "explanation": "break exits the loop; continue only skips to the next pass.",
+            "concepts": [
+              "loops"
+            ]
           }
         ]
       }
@@ -69,21 +117,45 @@
         "questions": [
           {
             "text": "What is len([1, 2, 3])?",
-            "options": { "a": "2", "b": "3", "c": "4", "d": "an error" },
+            "options": {
+              "a": "2",
+              "b": "3",
+              "c": "4",
+              "d": "an error"
+            },
             "correct": "b",
-            "explanation": "len counts the items, and there are three."
+            "explanation": "len counts the items, and there are three.",
+            "concepts": [
+              "lists"
+            ]
           },
           {
             "text": "What does [1, 2, 3][0] give?",
-            "options": { "a": "1", "b": "2", "c": "3", "d": "an error" },
+            "options": {
+              "a": "1",
+              "b": "2",
+              "c": "3",
+              "d": "an error"
+            },
             "correct": "a",
-            "explanation": "Positions start at 0, so [0] is the first item."
+            "explanation": "Positions start at 0, so [0] is the first item.",
+            "concepts": [
+              "lists"
+            ]
           },
           {
             "text": "Which method adds one item to the end of a list?",
-            "options": { "a": "add", "b": "append", "c": "insert", "d": "extend" },
+            "options": {
+              "a": "add",
+              "b": "append",
+              "c": "insert",
+              "d": "extend"
+            },
             "correct": "b",
-            "explanation": "append adds a single item; extend adds every item of another list."
+            "explanation": "append adds a single item; extend adds every item of another list.",
+            "concepts": [
+              "lists"
+            ]
           }
         ]
       }

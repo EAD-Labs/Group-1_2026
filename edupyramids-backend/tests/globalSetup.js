@@ -72,6 +72,8 @@ module.exports = async function globalSetup() {
 
   // Load the sample questions through the real importer, so the tests exercise
   // the same path an operator would use.
+  const concepts = require('../scripts/import-concepts');
+  await concepts.load(JSON.parse(fs.readFileSync(concepts.DEFAULT_FILE, 'utf8')));
   const { load } = require('../scripts/import-questions');
   const content = JSON.parse(
     fs.readFileSync(path.join(__dirname, '..', 'content', 'sample-questions.json'), 'utf8'),

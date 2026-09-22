@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 import { auth } from '../utils/auth';
+import { MasteryMoves } from './Practice';
 
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 
@@ -275,6 +276,15 @@ function Result({ quiz, result }) {
 
       {result.revisit.length > 0 && (
         <p className="revisit"><strong>Worth another look:</strong> {result.revisit.join(', ')}</p>
+      )}
+
+      {result.mastery?.length > 0 && (
+        <>
+          <h2 className="h2">What moved</h2>
+          <div className="card">
+            <MasteryMoves changes={result.mastery} dark={false} />
+          </div>
+        </>
       )}
 
       <h2 className="h2">Every question</h2>
