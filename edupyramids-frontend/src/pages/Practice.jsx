@@ -74,7 +74,7 @@ export default function Practice() {
     return (
       <DashboardShell title="Practice">
         <p className="alert" role="alert">{error}</p>
-        <Link className="btn btn--sm" to="/dashboard/student">Back to your topics</Link>
+        <Link className="btn btn--sm" to="/dashboard/student">Back home</Link>
       </DashboardShell>
     );
   }
@@ -88,11 +88,7 @@ export default function Practice() {
   const { question, concept, reason, predicted } = pick;
 
   return (
-    <DashboardShell title="Practice" wide>
-      <p className="quiz-back">
-        <Link to="/dashboard/student">&larr; All topics</Link>
-        <span className="muted small">Questions picked for you, one at a time</span>
-      </p>
+    <DashboardShell title="Practice" wide note="Questions picked for you, one at a time">
 
       <div className="quiz">
         <div className="quiz-top">
@@ -214,7 +210,7 @@ function Summary({ history, onAgain }) {
 
       <div className="result-actions note-foot">
         <button className="btn btn--sm" type="button" onClick={onAgain}>Practise again</button>
-        <Link className="btn btn--ghost btn--sm" to="/dashboard/student">Back to your topics</Link>
+        <Link className="btn btn--ghost btn--sm" to="/dashboard/student">Back home</Link>
       </div>
     </DashboardShell>
   );

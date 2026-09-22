@@ -141,3 +141,69 @@ A list of topics, each with a list of games. Every game has a `title`, a
 The importer refuses a file where two answers or tiles in one game have the
 same text (a right answer could be marked wrong), an item names a bucket the
 game does not have, or a game has fewer than two pairs, buckets or items.
+
+## The newer game kinds
+
+These follow the same file and the same rules. Every kind's exact checks live
+in `src/games/<kind>.js`; run the importer with `--dry-run` to see them applied.
+
+**`parsons`** — put scrambled lines in order, with indentation.
+
+```json
+{ "title": "Sum of even numbers", "kind": "parsons",
+  "lines": [
+    { "code": "total = 0", "indent": 0 },
+    { "code": "for i in range(1, 11):", "indent": 0 },
+    { "code": "if i % 2 == 0:", "indent": 1 },
+    { "code": "total = total + i", "indent": 2 },
+    { "code": "print(total)", "indent": 0 }
+  ],
+  "distractors": ["for i in range(1, 10):"],
+  "explanation": "…" }
+```
+
+Lines are listed in the right order. Each indents at most one level deeper than
+the line before. No two lines (including distractors) may be identical.
+Scored by the longest run of lines in the right order at the right indent,
+minus one for each distractor used.
+
+**`predict`** — type exactly what the code prints.
+
+```json
+{ "title": "Trace the loop", "kind": "predict",
+  "items": [{ "code": "for i in range(3):\n    print(i)", "output": "0\n1\n2", "explanation": "…" }] }
+```
+
+Run every `code` in Python and paste its real output: trailing spaces and line
+endings are ignored, everything else must match.
+
+**`bughunt`** — find the line with the bug, then pick the fix.
+
+```json
+{ "title": "Fix the function", "kind": "bughunt",
+  "items": [{ "code": "def greet(name)\n    return name", "bugLine": 1,
+              "fixes": ["def greet(name):", "def greet name:"], "fix": 0, "explanation": "…" }] }
+```
+
+`bugLine` counts from 1. `fix` is the index of the right entry in `fixes`
+(2 to 4 options). A point for the line, a second for the fix.
+
+**`fillblank`** — fill each `___` with a chip.
+
+```json
+{ "title": "Complete the code", "kind": "fillblank",
+  "items": [{ "code": "x = 7\nprint(x ___ 2)   # prints 1", "blanks": ["%"], "decoys": ["//", "/"], "explanation": "…" }] }
+```
+
+One entry in `blanks` per `___`, in order. At least one decoy, and no decoy may
+also be a right answer.
+
+### Adding a new kind of game
+
+1. `edupyramids-backend/src/games/<kind>.js` with `validate`, `contentOf`,
+   `deliver` and `mark` (and `check` if it needs instant feedback during play),
+   then add it to `src/games/index.js`.
+2. `edupyramids-frontend/src/games/<kind>/Board.jsx`, then add it to
+   `src/games/registry.js`.
+3. Add a `perfect` answer builder for it in `tests/gameKinds.test.js`; the
+   shared checks then cover it automatically.

@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
-import { auth } from '../utils/auth';
 
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 const TABS = [
@@ -30,8 +28,6 @@ export default function QuestionGenerator() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState(null);
   const [error, setError] = useState(null);
-
-  const home = auth.homeFor(auth.getCurrentUser()?.role);
 
   async function loadVideos() {
     const res = await client.get('/content/videos');
@@ -97,10 +93,6 @@ export default function QuestionGenerator() {
 
   return (
     <DashboardShell title="Question generator" wide>
-      <p className="quiz-back">
-        <Link to={home}>&larr; Back to the dashboard</Link>
-      </p>
-
       <p className="gen-intro muted">
         Pick a Spoken Tutorial video. Gemini reads its narration and writes multiple-choice questions
         about what the video teaches. <strong>Nothing reaches students until you approve it.</strong>{' '}

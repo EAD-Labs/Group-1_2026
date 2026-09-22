@@ -77,15 +77,15 @@ export default function Quiz() {
 
   if (error) {
     return (
-      <DashboardShell title="Quiz">
+      <DashboardShell title="Quiz" back={{ to: '/learn', label: 'All topics' }}>
         <p className="alert" role="alert">{error}</p>
-        <Link className="btn btn--sm" to="/dashboard/student">Back to your topics</Link>
+        <Link className="btn btn--sm" to="/learn">Back to your topics</Link>
       </DashboardShell>
     );
   }
 
   if (!quiz) {
-    return <DashboardShell title="Quiz"><p className="muted">Loading…</p></DashboardShell>;
+    return <DashboardShell title="Quiz" back={{ to: '/learn', label: 'All topics' }}><p className="muted">Loading…</p></DashboardShell>;
   }
 
   if (result) return <Result quiz={quiz} result={result} />;
@@ -125,13 +125,10 @@ export default function Quiz() {
   }
 
   return (
-    <DashboardShell title={quiz.topic} wide>
-      {/* Leaving is safe: answers so far are kept, so this says so rather than
-          making the student guess whether they are about to lose them. */}
-      <p className="quiz-back">
-        <Link to="/dashboard/student">&larr; All topics</Link>
-        {answered > 0 && <span className="muted small">Your answers are saved</span>}
-      </p>
+    // Leaving is safe: answers so far are kept, so the note says so rather than
+    // making the student guess whether they are about to lose them.
+    <DashboardShell title={quiz.topic} wide back={{ to: '/learn', label: 'All topics' }}
+      note={answered > 0 ? 'Your answers are saved' : undefined}>
 
       <div className="quiz">
         <div className="quiz-top">
@@ -266,7 +263,7 @@ function Result({ quiz, result }) {
   }, [result.score]);
 
   return (
-    <DashboardShell title={`${quiz.topic} — your result`}>
+    <DashboardShell title={`${quiz.topic} — your result`} back={{ to: '/learn', label: 'All topics' }}>
       <div className="result-score">
         <p className="stat-value big">{shown} / {result.maxScore}</p>
         <p className="muted">{result.percent}%
@@ -317,7 +314,7 @@ function Result({ quiz, result }) {
         })}
       </ol>
 
-      <Link className="btn btn--sm" to="/dashboard/student">Back to your topics</Link>
+      <Link className="btn btn--sm" to="/learn">Back to your topics</Link>
     </DashboardShell>
   );
 }

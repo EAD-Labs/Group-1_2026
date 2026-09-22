@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import ClassReport from '../components/ClassReport';
 import SchoolPanel from '../components/SchoolPanel';
@@ -65,16 +64,6 @@ export default function CoordinatorDash() {
 
   return (
     <DashboardShell title="Across the programme">
-      <section className="practice-cta">
-        <div>
-          <p className="practice-title">Question generator</p>
-          <p className="practice-sub">
-            Turn a Spoken Tutorial video into quiz questions with Gemini, then review them before students see them.
-          </p>
-        </div>
-        <Link className="btn btn--sm" to="/content">Open generator</Link>
-      </section>
-
       <div className="stat-row">
         <Stat label="Classes" value={classes.length} />
         <Stat label="Students" value={students} />

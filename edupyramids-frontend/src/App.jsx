@@ -2,7 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
-import StudentDashboard from './pages/StudentDashboard';
+import StudentHome from './pages/StudentHome';
+import Learn from './pages/Learn';
+import Play from './pages/Play';
+import Me from './pages/Me';
 import Quiz from './pages/Quiz';
 import Game from './pages/Game';
 import Practice from './pages/Practice';
@@ -29,7 +32,31 @@ export default function App() {
             path="/dashboard/student"
             element={(
               <ProtectedRoute role="student">
-                <StudentDashboard />
+                <StudentHome />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/learn"
+            element={(
+              <ProtectedRoute role="student">
+                <Learn />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/play"
+            element={(
+              <ProtectedRoute role="student">
+                <Play />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/me"
+            element={(
+              <ProtectedRoute role="student">
+                <Me />
               </ProtectedRoute>
             )}
           />

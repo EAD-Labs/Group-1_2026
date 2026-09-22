@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import ClassReport from '../components/ClassReport';
 import { client } from '../api/client';
@@ -52,16 +51,6 @@ export default function TeacherDashboard() {
 
   return (
     <DashboardShell title="Your class">
-      <section className="practice-cta">
-        <div>
-          <p className="practice-title">Question generator</p>
-          <p className="practice-sub">
-            Turn a Spoken Tutorial video into quiz questions with Gemini, then review them before students see them.
-          </p>
-        </div>
-        <Link className="btn btn--sm" to="/content">Open generator</Link>
-      </section>
-
       {classes.length > 1 && (
         <div className="field field--inline">
           <label htmlFor="class">Class</label>
