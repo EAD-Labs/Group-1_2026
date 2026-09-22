@@ -32,6 +32,11 @@ services:
       # false before real students use it.
       - key: SEED_DEMO_DATA
         value: "true"
+      # Set in the Render dashboard, never in this file.
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.8-flash
 
 databases:
   - name: edupyramids-db

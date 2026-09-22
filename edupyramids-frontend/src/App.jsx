@@ -6,6 +6,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import Quiz from './pages/Quiz';
 import Game from './pages/Game';
 import Practice from './pages/Practice';
+import QuestionGenerator from './pages/QuestionGenerator';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CoordinatorDash from './pages/CoordinatorDash';
 import { auth } from './utils/auth';
@@ -53,6 +54,14 @@ export default function App() {
             element={(
               <ProtectedRoute role="student">
                 <Game />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/content"
+            element={(
+              <ProtectedRoute role={['teacher', 'coordinator']}>
+                <QuestionGenerator />
               </ProtectedRoute>
             )}
           />

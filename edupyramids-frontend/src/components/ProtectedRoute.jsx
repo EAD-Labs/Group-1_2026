@@ -17,14 +17,16 @@ export default function ProtectedRoute({ role, children }) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  if (role && !auth.hasRole(role)) {
+  // One role, or a list of roles that may all use the page.
+  const roles = [].concat(role || []);
+  if (roles.length && !roles.some((r) => auth.hasRole(r))) {
     const user = auth.getCurrentUser();
     return (
       <main className="auth">
         <div className="card auth-card">
           <h1>Not allowed</h1>
           <p className="muted">
-            This page is for {role}s. You are signed in as {user.role}.
+            This page is for {roles.map((r) => `${r}s`).join(' and ')}. You are signed in as {user.role}.
           </p>
           <a className="btn" href={auth.homeFor(user.role)}>
             Go to your dashboard

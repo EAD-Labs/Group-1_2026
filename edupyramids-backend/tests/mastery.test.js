@@ -35,7 +35,12 @@ beforeAll(async () => {
   student = await login('mastery@school.com', 'student');
 });
 
-afterAll(() => pool.end());
+// Leave nothing behind for the suites that count classes and students.
+afterAll(async () => {
+  await query("DELETE FROM classes WHERE name = 'Grade 9-C'");
+  await query('DELETE FROM users WHERE id = $1', [studentId]);
+  await pool.end();
+});
 
 describe('the knowledge tracing arithmetic', () => {
   test('a right answer raises the estimate by Bayes rule plus learning', () => {

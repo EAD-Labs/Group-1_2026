@@ -29,6 +29,7 @@ app.use('/api/classes', require('./routes/classes'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/school', require('./routes/school'));
 app.use('/api/practice', require('./routes/practice'));
+app.use('/api/content', require('./routes/content'));
 
 /*
  * The built interface, served from the same origin as the API.

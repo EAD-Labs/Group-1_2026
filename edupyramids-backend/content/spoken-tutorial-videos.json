@@ -1,0 +1,699 @@
+[
+  {
+    "order": 1,
+    "slug": "getting-started-with-ipython",
+    "title": "Getting started with IPython",
+    "concepts": [
+      "tools"
+    ],
+    "duration": "12:28",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+IPython/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/863/Getting-started-with-IPython-English.srt",
+    "outline": [
+      "Invoke and quit the IPython interpreter",
+      "Navigate the session history",
+      "Tab-completion",
+      "Documentation of functions with a question mark",
+      "Interrupt commands with Ctrl + C",
+      "round command"
+    ]
+  },
+  {
+    "order": 2,
+    "slug": "using-plot-command-interactively",
+    "title": "Using plot command interactively",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "11:12",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Using+plot+command+interactively/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/864/Using-plot-command-interactively-English.srt",
+    "outline": [
+      "Start IPython with pylab",
+      "linspace to create equally spaced points",
+      "len of sequences",
+      "Plot mathematical functions with plot",
+      "Clear the drawing area with clf",
+      "Plot window buttons: save, zoom, move, back, forward, home"
+    ]
+  },
+  {
+    "order": 3,
+    "slug": "embellishing-a-plot",
+    "title": "Embellishing a plot",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "13:40",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Embellishing+a+plot/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/865/Embellishing-a-plot-English.srt",
+    "outline": [
+      "Modify plot attributes with keyword arguments",
+      "title, with LaTeX formatting between dollar signs",
+      "xlabel and ylabel",
+      "annotate",
+      "Get and set axis limits with xlim and ylim"
+    ]
+  },
+  {
+    "order": 4,
+    "slug": "saving-plots",
+    "title": "Saving plots",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "06:31",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Saving+plots/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/866/Saving-plots-English.srt",
+    "outline": [
+      "Save plots with savefig",
+      "Formats: pdf, ps, png, svg, eps"
+    ]
+  },
+  {
+    "order": 5,
+    "slug": "multiple-plots",
+    "title": "Multiple plots",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "10:50",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Multiple+plots/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/867/Multiple-plots-English.srt",
+    "outline": [
+      "Overlaid plots",
+      "figure command",
+      "legend command",
+      "Switch between plots",
+      "Save individual plots"
+    ]
+  },
+  {
+    "order": 6,
+    "slug": "subplots",
+    "title": "Subplots",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "09:20",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Subplots/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/868/Subplots-English.srt",
+    "outline": [
+      "Create and switch between subplots",
+      "subplot(rows, columns, serial number)"
+    ]
+  },
+  {
+    "order": 7,
+    "slug": "additional-features-of-ipython",
+    "title": "Additional features of IPython",
+    "concepts": [
+      "tools"
+    ],
+    "duration": "11:57",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Additional+features+of+IPython/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/869/Additional-features-of-IPython-English.srt",
+    "outline": [
+      "%history, whole or in part",
+      "%save lines of code in order",
+      "%run -i to run a saved script"
+    ]
+  },
+  {
+    "order": 8,
+    "slug": "loading-data-from-files",
+    "title": "Loading Data From Files",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "10:05",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Loading+Data+From+Files/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/943/Loading-Data-From-Files-English.srt",
+    "outline": [
+      "loadtxt for single and multiple columns",
+      "Columns separated by spaces or semicolons",
+      "unpack and delimiter arguments",
+      "cat command"
+    ]
+  },
+  {
+    "order": 9,
+    "slug": "plotting-data",
+    "title": "Plotting Data",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "07:47",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Plotting+Data/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/944/Plotting-Data-English.srt",
+    "outline": [
+      "Plot data points from lists",
+      "Element-wise squaring",
+      "Dots, filled circles and red pluses",
+      "errorbar function",
+      "Format argument"
+    ]
+  },
+  {
+    "order": 10,
+    "slug": "other-types-of-plots",
+    "title": "Other Types Of Plots",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "07:48",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Other+Types+Of+Plots/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/945/Other-Types-Of-Plots-English.srt",
+    "outline": [
+      "scatter plots and their arguments",
+      "loglog plots",
+      "loadtxt with unpack",
+      "scatter versus plot"
+    ]
+  },
+  {
+    "order": 11,
+    "slug": "plotting-charts",
+    "title": "Plotting Charts",
+    "concepts": [
+      "plotting"
+    ],
+    "duration": "07:29",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Plotting+Charts/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/946/Plotting-Charts-English.srt",
+    "outline": [
+      "Scatter plot",
+      "Pie chart with pie",
+      "Bar chart with bar",
+      "Line hatching",
+      "matplotlib online help"
+    ]
+  },
+  {
+    "order": 12,
+    "slug": "getting-started-with-lists",
+    "title": "Getting started with Lists",
+    "concepts": [
+      "lists"
+    ],
+    "duration": "14:50",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+Lists/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/976/Getting-started-with-Lists-English.srt",
+    "outline": [
+      "What a list is",
+      "List index",
+      "Empty lists and lists within lists",
+      "len",
+      "Access by index",
+      "append",
+      "del and remove"
+    ]
+  },
+  {
+    "order": 13,
+    "slug": "getting-started-with-for",
+    "title": "Getting started with for",
+    "concepts": [
+      "loops"
+    ],
+    "duration": "10:42",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+for/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/986/Getting-started-with-for-English.srt",
+    "outline": [
+      "for loop syntax and indentation",
+      "Blocks in Python",
+      "Iterate over a list",
+      "range in a for loop",
+      "Blocks in the IPython interpreter"
+    ]
+  },
+  {
+    "order": 14,
+    "slug": "getting-started-with-strings",
+    "title": "Getting started with strings",
+    "concepts": [
+      "strings"
+    ],
+    "duration": "10:09",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+strings/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/987/Getting-started-with-strings-English.srt",
+    "outline": [
+      "How strings are written",
+      "Concatenation",
+      "Multiplying a string by an integer",
+      "Indexing, including negative indices",
+      "split and join"
+    ]
+  },
+  {
+    "order": 15,
+    "slug": "getting-started-with-files",
+    "title": "Getting started with files",
+    "concepts": [
+      "basics"
+    ],
+    "duration": "10:07",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+files/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/988/Getting-started-with-files-English.srt",
+    "outline": [
+      "open and file modes",
+      "read the whole file or line by line",
+      "Append lines to a list",
+      "close",
+      "splitlines"
+    ]
+  },
+  {
+    "order": 16,
+    "slug": "parsing-data",
+    "title": "Parsing data",
+    "concepts": [
+      "strings"
+    ],
+    "duration": "12:33",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Parsing+data/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1075/Parsing-data-English.srt",
+    "outline": [
+      "Tokenising strings with split, with and without an argument",
+      "strip",
+      "Convert strings to floats and integers",
+      "Parse a large text file record by record",
+      "%run"
+    ]
+  },
+  {
+    "order": 17,
+    "slug": "statistics",
+    "title": "Statistics",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "14:12",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Statistics/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1076/Statistics-English.srt",
+    "outline": [
+      "loadtxt",
+      "Shape of an array",
+      "Sum of a column",
+      "mean, including across an axis",
+      "median",
+      "standard deviation"
+    ]
+  },
+  {
+    "order": 18,
+    "slug": "getting-started-with-arrays",
+    "title": "Getting started with arrays",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "11:02",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+arrays/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1077/Getting-started-with-arrays-English.srt",
+    "outline": [
+      "Creating arrays with numpy",
+      "Two-dimensional arrays",
+      "arange and reshape",
+      "shape",
+      "Arrays with mixed datatypes",
+      "Identity matrix and zeros"
+    ]
+  },
+  {
+    "order": 19,
+    "slug": "accessing-parts-of-arrays",
+    "title": "Accessing parts of arrays",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "11:29",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Accessing+parts+of+arrays/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1078/Accessing-parts-of-arrays-English.srt",
+    "outline": [
+      "Access and change elements of 1-D and 2-D arrays",
+      "Negative indexing",
+      "Slicing",
+      "Striding",
+      "Odd rows and columns"
+    ]
+  },
+  {
+    "order": 20,
+    "slug": "image-manipulation-using-arrays",
+    "title": "Image manipulation using Arrays",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "09:12",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Image+manipulation+using+Arrays/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1080/Image-manipulation-using-Arrays-English.srt",
+    "outline": [
+      "imread, imshow and show",
+      "Dimensions of an array",
+      "Access parts of an image",
+      "Striding over an image",
+      "RGB images"
+    ]
+  },
+  {
+    "order": 21,
+    "slug": "basic-matrix-operations",
+    "title": "Basic Matrix Operations",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "12:47",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Basic+Matrix+Operations/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1081/Basic-Matrix-Operations-English.srt",
+    "outline": [
+      "Matrices from lists",
+      "asmatrix, arange and reshape",
+      "Add, subtract, multiply",
+      "Determinant and inverse",
+      "eye and allclose",
+      "Eigenvalues and eigenvectors",
+      "diag"
+    ]
+  },
+  {
+    "order": 22,
+    "slug": "advanced-matrix-operations",
+    "title": "Advanced Matrix Operations",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "07:55",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Advanced+Matrix+Operations/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1082/Advanced-Matrix-Operations-English.srt",
+    "outline": [
+      "flatten",
+      "Frobenius and infinity norms",
+      "Inverse of a matrix",
+      "Singular value decomposition with svd"
+    ]
+  },
+  {
+    "order": 23,
+    "slug": "least-square-fit",
+    "title": "Least square fit",
+    "concepts": [
+      "numpy"
+    ],
+    "duration": "08:19",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Least+square+fit/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1083/Least-square-fit-English.srt",
+    "outline": [
+      "Least square fit line",
+      "Plot L against t squared",
+      "Matrix formulation tsq = A.p",
+      "transpose",
+      "lstsq"
+    ]
+  },
+  {
+    "order": 24,
+    "slug": "basic-datatypes-and-operators",
+    "title": "Basic datatypes and operators",
+    "concepts": [
+      "numbers",
+      "basics"
+    ],
+    "duration": "09:25",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Basic+datatypes+and+operators/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1084/Basic-datatypes-and-operators-English.srt",
+    "outline": [
+      "int, float and complex",
+      "Functions for int and complex numbers",
+      "Boolean operations",
+      "Operator precedence and parentheses",
+      "Modulo",
+      "Exponent and square root"
+    ]
+  },
+  {
+    "order": 25,
+    "slug": "sequence-datatypes",
+    "title": "Sequence datatypes",
+    "concepts": [
+      "lists",
+      "strings"
+    ],
+    "duration": "14:25",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Sequence+datatypes/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1085/Sequence-datatypes-English.srt",
+    "outline": [
+      "Lists, strings and tuples",
+      "Access by index",
+      "Adding sequences",
+      "len and sum",
+      "Convert between list, tuple and string"
+    ]
+  },
+  {
+    "order": 26,
+    "slug": "input-output",
+    "title": "Input-output",
+    "concepts": [
+      "basics"
+    ],
+    "duration": "10:10",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Input-output/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1086/Input-output-English.srt",
+    "outline": [
+      "print, with newlines",
+      "Format operators for integers, strings and floats",
+      "input with a prompt",
+      "Save and run a script with %run"
+    ]
+  },
+  {
+    "order": 27,
+    "slug": "conditional-statements",
+    "title": "Conditional Statements",
+    "concepts": [
+      "conditions"
+    ],
+    "duration": "08:39",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Conditional+Statements/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1087/Conditional-Statements-English.srt",
+    "outline": [
+      "if, if/else and elif",
+      "Indentation and the colon",
+      "Ternary conditional",
+      "pass"
+    ]
+  },
+  {
+    "order": 28,
+    "slug": "loops",
+    "title": "Loops",
+    "concepts": [
+      "loops"
+    ],
+    "duration": "07:06",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Loops/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1088/Loops-English.srt",
+    "outline": [
+      "while loop",
+      "for loop, with range",
+      "Squares of even numbers below 10",
+      "break, continue and pass"
+    ]
+  },
+  {
+    "order": 29,
+    "slug": "manipulating-lists",
+    "title": "Manipulating lists",
+    "concepts": [
+      "lists"
+    ],
+    "duration": "10:07",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Manipulating+lists/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1089/Manipulating-lists-English.srt",
+    "outline": [
+      "Slicing with a step",
+      "Striding, including negative values",
+      "sort and sorted",
+      "Reverse a list"
+    ]
+  },
+  {
+    "order": 30,
+    "slug": "manipulating-strings",
+    "title": "Manipulating strings",
+    "concepts": [
+      "strings"
+    ],
+    "duration": "10:20",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Manipulating+strings/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1090/Manipulating-strings-English.srt",
+    "outline": [
+      "Slicing and substrings",
+      "Reverse a string and check for a palindrome",
+      "replace",
+      "upper and lower",
+      "join"
+    ]
+  },
+  {
+    "order": 31,
+    "slug": "getting-started-with-tuples",
+    "title": "Getting started with tuples",
+    "concepts": [
+      "lists"
+    ],
+    "duration": "09:14",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+started+with+tuples/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1091/Getting-started-with-tuples-English.srt",
+    "outline": [
+      "Declaring tuples",
+      "Access by index and iteration",
+      "Tuples are immutable",
+      "Swapping values",
+      "Packing and unpacking"
+    ]
+  },
+  {
+    "order": 32,
+    "slug": "dictionaries",
+    "title": "Dictionaries",
+    "concepts": [
+      "sets-dicts"
+    ],
+    "duration": "09:39",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Dictionaries/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1092/Dictionaries-English.srt",
+    "outline": [
+      "Empty and non-empty dictionaries",
+      "key:value pairs",
+      "Accessing elements and a wrong key",
+      "Add, delete and modify items",
+      "in",
+      "keys and values",
+      "Iterate with a for loop"
+    ]
+  },
+  {
+    "order": 33,
+    "slug": "sets-in-python",
+    "title": "Sets in Python",
+    "concepts": [
+      "sets-dicts"
+    ],
+    "duration": "11:30",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Sets+in+Python/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1171/Sets-in-Python-English.srt",
+    "outline": [
+      "Creating sets, including empty sets",
+      "add and remove",
+      "union and intersection",
+      "difference and symmetric_difference",
+      "Subsets and supersets",
+      "len and membership"
+    ]
+  },
+  {
+    "order": 34,
+    "slug": "getting-started-with-functions",
+    "title": "Getting Started with Functions",
+    "concepts": [
+      "functions"
+    ],
+    "duration": "07:09",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Getting+Started+with+Functions/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1172/Getting-Started-with-Functions-English.srt",
+    "outline": [
+      "Defining and calling functions, with and without arguments",
+      "Return values",
+      "Docstrings",
+      "A circle function returning area and perimeter"
+    ]
+  },
+  {
+    "order": 35,
+    "slug": "advanced-features-of-functions",
+    "title": "Advanced Features of Functions",
+    "concepts": [
+      "functions"
+    ],
+    "duration": "12:11",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Advanced+Features+of+Functions/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1173/Advanced-Features-of-Functions-English.srt",
+    "outline": [
+      "Default arguments",
+      "Keyword and positional arguments",
+      "Arbitrary arguments with * and **",
+      "Built-in functions"
+    ]
+  },
+  {
+    "order": 36,
+    "slug": "using-python-modules",
+    "title": "Using Python Modules",
+    "concepts": [
+      "modules-oop"
+    ],
+    "duration": "11:01",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Using+Python+Modules/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1174/Using-Python-Modules-English.srt",
+    "outline": [
+      "Run a script from the command line",
+      "import and importing single functions",
+      "Namespaces and aliases",
+      "Run scripts in IPython",
+      "The standard library"
+    ]
+  },
+  {
+    "order": 37,
+    "slug": "writing-python-scripts",
+    "title": "Writing Python Scripts",
+    "concepts": [
+      "modules-oop",
+      "basics"
+    ],
+    "duration": "08:56",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Writing+Python+Scripts/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1175/Writing-Python-Scripts-English.srt",
+    "outline": [
+      "Save a function as a script",
+      "Import a module",
+      "The __name__ variable and test conditions",
+      "Ways to run a script"
+    ]
+  },
+  {
+    "order": 38,
+    "slug": "testing-and-debugging",
+    "title": "Testing and Debugging",
+    "concepts": [
+      "errors"
+    ],
+    "duration": "07:38",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Testing+and+Debugging/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1176/Testing-and-Debugging-English.srt",
+    "outline": [
+      "Software testing",
+      "Writing and automating test cases",
+      "A failing test",
+      "Coding style and meaningful names"
+    ]
+  },
+  {
+    "order": 39,
+    "slug": "handling-errors-and-exceptions",
+    "title": "Handling Errors and Exceptions",
+    "concepts": [
+      "errors"
+    ],
+    "duration": "07:54",
+    "url": "https://spoken-tutorial.org/watch/Python+3.4.3/Handling+Errors+and+Exceptions/English",
+    "subtitles": "https://spoken-tutorial.org/media/videos/89/1177/Handling-Errors-and-Exceptions-English.srt",
+    "outline": [
+      "Syntax errors and exceptions",
+      "ValueError and ZeroDivisionError",
+      "try, except and else",
+      "%debug in IPython"
+    ]
+  }
+]
