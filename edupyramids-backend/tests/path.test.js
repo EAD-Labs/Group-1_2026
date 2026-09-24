@@ -175,6 +175,36 @@ test('failing a checkpoint keeps the next unit shut; passing it opens it, even s
   expect(responses.map((r) => r.question_id).sort()).toEqual(tagged.map((r) => r.question_id).sort());
 });
 
+test('a concept due for review shows on the units that practise it, and the review keeps to it', async () => {
+  const { units } = await path();
+  const unit = units.find((u) => u.unlocked && u.nodes.some((n) => n.type === 'quiz'));
+  const concept = await queryOne(
+    `SELECT DISTINCT c.id, c.slug FROM question_concepts qc JOIN concepts c ON c.id = qc.concept_id
+       JOIN questions q ON q.id = qc.question_id JOIN quizzes z ON z.id = q.quiz_id
+      WHERE z.topic_id = $1 LIMIT 1`,
+    [unit.topicId],
+  );
+  expect(unit.review).toBeNull();
+
+  await query(
+    `INSERT INTO concept_mastery (student_id, concept_id, p_known, answered, correct, mastered_at, review_interval, next_review)
+     VALUES ($1, $2, 0.97, 6, 6, now() - interval '3 days', 1, now() - interval '1 hour')
+     ON CONFLICT (student_id, concept_id) DO UPDATE SET p_known = 0.97, answered = 6, next_review = now() - interval '1 hour'`,
+    [studentId, concept.id],
+  );
+
+  const after = (await path()).units.find((u) => u.topicId === unit.topicId);
+  expect(after.review.concepts.map((c) => c.slug)).toContain(concept.slug);
+  const url = new URL(after.review.href, 'http://x');
+  expect(url.pathname).toBe('/practice');
+  expect(url.searchParams.get('focus').split(',')).toContain(concept.slug);
+  expect(url.searchParams.get('n')).toBe('5');
+
+  const focus = after.review.concepts.map((c) => c.slug);
+  const next = await request(app).get(`/api/practice/next?focus=${focus.join(',')}`).set(student);
+  expect(focus).toContain(next.body.data.concept.slug);
+});
+
 test('the path is for students only', async () => {
   resetThrottle();
   const res = await request(app).post('/api/auth/login').send({ email: 'teacher1@school.com', password: 'password123', role: 'teacher' });

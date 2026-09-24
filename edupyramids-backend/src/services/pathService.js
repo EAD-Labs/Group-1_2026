@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const { pool, query } = require('../config/database');
 const Game = require('../models/Game');
-const { recordResponse, summariseChanges } = require('./masteryService');
+const { recordResponse, summariseChanges, masteryFor } = require('./masteryService');
 const { shuffle } = require('../games/common');
 const { quizStars } = require('./xp');
 
@@ -86,9 +86,32 @@ async function unitsWithContent(studentId) {
   }).filter((u) => u.nodes.length || u.extras.length);
 }
 
+const REVIEW_LENGTH = 5;
+
+/** Per unit, the concepts its questions practise that are due for review. */
+async function reviewsFor(studentId) {
+  const [mastery, tagged] = await Promise.all([
+    masteryFor(studentId),
+    query(
+      `SELECT DISTINCT z.topic_id AS "topicId", c.slug
+         FROM question_concepts qc
+         JOIN concepts c ON c.id = qc.concept_id
+         JOIN questions q ON q.id = qc.question_id
+         JOIN quizzes z ON z.id = q.quiz_id`,
+    ),
+  ]);
+  const due = new Map(mastery.filter((c) => c.status === 'review').map((c) => [c.slug, c.name]));
+  const byTopic = new Map();
+  tagged.filter((t) => due.has(t.slug)).forEach((t) => {
+    if (!byTopic.has(t.topicId)) byTopic.set(t.topicId, []);
+    byTopic.get(t.topicId).push({ slug: t.slug, name: due.get(t.slug) });
+  });
+  return byTopic;
+}
+
 /** The whole path for one student, with what is open and what comes next. */
 async function pathFor(studentId) {
-  const units = await unitsWithContent(studentId);
+  const [units, reviews] = await Promise.all([unitsWithContent(studentId), reviewsFor(studentId)]);
   let next = null;
 
   units.forEach((u, i) => {
@@ -120,6 +143,14 @@ async function pathFor(studentId) {
     }
     // A locked unit can be reached by passing the checkpoint before it.
     u.jumpFrom = !u.unlocked && units[i - 1].hasCheckpoint ? units[i - 1].topicId : null;
+
+    // Concepts from this unit that are fading: a short review, from the path.
+    const due = u.unlocked ? reviews.get(u.topicId) || [] : [];
+    u.review = due.length ? {
+      concepts: due,
+      questions: REVIEW_LENGTH,
+      href: `/practice?focus=${due.map((c) => c.slug).join(',')}&n=${REVIEW_LENGTH}`,
+    } : null;
 
     const done = u.nodes.filter((n) => n.stars > 0).length + (u.checkpoint.passed ? 1 : 0);
     u.progress = { done, total: u.nodes.length + (u.hasCheckpoint ? 1 : 0) };

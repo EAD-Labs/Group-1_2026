@@ -23,12 +23,17 @@ router.get('/mastery', async (req, res, next) => {
   }
 });
 
-/** GET /api/practice/next?exclude=1,2,3 — the next question, and why it was chosen. */
+/**
+ * GET /api/practice/next?exclude=1,2,3&focus=loops,strings — the next
+ * question, and why it was chosen. focus keeps to those concepts (a review
+ * started from the path).
+ */
 router.get('/next', async (req, res, next) => {
   try {
     const exclude = String(req.query.exclude || '')
       .split(',').filter(Boolean).map(Number).filter(Number.isInteger).slice(0, 200);
-    const pick = await nextPracticeQuestion(req.user.userId, exclude);
+    const focus = String(req.query.focus || '').split(',').map((s) => s.trim()).filter(Boolean).slice(0, 20);
+    const pick = await nextPracticeQuestion(req.user.userId, exclude, focus);
     if (!pick) return res.status(404).json({ error: 'No more questions to practise right now' });
     return res.json({ success: true, data: pick });
   } catch (err) {

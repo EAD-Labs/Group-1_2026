@@ -214,9 +214,11 @@ async function masteryFor(studentId) {
  *
  * @param {number}   studentId
  * @param {number[]} exclude   question ids already seen in this session
+ * @param {string[]} focus     concept slugs to keep to (a review from the path); all when empty
  */
-async function nextPracticeQuestion(studentId, exclude = []) {
-  const concepts = (await masteryFor(studentId)).filter((c) => c.questions > 0);
+async function nextPracticeQuestion(studentId, exclude = [], focus = []) {
+  const concepts = (await masteryFor(studentId))
+    .filter((c) => c.questions > 0 && (!focus.length || focus.includes(c.slug)));
   if (!concepts.length) return null;
 
   // Priority, highest first, with the reason the student will be shown.

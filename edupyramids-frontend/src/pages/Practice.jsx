@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 const SESSION_LENGTH = 10;
+const MAX_LENGTH = 20;
 
 /*
  * Adaptive practice: ten questions, each picked by the mastery model.
@@ -15,6 +16,11 @@ const SESSION_LENGTH = 10;
  * it — and a teacher or examiner can check that it does what it claims.
  */
 export default function Practice() {
+  // A review from the path keeps to its concepts and is shorter: ?focus=a,b&n=5
+  const [params] = useSearchParams();
+  const focus = params.get('focus') || '';
+  const length = Math.min(MAX_LENGTH, Math.max(1, Number(params.get('n')) || SESSION_LENGTH));
+  const title = focus ? 'Review' : 'Practice';
   const [pick, setPick] = useState(null);
   const [seen, setSeen] = useState([]);
   const [chosen, setChosen] = useState(null);
@@ -29,7 +35,7 @@ export default function Practice() {
     setChosen(null);
     setVerdict(null);
     try {
-      const res = await client.get(`/practice/next?exclude=${exclude.join(',')}`);
+      const res = await client.get(`/practice/next?exclude=${exclude.join(',')}${focus ? `&focus=${encodeURIComponent(focus)}` : ''}`);
       setPick(res.data);
     } catch (err) {
       if (err.status === 404) setFinished(true);
@@ -61,7 +67,7 @@ export default function Practice() {
   function next() {
     const nowSeen = [...seen, pick.question.id];
     setSeen(nowSeen);
-    if (nowSeen.length >= SESSION_LENGTH) setFinished(true);
+    if (nowSeen.length >= length) setFinished(true);
     else load(nowSeen);
   }
 
@@ -74,7 +80,7 @@ export default function Practice() {
 
   if (error) {
     return (
-      <DashboardShell title="Practice">
+      <DashboardShell title={title}>
         <p className="alert" role="alert">{error}</p>
         <Link className="btn btn--sm" to="/dashboard/student">Back home</Link>
       </DashboardShell>
@@ -84,22 +90,22 @@ export default function Practice() {
   if (finished) return <Summary history={history} onAgain={again} />;
 
   if (!pick) {
-    return <DashboardShell title="Practice"><p className="muted">Choosing your first question…</p></DashboardShell>;
+    return <DashboardShell title={title}><p className="muted">Choosing your first question…</p></DashboardShell>;
   }
 
   const { question, concept, reason, predicted } = pick;
 
   return (
-    <DashboardShell title="Practice" wide note="Questions picked for you, one at a time">
+    <DashboardShell title={title} wide note="Questions picked for you, one at a time">
 
       <div className="quiz">
         <div className="quiz-top">
           <p className="quiz-topic">{concept.name} · {question.topic}</p>
-          <p className="quiz-count">{seen.length + 1}<span>/{SESSION_LENGTH}</span></p>
+          <p className="quiz-count">{seen.length + 1}<span>/{length}</span></p>
         </div>
 
         <ol className="pips" aria-hidden="true">
-          {Array.from({ length: SESSION_LENGTH }, (_, i) => {
+          {Array.from({ length: length }, (_, i) => {
             const h = history[i];
             const state = h ? (h.correct ? 'right' : 'wrong') : (i === seen.length ? 'now' : 'todo');
             return <li key={i} className={`pip pip--${state}`} />;
@@ -149,7 +155,7 @@ export default function Practice() {
         <div className="quiz-nav">
           <span />
           <button className="btn btn--sm" type="button" onClick={next} disabled={!verdict || busy}>
-            {seen.length + 1 >= SESSION_LENGTH ? 'Finish' : 'Next question'}
+            {seen.length + 1 >= length ? 'Finish' : 'Next question'}
           </button>
         </div>
       </div>
@@ -193,7 +199,7 @@ function Summary({ history, onAgain }) {
   });
 
   return (
-    <DashboardShell title="Practice — how it went">
+    <DashboardShell title={`${title} — how it went`}>
       <div className="result-score">
         <p className="stat-value big">{right} / {history.length}</p>
         <p className="muted">

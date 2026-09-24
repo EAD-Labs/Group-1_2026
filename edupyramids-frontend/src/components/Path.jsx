@@ -70,6 +70,24 @@ function Checkpoint({ unit, offset, nowRef }) {
   );
 }
 
+/** Concepts from this unit that are fading: a short review, from the path (spaced repetition). */
+function ReviewNode({ review }) {
+  const names = review.concepts.map((c) => c.name);
+  const label = names.length > 2 ? `${names.slice(0, 2).join(', ')} and ${names.length - 2} more` : names.join(' and ');
+  return (
+    <li className="node node--review">
+      <Link className="node-link" to={review.href} aria-label={`Review ${label}: due now, ${review.questions} questions`}>
+        <span className="node-start node-start--review" aria-hidden="true">Review</span>
+        <span className="node-circle" aria-hidden="true">🔨</span>
+        <span className="node-label">
+          <span className="node-title">{label}</span>
+          <span className="node-kind">Fading · {review.questions} quick questions</span>
+        </span>
+      </Link>
+    </li>
+  );
+}
+
 export default function Path({ units }) {
   const nowRef = useRef(null);
   useEffect(() => {
@@ -102,6 +120,7 @@ export default function Path({ units }) {
             )}
 
             <ol className="road">
+              {u.review && <ReviewNode review={u.review} />}
               {u.nodes.map((n, i) => <Node key={`${n.type}${n.id}`} node={n} offset={WIND[i % WIND.length]} nowRef={nowRef} />)}
               {u.hasCheckpoint && <Checkpoint unit={u} offset={WIND[u.nodes.length % WIND.length]} nowRef={nowRef} />}
             </ol>

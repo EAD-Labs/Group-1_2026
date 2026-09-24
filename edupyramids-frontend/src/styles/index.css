@@ -2139,3 +2139,9 @@ a.warmup:hover { border-color: var(--tile, var(--brand)); }
 .goal-choice span { font-size: 13px; color: var(--text-light); }
 .goal-choice--on { border-color: var(--accent); background: var(--accent-tint); }
 .goal-choice:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+
+/* a review node: a concept from this unit is fading */
+.node--review { margin-top: 1.6rem; }
+.node--review .node-circle { background: #FFF6E6; border-color: var(--amber); box-shadow: 0 5px 0 #C27A12; }
+.node-start--review { color: #B45309; border-color: var(--amber); animation: none; }
+.node-start--review::after { border-top-color: var(--amber); }
