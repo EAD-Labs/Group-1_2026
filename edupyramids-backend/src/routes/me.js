@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddleware, requireRole } = require('../middleware/auth');
-const { dailyFor, setGoal } = require('../services/dailyService');
+const { dailyFor, setGoal, classesForStudent } = require('../services/dailyService');
 
 /*
  * The signed-in student's own daily figures: XP, goal and streak.
@@ -12,6 +12,15 @@ router.use(authMiddleware, requireRole('student'));
 router.get('/daily', async (req, res, next) => {
   try {
     res.json({ success: true, data: await dailyFor(req.user.userId) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/** GET /api/me/classes — each class's shared weekly goal, and this student's own share. */
+router.get('/classes', async (req, res, next) => {
+  try {
+    res.json({ success: true, data: await classesForStudent(req.user.userId) });
   } catch (err) {
     next(err);
   }

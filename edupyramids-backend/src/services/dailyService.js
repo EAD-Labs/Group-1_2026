@@ -47,37 +47,45 @@ const addDays = (day, n) => {
 };
 const weekday = (day) => new Date(`${day}T00:00:00Z`).getUTCDay();
 
-/** Every XP-earning event for a student, oldest first: [{ day, xp, what }]. */
-async function eventsFor(studentId) {
+/**
+ * Every XP-earning event for each of the given students, oldest first:
+ * Map(studentId -> [{ day, xp, what }]). Three queries however many students,
+ * so a whole class costs the same as one.
+ */
+async function eventsForMany(studentIds) {
   const [attempts, checkpoints, practice] = await Promise.all([
     query(
-      `SELECT kind, quiz_id, game_id, score, max_score, stars, hints_used, created_at
-         FROM attempts WHERE student_id = $1 ORDER BY created_at, id`,
-      [studentId],
+      `SELECT student_id, kind, quiz_id, game_id, score, max_score, stars, hints_used, created_at
+         FROM attempts WHERE student_id = ANY($1) ORDER BY created_at, id`,
+      [studentIds],
     ),
-    query('SELECT passed, created_at FROM checkpoint_attempts WHERE student_id = $1', [studentId]),
-    query("SELECT created_at FROM responses WHERE student_id = $1 AND source = 'practice'", [studentId]),
+    query('SELECT student_id, passed, created_at FROM checkpoint_attempts WHERE student_id = ANY($1)', [studentIds]),
+    query("SELECT student_id, created_at FROM responses WHERE student_id = ANY($1) AND source = 'practice'", [studentIds]),
   ]);
 
+  const out = new Map(studentIds.map((id) => [id, []]));
   const best = new Map();
-  const events = attempts.map((a) => {
-    const key = a.kind === 'quiz' ? `q${a.quiz_id}` : `g${a.game_id}`;
+  attempts.forEach((a) => {
+    const key = `${a.student_id}:${a.kind === 'quiz' ? `q${a.quiz_id}` : `g${a.game_id}`}`;
     const stars = a.kind === 'quiz'
       ? quizStars(Math.round((a.score / a.max_score) * 100))
       : a.stars ?? starsFor({ score: a.score, maxScore: a.max_score, hintsUsed: a.hints_used });
     const before = best.get(key) ?? 0;
     best.set(key, Math.max(before, stars));
-    return { at: a.created_at, xp: xpForAttempt(before, stars, a.score / a.max_score), what: a.kind };
+    out.get(a.student_id).push({ at: a.created_at, xp: xpForAttempt(before, stars, a.score / a.max_score), what: a.kind });
   });
-  checkpoints.forEach((c) => events.push({
+  checkpoints.forEach((c) => out.get(c.student_id).push({
     at: c.created_at, xp: c.passed ? XP.checkpointPass : XP.checkpointTry, what: 'checkpoint',
   }));
-  practice.forEach((p) => events.push({ at: p.created_at, xp: XP.practiceAnswer, what: 'practice' }));
+  practice.forEach((r) => out.get(r.student_id).push({ at: r.created_at, xp: XP.practiceAnswer, what: 'practice' }));
 
-  return events
+  out.forEach((events, id) => out.set(id, events
     .map((e) => ({ ...e, day: dayOf(e.at) }))
-    .sort((a, b) => new Date(a.at) - new Date(b.at));
+    .sort((a, b) => new Date(a.at) - new Date(b.at))));
+  return out;
 }
+
+const eventsFor = async (studentId) => (await eventsForMany([studentId])).get(studentId);
 
 /**
  * Walk the calendar from the first active day to today and replay the rules.
@@ -150,6 +158,58 @@ async function dailyFor(studentId, now = new Date()) {
   };
 }
 
+/*
+ * The class goal: one shared weekly target, after the finding that combining
+ * collaboration with competition works best (Sailer & Homner, 2020), and that
+ * public rankings discourage weaker students. Students see the class total,
+ * how many are active and their own share, never a ranking or a name.
+ * Teachers also see who has not practised yet this week.
+ */
+const CLASS_XP_PER_STUDENT = 60;     // about three days of the default goal
+
+/** Monday of the week containing `day`. */
+const mondayOf = (day) => addDays(day, -((weekday(day) + 6) % 7));
+
+async function classWeek(classId, { now = new Date(), names = false } = {}) {
+  const cls = await queryOne('SELECT id, name FROM classes WHERE id = $1', [classId]);
+  if (!cls) return null;
+  const students = await query(
+    `SELECT u.id, u.name FROM class_students cs JOIN users u ON u.id = cs.student_id
+      WHERE cs.class_id = $1 ORDER BY u.name`,
+    [classId],
+  );
+  const today = dayOf(now);
+  const from = mondayOf(today);
+  const events = await eventsForMany(students.map((s) => s.id));
+  const weekXp = (id) => events.get(id).filter((e) => e.day >= from && e.day <= today).reduce((n, e) => n + e.xp, 0);
+  const per = students.map((s) => ({ ...s, xp: weekXp(s.id) }));
+
+  const week = {
+    classId: cls.id,
+    name: cls.name,
+    from,
+    to: addDays(from, 6),
+    xp: per.reduce((n, s) => n + s.xp, 0),
+    goal: Math.max(1, students.length) * CLASS_XP_PER_STUDENT,
+    students: students.length,
+    active: per.filter((s) => s.xp > 0).length,
+  };
+  if (names) week.quiet = per.filter((s) => s.xp === 0).map((s) => ({ id: s.id, name: s.name }));
+  return { week, per };
+}
+
+/** A student's classes this week, with their own share and nothing about anyone else. */
+async function classesForStudent(studentId, now = new Date()) {
+  const ids = await query('SELECT class_id FROM class_students WHERE student_id = $1 ORDER BY class_id', [studentId]);
+  const out = [];
+  for (const { class_id: classId } of ids) {
+    // eslint-disable-next-line no-await-in-loop
+    const { week, per } = await classWeek(classId, { now });
+    out.push({ ...week, mine: per.find((s) => s.id === studentId)?.xp ?? 0 });
+  }
+  return out;
+}
+
 async function setGoal(studentId, goal) {
   if (!GOALS.includes(goal)) {
     const err = new Error(`The daily goal must be one of ${GOALS.join(', ')}`);
@@ -161,5 +221,5 @@ async function setGoal(studentId, goal) {
 }
 
 module.exports = {
-  dailyFor, setGoal, xpForAttempt, streakFrom, dayOf, XP, GOALS,
+  dailyFor, setGoal, classWeek, classesForStudent, xpForAttempt, streakFrom, dayOf, XP, GOALS, CLASS_XP_PER_STUDENT,
 };

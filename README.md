@@ -13,8 +13,8 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 
 | For | What they get |
 |---|---|
-| Students | Quizzes on the client's 136 questions, 21 games of 7 kinds (matching, sorting, memory tiles, fill the blank, predict the output, Parsons puzzles, bug hunt), adaptive practice that picks the next question, and a view of their progress by concept |
-| Teachers | Their class: averages by topic, students who need help, the questions the class got wrong, and a students-by-concept mastery heatmap |
+| Students | A learning path (Home): one road through the course, level by level, with a checkpoint that opens each next level. On it: quizzes on the client's 136 questions and 25 games of 9 kinds, from warm-ups (matching, sorting, memory) to fill the blank, Parsons puzzles, predict the output, Trace Runner, bug hunt and Bug Catcher. Stars, hints, XP, a daily goal and a school-day streak; review nodes when a concept starts to fade; adaptive practice; and a class goal shared with classmates |
+| Teachers | Their class: the weekly class goal and who has not practised yet, averages by topic, students who need help, the questions the class got wrong, and a students-by-concept mastery heatmap |
 | Coordinators | Every class, the school database (when connected), and the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve |
 
 ## Layout
@@ -55,6 +55,32 @@ Test accounts, all with the password `password123`: `student1@school.com`,
 
 `npm test` in the backend rebuilds a separate `edupyramids_test` database and
 runs the suite. The same tests run on GitHub for every push.
+
+## How progress works
+
+The design follows the research summarised for the course report: Duolingo's
+single learning path, streaks and daily goals; intrinsic integration
+(Habgood & Ainsworth); and the finding that public leaderboards discourage
+weaker students.
+
+- **Path.** Each level is a unit: its quiz, then its games from the easiest
+  skill to the hardest, then a checkpoint (10 mixed questions, 70% to pass).
+  A node opens when the one before has a star. Anything already played stays
+  open, and a locked unit can be reached by passing the checkpoint before it.
+- **Stars.** One at 60%, two for everything right, three for everything right
+  with no hints (and, in Bug Catcher, no more tests than par).
+- **XP.** Up to 10 for finishing, in proportion to the score, plus 5 per new
+  star; 20 for passing a checkpoint; 2 per practice answer. Replays of
+  three-star work earn little, and empty attempts earn nothing.
+- **Streak and goal.** One finished activity keeps the day. Weekends never
+  break a streak. Every 5 active days earn a freeze (up to 2) that covers a
+  missed school day. Students pick a daily goal of 10 to 50 XP.
+- **Class goal.** 60 XP per student per week, shared. Students see the total
+  and their own share, never a ranking; teachers also see who has not
+  practised yet.
+
+All of it is worked out from what students actually did, in India time
+(`APP_TIMEZONE`), so offline attempts count on the day they were done.
 
 ## Offline use
 

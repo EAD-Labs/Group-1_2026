@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import DashboardShell from '../components/DashboardShell';
 import ClassReport from '../components/ClassReport';
+import { TeacherClassGoal } from '../components/ClassGoal';
 import { client } from '../api/client';
 
 /*
@@ -61,6 +62,8 @@ export default function TeacherDashboard() {
           </select>
         </div>
       )}
+
+      {selected && <TeacherClassGoal classId={selected} />}
 
       {selected && (
         <ClassReport

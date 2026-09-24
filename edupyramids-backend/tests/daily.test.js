@@ -95,7 +95,6 @@ describe('the API', () => {
 
   afterAll(async () => {
     await query('DELETE FROM users WHERE id = $1', [studentId]);
-    await pool.end();
   });
 
   test('a new student starts at zero with the default goal', async () => {
@@ -145,5 +144,39 @@ describe('the API', () => {
     resetThrottle();
     const res = await request(app).post('/api/auth/login').send({ email: 'teacher1@school.com', password: 'password123', role: 'teacher' });
     expect((await request(app).get('/api/me/daily').set({ Authorization: `Bearer ${res.body.token}` })).status).toBe(403);
+  });
+});
+
+describe('the class goal', () => {
+  const login = async (email, role) => {
+    resetThrottle();
+    const res = await request(app).post('/api/auth/login').send({ email, password: 'password123', role });
+    return { Authorization: `Bearer ${res.body.token}` };
+  };
+
+  afterAll(() => pool.end());
+
+  test('a student sees the class total, how many are active and their own share, and no names', async () => {
+    const student = await login('student1@school.com', 'student');
+    const { body } = await request(app).get('/api/me/classes').set(student);
+    expect(body.data).toHaveLength(1);
+    const [week] = body.data;
+    expect(week).toMatchObject({ name: 'Grade 9-A', students: 2 });
+    expect(week.goal).toBe(2 * 60);
+    expect(week.mine).toBeLessThanOrEqual(week.xp);
+    expect(week).not.toHaveProperty('quiet');
+    expect(JSON.stringify(body.data)).not.toMatch(/Priya|Aditya/);
+  });
+
+  test("a teacher sees who has not practised this week, for their own class only", async () => {
+    const teacher = await login('teacher2@school.com', 'teacher');
+    const classes = await query("SELECT id, name FROM classes WHERE name IN ('Grade 9-A', 'Grade 9-B')");
+    const own = classes.find((c) => c.name === 'Grade 9-B');
+    const other = classes.find((c) => c.name === 'Grade 9-A');
+
+    const res = await request(app).get(`/api/analytics/classes/${own.id}/week`).set(teacher);
+    expect(res.status).toBe(200);
+    expect(res.body.data.quiet.map((s) => s.name)).toContain('Rahul Menon');
+    expect((await request(app).get(`/api/analytics/classes/${other.id}/week`).set(teacher)).status).toBe(403);
   });
 });

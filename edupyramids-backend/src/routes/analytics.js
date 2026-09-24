@@ -2,10 +2,31 @@ const express = require('express');
 const Attempt = require('../models/Attempt');
 const User = require('../models/User');
 const { classMastery } = require('../services/masteryService');
+const { classWeek } = require('../services/dailyService');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 router.use(authMiddleware);
+
+/**
+ * GET /api/analytics/classes/:classId/week — the class goal this week, with
+ * the students who have not practised yet, for the teacher to nudge. Same
+ * access rules as the class report below.
+ */
+router.get('/classes/:classId/week', requireRole('teacher', 'coordinator'), async (req, res, next) => {
+  try {
+    const classId = Number(req.params.classId);
+    if (!Number.isInteger(classId)) return res.status(400).json({ error: 'Class id must be a number' });
+    if (req.user.role === 'teacher' && !(await User.classIdsForTeacher(req.user.userId)).includes(classId)) {
+      return res.status(403).json({ error: 'Not allowed' });
+    }
+    const result = await classWeek(classId, { names: true });
+    if (!result) return res.status(404).json({ error: 'No such class' });
+    return res.json({ success: true, data: result.week });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 /**
  * 11. GET /api/analytics/classes/:classId
