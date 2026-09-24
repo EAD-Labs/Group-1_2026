@@ -101,6 +101,9 @@ On every start the service applies the migrations and loads any new questions
 and games; content already loaded is left alone. `SEED_DEMO_DATA=true` also
 creates the test accounts. Set it to `false` before real students use the app.
 Question generation needs `GEMINI_API_KEY` set in the service's environment.
+It uses `GEMINI_MODEL` (default `gemini-3.5-flash-lite`). When Google answers
+that the model is busy it retries twice, then tries `GEMINI_FALLBACK_MODEL` if
+one is set.
 
 Free plan limits: the service sleeps after 15 minutes idle (the next visit
 takes about a minute), and the free database expires after 30 days.

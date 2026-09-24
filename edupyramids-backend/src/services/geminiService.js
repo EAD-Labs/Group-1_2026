@@ -11,8 +11,14 @@
  */
 
 const API_BASE = process.env.GEMINI_API_BASE || 'https://generativelanguage.googleapis.com/v1beta';
-const DEFAULT_MODEL = 'gemini-3.8-flash';
+const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
 const TIMEOUT_MS = 120_000;
+// Google answers 503 UNAVAILABLE (and sometimes 500) when a model is
+// overloaded. It passes in seconds, so wait and ask again before giving up.
+const retryDelays = () => (process.env.GEMINI_RETRY_DELAYS_MS || '2000,6000')
+  .split(',').map(Number).filter((n) => n >= 0);
+const BUSY = new Set([500, 503]);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 class GeminiError extends Error {
   constructor(message, status = 502) {
@@ -22,6 +28,8 @@ class GeminiError extends Error {
 }
 
 const model = () => process.env.GEMINI_MODEL || DEFAULT_MODEL;
+// Optional: a second model to try when the first is still busy after the retries.
+const fallbackModel = () => process.env.GEMINI_FALLBACK_MODEL || null;
 const isConfigured = () => Boolean(process.env.GEMINI_API_KEY);
 
 const QUESTION_SCHEMA = {
@@ -89,26 +97,42 @@ async function generateQuestions(input) {
     throw new GeminiError('Question generation is not set up: GEMINI_API_KEY is missing.', 503);
   }
 
+  const body = JSON.stringify({
+    contents: [{ role: 'user', parts: [{ text: buildPrompt(input) }] }],
+    generationConfig: {
+      temperature: 0.5,
+      responseMimeType: 'application/json',
+      responseJsonSchema: QUESTION_SCHEMA,
+    },
+  });
+
+  const delays = retryDelays();
+  for (const name of [model(), fallbackModel()].filter(Boolean)) {
+    for (let attempt = 0; attempt <= delays.length; attempt++) {
+      if (attempt > 0) await sleep(delays[attempt - 1]);
+      const result = await callOnce(name, body);
+      if (!BUSY.has(result.response.status)) return readReply(result);
+    }
+  }
+  // Still busy on every model and every retry.
+  throw new GeminiError('Gemini is busy right now (UNAVAILABLE). Wait a minute and try again.', 503);
+}
+
+/** One request to one model. */
+async function callOnce(name, body) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   let response;
   try {
-    response = await fetch(`${API_BASE}/models/${encodeURIComponent(model())}:generateContent`, {
+    response = await fetch(`${API_BASE}/models/${encodeURIComponent(name)}:generateContent`, {
       method: 'POST',
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         'x-goog-api-key': process.env.GEMINI_API_KEY,
       },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: buildPrompt(input) }] }],
-        generationConfig: {
-          temperature: 0.5,
-          responseMimeType: 'application/json',
-          responseJsonSchema: QUESTION_SCHEMA,
-        },
-      }),
+      body,
     });
   } catch (err) {
     throw new GeminiError(err.name === 'AbortError'
@@ -118,8 +142,11 @@ async function generateQuestions(input) {
     clearTimeout(timer);
   }
 
-  const body = await response.json().catch(() => ({}));
+  return { response, reply: await response.json().catch(() => ({})) };
+}
 
+/** Turn a finished reply into questions, or a plain error. */
+function readReply({ response, reply: body }) {
   if (!response.ok) {
     // Say which kind of failure it was without echoing anything that might
     // contain the key.

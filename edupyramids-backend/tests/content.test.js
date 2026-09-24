@@ -45,9 +45,13 @@ const generated = {
 
 let lastGeminiBody;
 let geminiStatus = 200;
+// Statuses to answer before the normal reply, one per call: [503, 503] is busy twice.
+let geminiQueue = [];
+const geminiModels = [];
 
 beforeAll(() => {
   process.env.GEMINI_API_KEY = 'test-key-not-real';
+  process.env.GEMINI_RETRY_DELAYS_MS = '0,0';
   const realFetch = global.fetch;
   jest.spyOn(global, 'fetch').mockImplementation(async (url, init = {}) => {
     const target = String(url);
@@ -56,6 +60,10 @@ beforeAll(() => {
     }
     if (target.includes('generativelanguage.googleapis.com')) {
       lastGeminiBody = JSON.parse(init.body);
+      geminiModels.push(target.split('/models/')[1].split(':')[0]);
+      if (geminiQueue.length) {
+        return new Response('{"error":{"status":"UNAVAILABLE"}}', { status: geminiQueue.shift() });
+      }
       if (geminiStatus !== 200) return new Response('{"error":{"status":"RESOURCE_EXHAUSTED"}}', { status: geminiStatus });
       return new Response(JSON.stringify({
         candidates: [{ content: { parts: [{ text: JSON.stringify(generated) }] }, finishReason: 'STOP' }],
@@ -179,6 +187,29 @@ describe('generating and reviewing', () => {
     expect(res.status).toBe(429);
     expect(res.body.error).toMatch(/rate limit/);
     expect(JSON.stringify(res.body)).not.toContain('test-key-not-real');
+  });
+
+  test('a busy Gemini is asked again, and the retry succeeds', async () => {
+    geminiQueue = [503, 503];
+    geminiModels.length = 0;
+    const res = await request(app).post('/api/content/videos/loops/generate').set(teacher).send({ count: 2 });
+    expect(res.status).toBe(201);
+    expect(geminiModels).toEqual(['gemini-3.5-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash-lite']);
+  });
+
+  test('still busy after the retries: the backup model is tried, then a plain message', async () => {
+    process.env.GEMINI_FALLBACK_MODEL = 'backup-model';
+    geminiQueue = [503, 503, 503, 500, 503, 503];
+    geminiModels.length = 0;
+    const res = await request(app).post('/api/content/videos/loops/generate').set(teacher).send({ count: 2 });
+    delete process.env.GEMINI_FALLBACK_MODEL;
+    geminiQueue = [];
+    expect(geminiModels).toEqual([
+      'gemini-3.5-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash-lite',
+      'backup-model', 'backup-model', 'backup-model',
+    ]);
+    expect(res.status).toBe(503);
+    expect(res.body.error).toMatch(/busy/);
   });
 
   test('without a key the generator says so instead of failing oddly', async () => {
