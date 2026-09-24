@@ -1,6 +1,7 @@
 const { pool } = require('../config/database');
 const { recordResponse, summariseChanges } = require('./masteryService');
 const { attemptTime } = require('./attemptTime');
+const { xpForAttempt, quizStars } = require('./xp');
 
 /*
  * Marking a quiz attempt.
@@ -72,6 +73,12 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
     const score = feedback.filter((f) => f.correct).length;
     const maxScore = questions.length;
 
+    const bestBefore = (await client.query(
+      `SELECT MAX(ROUND(score::numeric / max_score * 100))::int AS percent
+         FROM attempts WHERE student_id = $1 AND quiz_id = $2`,
+      [studentId, quizId],
+    )).rows[0].percent;
+
     await client.query('BEGIN');
 
     // ON CONFLICT DO NOTHING is the double-submit guard. The index only covers
@@ -118,6 +125,7 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
     return {
       attemptId: attempt.id,
       duplicate,
+      xp: duplicate ? 0 : xpForAttempt(quizStars(bestBefore), quizStars(Math.round((score / maxScore) * 100)), score / maxScore),
       mastery,
       quizId,
       topic,

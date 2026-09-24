@@ -3,6 +3,7 @@ const { pool, query } = require('../config/database');
 const Game = require('../models/Game');
 const { recordResponse, summariseChanges } = require('./masteryService');
 const { shuffle } = require('../games/common');
+const { quizStars } = require('./xp');
 
 /*
  * The learning path: one road through the course, after Duolingo's 2022
@@ -37,13 +38,6 @@ class PathError extends Error {
   }
 }
 
-/** A quiz's stars from its best score: quizzes have no hints, so percent alone decides. */
-function quizStars(bestPercent) {
-  if (bestPercent === null || bestPercent === undefined) return 0;
-  if (bestPercent >= 100) return 3;
-  if (bestPercent >= 80) return 2;
-  return bestPercent >= 60 ? 1 : 0;
-}
 
 async function unitsWithContent(studentId) {
   const [topics, quizzes, games, checkpoints] = await Promise.all([
@@ -228,7 +222,7 @@ async function finishCheckpoint({ studentId, topicId, ticket, answers = {} }) {
     await client.query('COMMIT');
 
     return {
-      topicId, score, maxScore, percent: Math.round((score / maxScore) * 100), passed,
+      topicId, score, maxScore, percent: Math.round((score / maxScore) * 100), passed, xp: passed ? 20 : 5,
       passPercent: Math.round(CHECKPOINT.passAt * 100), feedback, mastery: summariseChanges(changes),
     };
   } catch (err) {

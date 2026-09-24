@@ -32,6 +32,7 @@ app.use('/api/practice', require('./routes/practice'));
 app.use('/api/content', require('./routes/content'));
 app.use('/api/offline', require('./routes/offline'));
 app.use('/api/path', require('./routes/path'));
+app.use('/api/me', require('./routes/me'));
 
 /*
  * Proof for Android that the APK and this site belong together, so the app

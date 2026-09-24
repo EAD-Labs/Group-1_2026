@@ -63,6 +63,7 @@ export default function Checkpoint() {
     return (
       <DashboardShell title={`${cp.topic} checkpoint — ${result.passed ? 'passed' : 'not yet'}`} back={back}>
         <div className="result-score">
+          {result.xp > 0 && <p className="xp-chip">+{result.xp} XP</p>}
           <p className="stat-value big">{result.score} / {result.maxScore}</p>
           <p className="muted">{result.percent}% · {result.passPercent}% needed to pass</p>
         </div>

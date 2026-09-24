@@ -49,7 +49,8 @@ router.post('/answer', async (req, res, next) => {
     const result = await answerPractice({
       studentId: req.user.userId, questionId: Number(questionId), answer,
     });
-    return res.json({ success: true, data: result });
+    // Each practice answer earns 2 XP (see services/dailyService.js).
+    return res.json({ success: true, data: { ...result, xp: 2 } });
   } catch (err) {
     if (err instanceof PracticeError) return res.status(err.status).json({ error: err.message });
     return next(err);

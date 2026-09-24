@@ -200,6 +200,7 @@ function GameResult({ result, onAgain }) {
       )}
       <div className="result-score">
         <Stars n={result.stars ?? 0} size="lg" />
+        {result.xp > 0 && <p className="xp-chip">+{result.xp} XP</p>}
         <p className="stat-value big">{result.score} / {result.maxScore}</p>
         <p className="muted">
           <span aria-hidden="true">{icon}</span> {label} · {result.percent}% · {result.topic}

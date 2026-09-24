@@ -2,7 +2,9 @@ import DashboardShell from '../components/DashboardShell';
 import ConceptMap from '../components/ConceptMap';
 import OfflineCard from '../offline/OfflineCard';
 import { auth } from '../utils/auth';
+import { useState } from 'react';
 import { useApi } from '../utils/useApi';
+import { DailyStrip, GoalSettings } from '../components/Daily';
 
 /*
  * Progress: the whole picture in one place — topics finished, what the
@@ -11,7 +13,8 @@ import { useApi } from '../utils/useApi';
  */
 export default function Me() {
   const user = auth.getCurrentUser();
-  const { loading, error, data } = useApi([`/progress/${user.id}`, '?/practice/mastery']);
+  const { loading, error, data } = useApi([`/progress/${user.id}`, '?/practice/mastery', '?/me/daily']);
+  const [changed, setChanged] = useState(null);
 
   if (loading || error) {
     return (
@@ -21,18 +24,23 @@ export default function Me() {
     );
   }
 
-  const [{ summary, badges }, concepts] = data;
+  const [{ summary, badges }, concepts, loaded] = data;
+  const daily = changed || loaded;
   const practisable = concepts.filter((c) => c.questions > 0);
   const mastered = practisable.filter((c) => c.status === 'mastered' || c.status === 'review').length;
 
   return (
     <DashboardShell title="Your progress">
+      {daily?.streak && <DailyStrip daily={daily} />}
+
       <div className="stat-row">
         <Stat label="Topics finished" value={`${summary.topicsLearnt} / ${summary.topics}`} note="80% or better" />
         <Stat label="Concepts mastered" value={`${mastered} / ${practisable.length}`} note="95% estimated" />
         <Stat label="Quizzes and games" value={summary.attempts} note="finished" />
         <Stat label="Badges" value={badges.length} />
       </div>
+
+      {daily?.streak && <GoalSettings daily={daily} onChange={setChanged} />}
 
       <OfflineCard />
 

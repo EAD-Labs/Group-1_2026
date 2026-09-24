@@ -2083,3 +2083,59 @@ a.warmup:hover { border-color: var(--tile, var(--brand)); }
 @media (prefers-reduced-motion: reduce) {
   .node--current .node-circle, .node-start { animation: none; }
 }
+
+/* ---------------------------------------------------------------- daily: streak, goal, week */
+.daily {
+  display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 0.75rem 1.25rem; align-items: center;
+  background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 0.85rem 1rem; margin-bottom: var(--gap-lg);
+}
+.daily-streak, .daily-goal { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-ui); color: var(--text-heading); }
+.daily-streak strong, .daily-goal strong { font-size: 20px; }
+.daily-sub { display: block; font-size: 12px; font-weight: 500; color: var(--text-light); }
+.daily-flame { font-size: 28px; filter: grayscale(1) opacity(0.45); transition: filter 0.3s ease; }
+.daily-streak--lit .daily-flame { filter: none; }
+.daily-freeze { font-size: 13px; font-weight: 700; background: #E6F4FF; color: #1D5C8C; border-radius: 999px; padding: 0.15rem 0.5rem; }
+
+.goal-ring { width: 40px; height: 40px; flex: none; }
+.goal-ring-track { fill: none; stroke: var(--brand-tint); stroke-width: 6; }
+.goal-ring-fill { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; transition: stroke-dasharray 0.6s ease; }
+.goal-ring-tick { fill: var(--accent); font-size: 16px; font-weight: 800; }
+
+.daily-week { list-style: none; display: flex; justify-content: flex-end; gap: 0.3rem; }
+.daily-day { display: grid; justify-items: center; gap: 0.15rem; width: 1.9rem; }
+.daily-dot {
+  width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center; font-size: 13px;
+  background: var(--brand-tint); border: 2px solid transparent;
+}
+.daily-day--active .daily-dot { background: var(--accent-tint); border-color: var(--accent); }
+.daily-day--frozen .daily-dot { background: #E6F4FF; border-color: #7CB8E6; }
+.daily-day--missed .daily-dot { background: #F3F4F6; border-color: #E5E7EB; }
+.daily-day--weekend .daily-dot { background: transparent; border: 2px dashed var(--line); }
+.daily-day--today .daily-dot { border-color: var(--accent); border-style: dashed; background: #fff; }
+.daily-letter { font-family: var(--font-ui); font-size: 11px; font-weight: 700; color: var(--text-light); }
+
+@media (max-width: 560px) {
+  .daily { grid-template-columns: 1fr 1fr; }
+  .daily-week { grid-column: 1 / -1; justify-content: space-between; }
+}
+
+.xp-chip {
+  display: inline-block; margin: 0 auto 0.4rem;
+  background: rgb(255 255 255 / 18%); color: #FFD166; border: 1px solid rgb(255 209 102 / 60%);
+  font-family: var(--font-ui); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 0.15rem 0.75rem;
+  animation: land 0.5s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+.result-score .xp-chip { display: table; }
+
+.goal-settings { margin: var(--gap-lg) 0; }
+.goal-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+@media (max-width: 560px) { .goal-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.goal-choice {
+  display: grid; gap: 0.1rem; text-align: left; cursor: pointer;
+  background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem;
+  font-family: var(--font-ui); color: var(--text-dark);
+}
+.goal-choice span { font-size: 13px; color: var(--text-light); }
+.goal-choice--on { border-color: var(--accent); background: var(--accent-tint); }
+.goal-choice:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }

@@ -301,6 +301,7 @@ function Result({ quiz, result }) {
         </p>
       )}
       <div className="result-score">
+        {result.xp > 0 && <p className="xp-chip">+{result.xp} XP</p>}
         <p className="stat-value big">{shown} / {result.maxScore}</p>
         <p className="muted">{result.percent}%
           {result.unanswered > 0 && ` · ${result.unanswered} left blank, counted wrong`}

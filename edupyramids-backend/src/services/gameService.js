@@ -4,6 +4,7 @@ const { kindOf } = require('../games');
 const { GameError, token } = require('../games/common');
 const { attemptTime } = require('./attemptTime');
 const { starsFor } = require('../games/stars');
+const { xpForAttempt } = require('./xp');
 
 /*
  * Delivering and marking games, for every kind.
@@ -77,6 +78,10 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
   const { feedback, score, maxScore, extra = {} } = kind.mark(game, answers);
   const hints = await hintsUsed(clientAttemptId, studentId);
   const stars = starsFor({ score, maxScore, hintsUsed: hints, parMet: extra.parMet });
+  const before = (await pool.query(
+    'SELECT COALESCE(MAX(stars), 0)::int AS stars FROM attempts WHERE student_id = $1 AND game_id = $2',
+    [studentId, game.id],
+  )).rows[0].stars;
 
   const client = await pool.connect();
   try {
@@ -114,6 +119,7 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
       percent: Math.round((score / maxScore) * 100),
       stars,
       hintsUsed: hints,
+      xp: duplicate ? 0 : xpForAttempt(before, stars, score / maxScore),
       ...extra,
       feedback,
       revisit: score < maxScore ? [game.topic] : [],
