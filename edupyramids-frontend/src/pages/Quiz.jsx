@@ -95,15 +95,15 @@ export default function Quiz() {
 
   if (error) {
     return (
-      <DashboardShell title="Quiz" back={{ to: '/learn', label: 'All topics' }}>
+      <DashboardShell title="Quiz" back={{ to: '/dashboard/student', label: 'Path' }}>
         <p className="alert" role="alert">{error}</p>
-        <Link className="btn btn--sm" to="/learn">Back to your topics</Link>
+        <Link className="btn btn--sm" to="/dashboard/student">Back to the path</Link>
       </DashboardShell>
     );
   }
 
   if (!quiz) {
-    return <DashboardShell title="Quiz" back={{ to: '/learn', label: 'All topics' }}><p className="muted">Loading…</p></DashboardShell>;
+    return <DashboardShell title="Quiz" back={{ to: '/dashboard/student', label: 'Path' }}><p className="muted">Loading…</p></DashboardShell>;
   }
 
   if (result) return <Result quiz={quiz} result={result} />;
@@ -158,7 +158,7 @@ export default function Quiz() {
   return (
     // Leaving is safe: answers so far are kept, so the note says so rather than
     // making the student guess whether they are about to lose them.
-    <DashboardShell title={quiz.topic} wide back={{ to: '/learn', label: 'All topics' }}
+    <DashboardShell title={quiz.topic} wide back={{ to: '/dashboard/student', label: 'Path' }}
       note={answered > 0 ? 'Your answers are saved' : undefined}>
 
       <div className="quiz">
@@ -294,7 +294,7 @@ function Result({ quiz, result }) {
   }, [result.score]);
 
   return (
-    <DashboardShell title={`${quiz.topic} — your result`} back={{ to: '/learn', label: 'All topics' }}>
+    <DashboardShell title={`${quiz.topic} — your result`} back={{ to: '/dashboard/student', label: 'Path' }}>
       {result.savedOffline && (
         <p className="offline-note" role="status">
           Marked on this device. It will be saved to your record when you are next online.
@@ -350,7 +350,7 @@ function Result({ quiz, result }) {
         })}
       </ol>
 
-      <Link className="btn btn--sm" to="/learn">Back to your topics</Link>
+      <Link className="btn btn--sm" to="/dashboard/student">Back to the path</Link>
     </DashboardShell>
   );
 }

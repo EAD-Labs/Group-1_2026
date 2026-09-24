@@ -82,7 +82,7 @@ export default function Game() {
 
   if (error) {
     return (
-      <DashboardShell title="Game" back={{ to: '/play', label: 'All games' }}>
+      <DashboardShell title="Game" back={{ to: '/dashboard/student', label: 'Path' }}>
         <p className="alert" role="alert">{error}</p>
       </DashboardShell>
     );
@@ -91,20 +91,20 @@ export default function Game() {
   if (result) return <GameResult result={result} onAgain={playAgain} />;
 
   if (!game) {
-    return <DashboardShell title="Game" back={{ to: '/play', label: 'All games' }}><p className="muted">Loading…</p></DashboardShell>;
+    return <DashboardShell title="Game" back={{ to: '/dashboard/student', label: 'Path' }}><p className="muted">Loading…</p></DashboardShell>;
   }
 
   const { Board, label, icon } = kindOf(game.kind);
   if (!Board) {
     return (
-      <DashboardShell title={game.title} back={{ to: '/play', label: 'All games' }}>
+      <DashboardShell title={game.title} back={{ to: '/dashboard/student', label: 'Path' }}>
         <p className="alert" role="alert">This version of the app cannot play this kind of game yet. Try refreshing the page.</p>
       </DashboardShell>
     );
   }
 
   return (
-    <DashboardShell title={game.title} wide back={{ to: '/play', label: 'All games' }}
+    <DashboardShell title={game.title} wide back={{ to: '/dashboard/student', label: 'Path' }}
       note="Nothing is saved until you finish">
       <div className="quiz game">
         <div className="quiz-top">
@@ -192,7 +192,7 @@ function GameResult({ result, onAgain }) {
   };
 
   return (
-    <DashboardShell title={`${result.title} — your result`} back={{ to: '/play', label: 'All games' }}>
+    <DashboardShell title={`${result.title} — your result`} back={{ to: '/dashboard/student', label: 'Path' }}>
       {result.savedOffline && (
         <p className="offline-note" role="status">
           Marked on this device. It will be saved to your record when you are next online.
@@ -260,7 +260,7 @@ function GameResult({ result, onAgain }) {
 
       <div className="result-actions">
         <button className="btn btn--sm" type="button" onClick={onAgain}>Play again</button>
-        <Link className="btn btn--ghost btn--sm" to="/play">All games</Link>
+        <Link className="btn btn--ghost btn--sm" to="/dashboard/student">Back to the path</Link>
       </div>
     </DashboardShell>
   );

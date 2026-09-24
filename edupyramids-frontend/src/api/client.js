@@ -76,7 +76,7 @@ async function request(method, path, body) {
  * error. Only these paths: nothing a teacher sees, and nothing that would be
  * wrong to show old (a quiz itself comes from the offline pack instead).
  */
-const REMEMBERED = [/^\/progress\/\d+$/, /^\/quizzes$/, /^\/games$/, /^\/practice\/mastery$/];
+const REMEMBERED = [/^\/progress\/\d+$/, /^\/quizzes$/, /^\/games$/, /^\/practice\/mastery$/, /^\/path$/];
 
 function memoryKey(path) {
   let userId = 'anon';

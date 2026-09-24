@@ -3,12 +3,12 @@ import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import StudentHome from './pages/StudentHome';
-import Learn from './pages/Learn';
 import Play from './pages/Play';
 import Me from './pages/Me';
 import Quiz from './pages/Quiz';
 import Game from './pages/Game';
 import Practice from './pages/Practice';
+import Checkpoint from './pages/Checkpoint';
 import QuestionGenerator from './pages/QuestionGenerator';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CoordinatorDash from './pages/CoordinatorDash';
@@ -36,11 +36,13 @@ export default function App() {
               </ProtectedRoute>
             )}
           />
+          {/* The path on Home replaced the Learn page; old links land there. */}
+          <Route path="/learn" element={<Navigate to="/dashboard/student" replace />} />
           <Route
-            path="/learn"
+            path="/checkpoint/:topicId"
             element={(
               <ProtectedRoute role="student">
-                <Learn />
+                <Checkpoint />
               </ProtectedRoute>
             )}
           />

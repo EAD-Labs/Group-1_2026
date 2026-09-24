@@ -31,6 +31,7 @@ app.use('/api/school', require('./routes/school'));
 app.use('/api/practice', require('./routes/practice'));
 app.use('/api/content', require('./routes/content'));
 app.use('/api/offline', require('./routes/offline'));
+app.use('/api/path', require('./routes/path'));
 
 /*
  * Proof for Android that the APK and this site belong together, so the app
