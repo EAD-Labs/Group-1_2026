@@ -8,7 +8,9 @@
  *   contentOf  the part of the file entry that is stored as games.content
  *   deliver    what the student's browser receives: shuffled, tokenised, no key
  *   mark       score an answer; returns { feedback, score, maxScore, extra? }
- *   check      optional: an instant check during play (memory tiles use it)
+ *   check      optional: an instant check during play (memory, trace)
+ *   hint       optional: (game, itemId, level) -> { text, maxLevel, ... }
+ *   offlineKey what the device needs to mark with no connection
  *
  * Adding a game kind is a new file here plus a board in the frontend's
  * src/games folder. Nothing else needs to change: the importer, the API and
@@ -22,6 +24,8 @@ const kinds = [
   require('./predict'),
   require('./bughunt'),
   require('./fillblank'),
+  require('./bugcatch'),
+  require('./trace'),
 ];
 
 const registry = Object.fromEntries(kinds.map((k) => [k.kind, k]));

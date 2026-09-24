@@ -24,11 +24,18 @@ const perfect = {
     token(g.id, `b${i}`), { line: it.bugLine, fix: token(g.id, `b${i}f${it.fix}`) },
   ])),
   fillblank: (g) => Object.fromEntries(g.content.items.map((it, i) => [token(g.id, `f${i}`), it.blanks])),
+  bugcatch: (g) => Object.fromEntries(g.content.items.map((it, i) => [token(g.id, `c${i}`),
+    registry.bugcatch.bestSet(it).map((k) => ({
+      input: token(g.id, `c${i}n${k}`),
+      expect: token(g.id, `c${i}n${k}o${registry.bugcatch.optionsFor(it, k).indexOf(it.outputs[k])}`),
+    }))])),
+  trace: (g) => Object.fromEntries(g.content.items.flatMap((it, i) => it.steps
+    .map((s, k) => [token(g.id, `t${i}s${k}`), s.value]))),
 };
 
 // Keys that only the stored content has. None may reach the browser.
 // (Parsons sends its lines as shuffled blocks; the indentation is the secret part.)
-const SECRET_KEYS = /"(explanation|right|bucket|output|blanks|decoys|bugLine|fix|indent|distractors|correct)"/;
+const SECRET_KEYS = /"(explanation|right|bucket|output|outputs|mutants|bug|value|blanks|decoys|bugLine|fix|indent|distractors|correct)"/;
 
 let auth;
 let games;

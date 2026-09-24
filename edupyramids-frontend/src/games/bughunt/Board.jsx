@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import Hint from '../Hint';
 
 /*
  * Bug hunt: tap the line with the bug, then choose what it should say.
  */
-export default function BugHuntBoard({ game, onFinish, sending }) {
+export default function BugHuntBoard({ game, onFinish, sending, hint }) {
   const [picks, setPicks] = useState({});        // itemId -> { line, fix }
   const done = game.items.filter((it) => picks[it.id]?.line && picks[it.id]?.fix).length;
 
@@ -44,6 +45,7 @@ export default function BugHuntBoard({ game, onFinish, sending }) {
                   ))}
                 </fieldset>
               ) : <p className="muted-on-dark small">Tap the line you think is wrong.</p>}
+              <Hint ask={hint} item={it.id} disabled={sending} />
             </li>
           );
         })}

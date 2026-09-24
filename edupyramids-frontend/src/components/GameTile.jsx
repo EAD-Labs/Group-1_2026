@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { kindOf } from '../games/registry';
+import Stars from './Stars';
 
 /** One game as a tile: what kind it is, where it sits, and how the student has done. */
 export default function GameTile({ game }) {
@@ -15,7 +16,9 @@ export default function GameTile({ game }) {
       <span className="tile-bar">
         <span style={{ width: `${game.attempts ? game.bestPercent : 0}%` }} />
       </span>
-      <span className="tile-meta">{game.attempts ? `Best ${game.bestPercent}%` : 'Not played yet'}</span>
+      <span className="tile-meta tile-best">
+        {game.attempts ? <>Best {game.bestPercent}% <Stars n={game.bestStars ?? 0} size="sm" /></> : 'Not played yet'}
+      </span>
     </Link>
   );
 }

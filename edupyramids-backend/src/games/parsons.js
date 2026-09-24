@@ -1,4 +1,6 @@
-const { token, shuffle, isText, duplicates, checker } = require('./common');
+const {
+  token, shuffle, isText, duplicates, checker, GameError,
+} = require('./common');
 
 /*
  * Parsons puzzle: put scrambled lines of a working program in order, with the
@@ -79,6 +81,22 @@ module.exports = {
       distractors: distractors.map((_, j) => token(game.id, `x${j}`)),
       explanation: explanation ?? null,
     };
+  },
+
+  /**
+   * Adaptive help (Ericson's adaptive Parsons problems): first take away a line
+   * that does not belong, then place the first line. The puzzle gets easier
+   * instead of the answer being handed over.
+   */
+  hint(game, itemId, level) {
+    if (itemId !== 'program') throw new GameError('Parsons hints are for the whole program');
+    const { lines, distractors } = game.content;
+    const first = { id: token(game.id, 'p0'), indent: lines[0].indent };
+    const maxLevel = distractors.length ? 2 : 1;
+    if (level === 1 && distractors.length) {
+      return { text: 'One line that does not belong has been taken away.', remove: token(game.id, 'x0'), maxLevel };
+    }
+    return { text: `The program starts with: ${lines[0].code}`, first, maxLevel };
   },
 
   /** answers: { program: [{ id, indent }, ...] } in the order the student built it */

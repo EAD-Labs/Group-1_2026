@@ -25,6 +25,19 @@ const fromKey = {
   bughunt: (g) => Object.fromEntries(Object.keys(g.key.bugLine)
     .map((id) => [id, { line: g.key.bugLine[id], fix: g.key.fix[id] }])),
   fillblank: (g) => g.key.blanks,
+  // Greedy: keep adding the input that catches the most copies still loose.
+  bugcatch: (g) => Object.fromEntries(Object.entries(g.key.items).map(([id, it]) => {
+    const loose = new Set(it.mutants.map((_, m) => m));
+    const tests = [];
+    while (loose.size) {
+      const input = it.inputs.map((k) => [k, [...loose].filter((m) => it.mutants[m].catches.includes(k)).length])
+        .sort((a, b) => b[1] - a[1])[0][0];
+      [...loose].filter((m) => it.mutants[m].catches.includes(input)).forEach((m) => loose.delete(m));
+      tests.push({ input, expect: it.right[input] });
+    }
+    return [id, tests];
+  })),
+  trace: (g) => g.key.shown,
 };
 
 let student;

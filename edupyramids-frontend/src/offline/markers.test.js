@@ -10,11 +10,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { markGame, checkMemory } from './markers.js';
+import {
+  markGame, checkMemory, checkTrace, starsFor,
+} from './markers.js';
 
 process.env.JWT_SECRET ||= 'offline-parity-test';
 const require = createRequire(import.meta.url);
 const { registry } = require('../../../edupyramids-backend/src/games');
+const serverStars = require('../../../edupyramids-backend/src/games/stars').starsFor;
 const content = require('../../../edupyramids-backend/content/python-games.json');
 
 // Every game in the file, as the server holds it and as the device receives it.
@@ -61,6 +64,15 @@ function answerFor(d, rnd, rightness) {
     case 'fillblank':
       return Object.fromEntries(d.items.map((it) => [it.id,
         d.key.blanks[it.id].map((b) => (right() ? b : pick(rnd, it.chips)))]));
+    case 'bugcatch':
+      // Random inputs, some with the right expectation, some repeated, some past the slot limit.
+      return Object.fromEntries(d.items.map((it) => [it.id, Array.from({ length: 1 + Math.floor(rnd() * 4) }, () => {
+        const input = pick(rnd, it.inputs);
+        return { input: input.id, expect: right() ? d.key.items[it.id].right[input.id] : pick(rnd, input.options).id };
+      })]));
+    case 'trace':
+      return Object.fromEntries(d.items.flatMap((it) => it.steps.filter(() => rnd() > 0.1)
+        .map((s) => [s.id, right() ? ` ${d.key.shown[s.id].replace(/'/g, '"')}` : pick(rnd, ['0', "'x'", '[]'])])));
     default:
       throw new Error(`no answer builder for ${d.kind}`);
   }
@@ -69,7 +81,11 @@ function answerFor(d, rnd, rightness) {
 const essentials = (r) => ({
   score: r.score,
   maxScore: r.maxScore,
-  feedback: r.feedback.map((f) => ({ prompt: f.prompt, given: f.given, answer: f.answer, correct: f.correct }))
+  parMet: r.parMet ?? r.extra?.parMet,
+  bestStreak: r.bestStreak ?? r.extra?.bestStreak,
+  feedback: r.feedback.map((f) => ({
+    prompt: f.prompt, given: f.given, answer: f.answer, correct: f.correct, changed: f.changed,
+  }))
     .sort((a, b) => String(a.prompt).localeCompare(String(b.prompt))),
 });
 
@@ -86,11 +102,29 @@ for (const { server, device, kind } of games) {
         const onServer = kind.mark(server, answers);
         const onDevice = markGame(device, answers);
         assert.deepEqual(essentials(onDevice), essentials(onServer), `rightness ${rightness}, run ${run}`);
+        assert.equal(onDevice.stars, serverStars({ ...onServer, parMet: onServer.extra?.parMet }));
       }
     }
     assert.deepEqual(essentials(markGame(device, {})), essentials(kind.mark(server, {})), 'empty answer');
   });
 }
+
+test('a trace check on the device agrees with the server', () => {
+  for (const { server, device, kind } of games.filter((g) => g.device.kind === 'trace')) {
+    for (const s of device.items.flatMap((it) => it.steps)) {
+      for (const value of [device.key.shown[s.id], ` ${device.key.shown[s.id].replace(/'/g, '"')} `, 'nope']) {
+        assert.deepEqual(checkTrace(device, s.id, value), kind.check(server, { step: s.id, value }));
+      }
+    }
+  }
+});
+
+test('the device gives the same stars as the server', () => {
+  for (const input of [
+    { score: 5, maxScore: 10 }, { score: 6, maxScore: 10 }, { score: 10, maxScore: 10 },
+    { score: 10, maxScore: 10, hintsUsed: 2 }, { score: 10, maxScore: 10, parMet: false },
+  ]) assert.equal(starsFor(input), serverStars(input));
+});
 
 test('a memory check on the device agrees with the server', () => {
   for (const { server, device, kind } of games.filter((g) => g.device.kind === 'memory')) {

@@ -231,6 +231,103 @@ function markFillBlank(g, answers) {
   return { feedback, score, maxScore };
 }
 
+/** Lines of a bugged copy that the working function does not have: where the bug is. */
+function changedLines(code, original) {
+  const have = new Set(original.split('\n'));
+  return code.split('\n').map((line, n) => (have.has(line) ? null : n)).filter((n) => n !== null);
+}
+
+function markBugCatch(g, answers) {
+  let score = 0;
+  let maxScore = 0;
+  let parMet = true;
+  const feedback = [];
+  const tests = [];
+  g.items.forEach((it) => {
+    const key = g.key.items[it.id];
+    const text = Object.fromEntries(it.inputs.flatMap((inp) => inp.options.map((o) => [o.id, o.text])));
+    const rightText = (input) => text[key.right[input]];
+    const seen = new Set();
+    const chosen = (Array.isArray(answers[it.id]) ? answers[it.id] : [])
+      .filter((t) => t && key.inputs.includes(t.input) && !seen.has(t.input) && seen.add(t.input))
+      .slice(0, key.slots)
+      .map((t) => {
+        const options = it.inputs.find((inp) => inp.id === t.input).options;
+        const opt = options.find((o) => o.id === t.expect);
+        return { input: t.input, expected: opt ? opt.text : null, ok: t.expect === key.right[t.input] };
+      });
+    chosen.forEach((t) => tests.push({
+      call: key.call[t.input], expected: t.expected, right: rightText(t.input), ok: t.ok,
+    }));
+    let caughtAll = true;
+    key.mutants.forEach((m) => {
+      const by = chosen.find((t) => t.ok && m.catches.includes(t.input));
+      if (by) score += 1; else caughtAll = false;
+      const first = m.catches[0];
+      feedback.push({
+        prompt: m.code,
+        given: by ? `Caught by ${key.call[by.input]}` : null,
+        answer: `${key.call[first]} catches it: the copy gives ${m.outputs[first]}, the working function ${rightText(first)}`,
+        correct: Boolean(by),
+        changed: changedLines(m.code, it.code),
+        explanation: m.bug,
+      });
+    });
+    maxScore += key.mutants.length;
+    if (!caughtAll || chosen.length > key.par) parMet = false;
+  });
+  return { feedback, score, maxScore, extra: { tests, parMet } };
+}
+
+/** Values as Python shows them, forgiving spacing and the choice of quote. */
+export const normaliseValue = (s) => String(s ?? '')
+  .trim()
+  .replace(/"/g, "'")
+  .replace(/\s+/g, ' ')
+  .replace(/\s*([,[\](){}:])\s*/g, '$1');
+
+/** One trace step. Same shape as POST /games/:id/check for a trace. */
+export function checkTrace(g, step, value) {
+  const shown = g.key.shown[step];
+  if (shown === undefined) return null;
+  return { correct: normaliseValue(value) === normaliseValue(shown), value: shown };
+}
+
+function markTrace(g, answers) {
+  let streak = 0;
+  let bestStreak = 0;
+  const feedback = g.items.flatMap((it, i) => it.steps.map((s, k) => {
+    const typed = answers[s.id];
+    const given = typeof typed === 'string' && typed.trim() ? typed.trim() : null;
+    const shown = g.key.shown[s.id];
+    const correct = given !== null && normaliseValue(given) === normaliseValue(shown);
+    streak = correct ? streak + 1 : 0;
+    bestStreak = Math.max(bestStreak, streak);
+    return {
+      prompt: `${s.line}: ${it.lines[s.line - 1].trim()}`,
+      given: given === null ? null : `${s.var} = ${given}`,
+      answer: `${s.var} = ${shown}`,
+      correct,
+      program: i,
+      explanation: k === it.steps.length - 1 ? g.key.explanation[it.id] ?? null : null,
+    };
+  }));
+  return {
+    feedback,
+    score: feedback.filter((f) => f.correct).length,
+    maxScore: feedback.length,
+    extra: { bestStreak, programs: g.items.map((it) => it.lines.join('\n')) },
+  };
+}
+
+/** Same rule as the server's src/games/stars.js. */
+export function starsFor({ score, maxScore, hintsUsed = 0, parMet = true }) {
+  const ratio = maxScore > 0 ? score / maxScore : 0;
+  if (ratio < 0.6) return 0;
+  if (ratio < 1) return 1;
+  return hintsUsed === 0 && parMet !== false ? 3 : 2;
+}
+
 const MARKERS = {
   matching: markMatching,
   drag_drop: markSort,
@@ -239,16 +336,23 @@ const MARKERS = {
   predict: markPredict,
   bughunt: markBugHunt,
   fillblank: markFillBlank,
+  bugcatch: markBugCatch,
+  trace: markTrace,
 };
 
-/** A whole game. Same shape as POST /games/:id/results. */
-export function markGame(game, answers = {}) {
+/**
+ * A whole game. Same shape as POST /games/:id/results. Hints need a
+ * connection, so an attempt marked here used none unless it says so.
+ */
+export function markGame(game, answers = {}, hintsUsed = 0) {
   const mark = MARKERS[game.kind];
   if (!mark) throw new Error(`Cannot mark "${game.kind}" games offline`);
   const { feedback, score, maxScore, extra = {} } = mark(game, answers);
   return {
     gameId: game.id, kind: game.kind, title: game.title, topic: game.topic,
-    score, maxScore, percent: percent(score, maxScore), ...extra, feedback,
+    score, maxScore, percent: percent(score, maxScore),
+    stars: starsFor({ score, maxScore, hintsUsed, parMet: extra.parMet }), hintsUsed,
+    ...extra, feedback,
     revisit: score < maxScore ? [game.topic] : [],
   };
 }

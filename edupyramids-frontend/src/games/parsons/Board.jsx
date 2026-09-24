@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Hint from '../Hint';
 
 /*
  * Parsons puzzle: build the program from scrambled lines.
@@ -9,10 +10,23 @@ import { useState } from 'react';
  */
 const INDENT_REM = 1.6;
 
-export default function ParsonsBoard({ game, onFinish, sending }) {
+export default function ParsonsBoard({ game, onFinish, sending, hint }) {
   const [program, setProgram] = useState([]);          // [{ id, code, indent }]
+  const [gone, setGone] = useState(new Set());         // lines a hint took away
   const used = new Set(program.map((p) => p.id));
-  const pool = game.blocks.filter((b) => !used.has(b.id));
+  const pool = game.blocks.filter((b) => !used.has(b.id) && !gone.has(b.id));
+
+  // Hints make the puzzle smaller rather than giving it away.
+  function onHint(h) {
+    if (h.remove) {
+      setGone((g) => new Set([...g, h.remove]));
+      setProgram((p) => p.filter((line) => line.id !== h.remove));
+    }
+    if (h.first) {
+      const block = game.blocks.find((b) => b.id === h.first.id);
+      setProgram((p) => [{ ...block, indent: h.first.indent }, ...p.filter((line) => line.id !== h.first.id)]);
+    }
+  }
   const maxIndent = Math.max(1, game.maxIndent);
 
   const add = (block) => setProgram((p) => [...p, { ...block, indent: p.length ? p[p.length - 1].indent : 0 }]);
@@ -32,7 +46,7 @@ export default function ParsonsBoard({ game, onFinish, sending }) {
     <>
       <p className="board-status" aria-live="polite">
         {program.length} line{program.length === 1 ? '' : 's'} placed · the program needs {game.lineCount}
-        {game.blocks.length > game.lineCount && <span className="muted-on-dark"> · some lines do not belong</span>}
+        {game.blocks.length - gone.size > game.lineCount && <span className="muted-on-dark"> · some lines do not belong</span>}
       </p>
 
       <div className="parsons">
@@ -79,6 +93,8 @@ export default function ParsonsBoard({ game, onFinish, sending }) {
           )}
         </section>
       </div>
+
+      <Hint ask={hint} item="program" onHint={onHint} disabled={sending} label="Make it easier" />
 
       <div className="quiz-nav">
         <button className="btn btn--ghost btn--sm" type="button" onClick={() => setProgram([])} disabled={!program.length || sending}>

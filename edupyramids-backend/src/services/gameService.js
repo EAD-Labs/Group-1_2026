@@ -3,6 +3,7 @@ const Game = require('../models/Game');
 const { kindOf } = require('../games');
 const { GameError, token } = require('../games/common');
 const { attemptTime } = require('./attemptTime');
+const { starsFor } = require('../games/stars');
 
 /*
  * Delivering and marking games, for every kind.
@@ -43,22 +44,53 @@ async function checkMove(gameId, body) {
   return kind.check(game, body || {});
 }
 
+/**
+ * A hint, recorded before it is given: the count decides the third star, so it
+ * is the server's record that counts, not the browser's. Asking again for the
+ * same hint is free.
+ */
+async function giveHint({ gameId, studentId, clientAttemptId, item, level }) {
+  const { game, kind } = await load(gameId);
+  if (!kind.hint) throw new GameError('This game has no hints');
+  const hint = kind.hint(game, item, level);
+  if (level > hint.maxLevel) throw new GameError('There are no more hints for this');
+  await pool.query(
+    `INSERT INTO game_hints (client_attempt_id, student_id, game_id, item, level)
+     VALUES ($1, $2, $3, $4, $5)
+     ON CONFLICT DO NOTHING`,
+    [clientAttemptId, studentId, game.id, item, level],
+  );
+  return { ...hint, level };
+}
+
+async function hintsUsed(clientAttemptId, studentId) {
+  if (!clientAttemptId) return 0;
+  const { rows } = await pool.query(
+    'SELECT COUNT(*)::int AS n FROM game_hints WHERE client_attempt_id = $1 AND student_id = $2',
+    [clientAttemptId, studentId],
+  );
+  return rows[0].n;
+}
+
 async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptId, answeredAt }) {
   const { game, kind } = await load(gameId);
   const { feedback, score, maxScore, extra = {} } = kind.mark(game, answers);
+  const hints = await hintsUsed(clientAttemptId, studentId);
+  const stars = starsFor({ score, maxScore, hintsUsed: hints, parMet: extra.parMet });
 
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     const inserted = await client.query(
       `INSERT INTO attempts
-         (student_id, kind, game_id, topic_id, score, max_score, answers, client_attempt_id, created_at)
-       VALUES ($1, 'game', $2, $3, $4, $5, $6, $7, COALESCE($8, now()))
+         (student_id, kind, game_id, topic_id, score, max_score, answers, client_attempt_id, created_at,
+          stars, hints_used)
+       VALUES ($1, 'game', $2, $3, $4, $5, $6, $7, COALESCE($8, now()), $9, $10)
        ON CONFLICT (client_attempt_id) WHERE client_attempt_id IS NOT NULL
        DO NOTHING
        RETURNING id`,
       [studentId, game.id, game.topicId, score, maxScore,
-        JSON.stringify(answers), clientAttemptId ?? null, attemptTime(answeredAt)],
+        JSON.stringify(answers), clientAttemptId ?? null, attemptTime(answeredAt), stars, hints],
     );
 
     let attemptId = inserted.rows[0]?.id;
@@ -80,6 +112,8 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
       score,
       maxScore,
       percent: Math.round((score / maxScore) * 100),
+      stars,
+      hintsUsed: hints,
       ...extra,
       feedback,
       revisit: score < maxScore ? [game.topic] : [],
@@ -93,5 +127,5 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
 }
 
 module.exports = {
-  getGameForStudent, checkMove, markGameAttempt, GameError, token,
+  getGameForStudent, checkMove, giveHint, markGameAttempt, GameError, token,
 };

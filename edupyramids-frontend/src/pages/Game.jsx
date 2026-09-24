@@ -6,6 +6,8 @@ import { kindOf } from '../games/registry';
 import { findGame } from '../offline/pack';
 import { markGame } from '../offline/markers';
 import { enqueue } from '../offline/outbox';
+import Pyra, { pyraOnResult } from '../components/Pyra';
+import Stars from '../components/Stars';
 
 /*
  * One game, start to finish, whatever its kind.
@@ -45,6 +47,13 @@ export default function Game() {
       });
     return () => { live = false; };
   }, [id, round, offlineGame]);
+
+  // Hints are recorded by the server against this round, so they need a connection.
+  const askHint = useCallback(async (item, level) => {
+    if (game?.offline) throw Object.assign(new Error('offline'), { status: 0 });
+    const res = await client.post(`/games/${id}/hint`, { clientAttemptId, item, level });
+    return res.data;
+  }, [id, clientAttemptId, game]);
 
   const finish = useCallback(async (answers) => {
     setSending(true);
@@ -104,7 +113,7 @@ export default function Game() {
           </p>
         </div>
         {game.instructions && <p className="game-instructions">{game.instructions}</p>}
-        <Board key={round} game={game} onFinish={finish} sending={sending} />
+        <Board key={round} game={game} onFinish={finish} sending={sending} hint={askHint} />
       </div>
     </DashboardShell>
   );
@@ -117,9 +126,64 @@ function Shown({ value }) {
   return multiline(value) ? <pre className="fb-code fb-code--inline">{value}</pre> : <strong>{value}</strong>;
 }
 
+/** Bug Catcher: the tests the student ran, then every bugged copy, caught or not. */
+function CatchResult({ result }) {
+  return (
+    <>
+      <h2 className="h2">Your tests</h2>
+      <ul className="catch-ran">
+        {result.tests.map((t, i) => (
+          <li key={i} className={t.ok ? 'catch-ran--ok' : 'catch-ran--no'}>
+            <code>{t.call}</code>
+            {t.ok
+              ? <span>you expected <code>{t.expected}</code>, right ✓</span>
+              : <span>you expected <code>{t.expected ?? 'nothing'}</code>, but it gives <code>{t.right}</code>, so this test could not catch anything</span>}
+          </li>
+        ))}
+      </ul>
+      <h2 className="h2">The bugged copies</h2>
+      <ol className="feedback">
+        {result.feedback.map((f, i) => (
+          <li key={i} className={`fb ${f.correct ? 'fb--ok' : 'fb--no'}`}>
+            <p className="fb-head"><span className="fb-mark">{f.correct ? `🪤 ${f.given}` : '🐞 Escaped'}</span></p>
+            <pre className="fb-code">
+              {f.prompt.split('\n').map((line, n) => (
+                <span key={n} className={`fb-code-line${f.changed?.includes(n) ? ' fb-code-changed' : ''}`}>{line || ' '}</span>
+              ))}
+            </pre>
+            {!f.correct && <p className="fb-a">{f.answer}.</p>}
+            <p className="fb-why">{f.explanation}</p>
+          </li>
+        ))}
+      </ol>
+    </>
+  );
+}
+
+/** Trace Runner: each program with every step, right or wrong. */
+function TraceResult({ result }) {
+  return result.programs.map((code, p) => (
+    <section key={p} className="trace-result">
+      <h2 className="h2">Program {p + 1}</h2>
+      <pre className="fb-code">{code}</pre>
+      <ol className="trace-steps">
+        {result.feedback.filter((f) => f.program === p).map((f, i) => (
+          <li key={i} className={f.correct ? 'trace-step--ok' : 'trace-step--no'}>
+            <span className="trace-step-mark" aria-label={f.correct ? 'right' : 'wrong'}>{f.correct ? '✓' : '✗'}</span>
+            <code className="trace-step-line">line {f.prompt}</code>
+            <span><code>{f.answer}</code>{!f.correct && <span className="muted"> (you said {f.given ? <code>{f.given.split(' = ').slice(1).join(' = ')}</code> : 'nothing'})</span>}</span>
+          </li>
+        ))}
+      </ol>
+      {result.feedback.filter((f) => f.program === p && f.explanation).map((f, i) => <p key={i} className="fb-why">{f.explanation}</p>)}
+    </section>
+  ));
+}
+
 function GameResult({ result, onAgain }) {
   const memory = result.kind === 'memory';
   const { label, icon } = kindOf(result.kind);
+  const pyra = pyraOnResult(result);
 
   const mark = (f) => {
     if (memory) return f.correct ? 'Found' : 'Not found';
@@ -135,13 +199,17 @@ function GameResult({ result, onAgain }) {
         </p>
       )}
       <div className="result-score">
+        <Stars n={result.stars ?? 0} size="lg" />
         <p className="stat-value big">{result.score} / {result.maxScore}</p>
         <p className="muted">
           <span aria-hidden="true">{icon}</span> {label} · {result.percent}% · {result.topic}
           {memory && result.misses > 0 && ` · ${result.misses} miss${result.misses > 1 ? 'es' : ''}`}
           {result.distractorsUsed > 0 && ` · ${result.distractorsUsed} line${result.distractorsUsed > 1 ? 's' : ''} that did not belong`}
+          {result.hintsUsed > 0 && ` · ${result.hintsUsed} hint${result.hintsUsed > 1 ? 's' : ''}`}
         </p>
       </div>
+
+      <Pyra mood={pyra.mood}>{pyra.text}</Pyra>
 
       {result.revisit.length > 0 && (
         <p className="revisit"><strong>Worth another look:</strong> {result.revisit.join(', ')}</p>
@@ -166,6 +234,10 @@ function GameResult({ result, onAgain }) {
         </>
       )}
 
+      {result.kind === 'bugcatch' && <CatchResult result={result} />}
+      {result.kind === 'trace' && <TraceResult result={result} />}
+
+      {!['bugcatch', 'trace'].includes(result.kind) && (<>
       <h2 className="h2">{memory ? 'The pairs' : 'Every answer'}</h2>
       <ol className="feedback">
         {result.feedback.map((f, i) => (
@@ -184,6 +256,7 @@ function GameResult({ result, onAgain }) {
           </li>
         ))}
       </ol>
+      </>)}
 
       <div className="result-actions">
         <button className="btn btn--sm" type="button" onClick={onAgain}>Play again</button>

@@ -10,7 +10,8 @@ const Game = {
       `SELECT g.id, g.title, g.kind, g.topic_id AS "topicId", t.name AS topic,
               t.level,
               COUNT(a.id)::int AS attempts,
-              MAX(ROUND(a.score::numeric / a.max_score * 100))::int AS "bestPercent"
+              MAX(ROUND(a.score::numeric / a.max_score * 100))::int AS "bestPercent",
+              MAX(a.stars)::int AS "bestStars"
          FROM games g
          JOIN topics t ON t.id = g.topic_id
          LEFT JOIN attempts a ON a.game_id = g.id AND a.student_id = $2

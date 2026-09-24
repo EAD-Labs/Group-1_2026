@@ -45,6 +45,8 @@ jobs:
         env:
           JWT_SECRET: ci
       - run: node -e "const v=require('./scripts/import-questions').validate(require('./content/python-mcqs.json'));if(v.errors.length){console.error(v.errors.join('\n'));process.exit(1)}"
+      # Bug Catcher outputs and Trace Runner steps must be what Python gives.
+      - run: python3 scripts/run-python-games.py content/python-games.json --check
 
   frontend:
     runs-on: ubuntu-latest

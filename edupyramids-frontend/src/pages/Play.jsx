@@ -14,6 +14,7 @@ const SKILL_HELP = {
   Trace: 'work out what code does',
   Write: 'put code together',
   Debug: 'find and fix mistakes',
+  Test: 'choose tests that catch hidden bugs',
 };
 
 export default function Play() {

@@ -5,6 +5,8 @@ import ParsonsBoard from './parsons/Board';
 import PredictBoard from './predict/Board';
 import BugHuntBoard from './bughunt/Board';
 import FillBlankBoard from './fillblank/Board';
+import BugCatchBoard from './bugcatch/Board';
+import TraceBoard from './trace/Board';
 
 /*
  * Every game kind the app can play, keyed by the kind name the server uses
@@ -22,6 +24,8 @@ export const GAME_KINDS = {
   predict: { label: 'Predict the output', icon: '🔮', skill: 'Trace', Board: PredictBoard },
   parsons: { label: 'Parsons puzzle', icon: '🧩', skill: 'Write', Board: ParsonsBoard },
   bughunt: { label: 'Bug hunt', icon: '🐞', skill: 'Debug', Board: BugHuntBoard },
+  trace: { label: 'Trace Runner', icon: '👣', skill: 'Trace', Board: TraceBoard },
+  bugcatch: { label: 'Bug Catcher', icon: '🧪', skill: 'Test', Board: BugCatchBoard },
 };
 
 const UNKNOWN = { label: 'Game', icon: '🎲', skill: 'Play', Board: null };

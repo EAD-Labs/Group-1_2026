@@ -1,5 +1,5 @@
 const {
-  token, isText, checker, normaliseOutput, scoreOf,
+  token, isText, checker, normaliseOutput, scoreOf, GameError,
 } = require('./common');
 
 /*
@@ -42,6 +42,14 @@ module.exports = {
       output: Object.fromEntries(items.map((it, i) => [token(game.id, `o${i}`), normaliseOutput(it.output)])),
       explanation: Object.fromEntries(items.map((it, i) => [token(game.id, `o${i}`), it.explanation ?? null])),
     };
+  },
+
+  /** How many lines it prints: enough to check a trace without giving it away. */
+  hint(game, itemId) {
+    const it = game.content.items.find((_, i) => token(game.id, `o${i}`) === itemId);
+    if (!it) throw new GameError('No such program in this game');
+    const n = normaliseOutput(it.output).split('\n').length;
+    return { text: `It prints ${n} line${n === 1 ? '' : 's'}.`, maxLevel: 1 };
   },
 
   /** answers: { [itemId]: "typed output" } */

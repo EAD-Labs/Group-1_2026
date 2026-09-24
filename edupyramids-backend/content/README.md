@@ -198,12 +198,61 @@ endings are ignored, everything else must match.
 One entry in `blanks` per `___`, in order. At least one decoy, and no decoy may
 also be a right answer.
 
+## Games whose answers come from running Python
+
+For these two kinds you write the code; `scripts/run-python-games.py` runs it
+in real Python and fills in the answers. Never type `outputs` or `steps` by
+hand. After editing, run:
+
+```bash
+python scripts/run-python-games.py content/python-games.json          # fill in
+python scripts/run-python-games.py content/python-games.json --check  # what CI runs
+```
+
+**`bugcatch`** (Bug Catcher): a working function plus 1 to 4 bugged copies.
+Students pick test inputs and say what the working function returns; a test
+catches every copy that answers differently. Give 2 to 6 `inputs`, written as
+the arguments of a call. Every copy must be caught by at least one input, and
+two copies that always answer alike make a dull puzzle. Test slots are par + 1,
+where par is the fewest inputs that catch every copy.
+
+```json
+{ "title": "Catch the loop bugs", "kind": "bugcatch",
+  "items": [{
+    "code": "def total_to(n):\n    total = 0\n    …",
+    "call": "total_to",
+    "task": "Adds up the whole numbers from 1 to n.",
+    "inputs": ["0", "1", "5"],
+    "mutants": [{ "code": "def total_to(n):\n    …range(1, n)…", "bug": "range(1, n) stops at n - 1." }],
+    "hint": "…", "explanation": "…"
+  }] }
+```
+
+Outputs are Python's `repr()`, so `'A'` and `5.0` are different from `A` and
+`5`. An input that raises an error has the error's name as its output.
+
+**`trace`** (Trace Runner): students type each value a watched variable gets,
+line by line. Module-level code only (no functions), at most 14 steps.
+
+```json
+{ "title": "Trace the loops", "kind": "trace",
+  "items": [{ "code": "total = 0\nfor i in range(1, 5):\n    …", "watch": ["i", "total"], "explanation": "…" }] }
+```
+
+## Stars and hints
+
+Every game gives up to three stars: one at 60%, two for everything right,
+three for everything right with no hints (and, in Bug Catcher, no more tests
+than par). Parsons, Predict, Bug hunt, Bug Catcher and Trace Runner have
+hints. The server records each one, and each costs the third star.
+
 ### Adding a new kind of game
 
 1. `edupyramids-backend/src/games/<kind>.js` with `validate`, `contentOf`,
-   `deliver` and `mark` (and `check` if it needs instant feedback during play),
-   then add it to `src/games/index.js`.
+   `deliver`, `mark` and `offlineKey` (plus `check` for instant feedback during
+   play, and `hint` if it has hints), then add it to `src/games/index.js`.
 2. `edupyramids-frontend/src/games/<kind>/Board.jsx`, then add it to
-   `src/games/registry.js`.
-3. Add a `perfect` answer builder for it in `tests/gameKinds.test.js`; the
-   shared checks then cover it automatically.
+   `src/games/registry.js`, and a marker for it in `src/offline/markers.js`.
+3. Add a `perfect` answer builder for it in `tests/gameKinds.test.js`, and
+   answer builders in `tests/offline.test.js` and the frontend's
+   `markers.test.js`; the shared checks then cover it automatically.

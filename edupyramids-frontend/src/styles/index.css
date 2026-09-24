@@ -1858,3 +1858,131 @@ tr.is-open > td { border-bottom-color: transparent; }
 .offline-head { display: flex; gap: 0.9rem; align-items: flex-start; }
 .offline-icon { font-size: 26px; width: 2.8rem; height: 2.8rem; flex: none; display: grid; place-items: center; border-radius: var(--radius); background: var(--brand-tint); }
 .offline-title { font-size: 18px; margin: 0 0 0.2rem; }
+
+/* ================================================================
+   The layer every game shares: Pyra, stars and hints.
+   ================================================================ */
+
+/* Pyra: navy on the page, amber on the navy game card */
+.pyra { display: flex; align-items: flex-start; gap: 0.75rem; margin: 0 0 var(--gap-lg); color: var(--brand); }
+.game .pyra { color: var(--amber); margin-bottom: var(--gap); }
+.pyra-bot { width: 56px; height: 60px; flex: none; }
+.pyra--small .pyra-bot { width: 44px; height: 47px; }
+.pyra-light { fill: var(--accent); }
+.pyra--proud .pyra-light, .pyra--happy .pyra-light { fill: #4ADE80; }
+.pyra-says {
+  position: relative;
+  background: #fff; color: var(--text-dark);
+  border-radius: var(--radius); padding: 0.7rem 0.95rem;
+  font-size: 15px; line-height: 1.45; box-shadow: var(--shadow);
+  margin-top: 0.2rem;
+}
+.pyra-says::before {
+  content: ''; position: absolute; left: -7px; top: 14px;
+  border: 7px solid transparent; border-left: 0; border-right-color: #fff;
+}
+.pyra--happy .pyra-bot, .pyra--proud .pyra-bot { animation: hop 0.5s ease 2; }
+@keyframes hop { 50% { transform: translateY(-5px); } }
+
+/* stars */
+.stars { display: inline-flex; gap: 0.1em; line-height: 1; vertical-align: middle; }
+.star { color: rgb(46 52 148 / 18%); }
+.star--on { color: var(--amber); }
+.stars--lg { font-size: 34px; margin-bottom: 0.3rem; }
+.stars--lg .star { color: rgb(255 255 255 / 30%); }
+.stars--lg .star--on { color: #FFD166; text-shadow: 0 2px 10px rgb(0 0 0 / 20%); }
+.stars--sm { font-size: 14px; margin-left: 0.3rem; }
+.tile-best { display: flex; align-items: center; }
+
+/* hints, on the navy card */
+.hint { display: grid; gap: 0.4rem; justify-items: start; }
+.hint-btn {
+  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+  background: transparent; color: #fff; cursor: pointer;
+  border: 1px dashed rgb(255 255 255 / 45%); border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+}
+.hint-btn:hover:not(:disabled) { background: rgb(255 255 255 / 10%); }
+.hint-btn:disabled { opacity: 0.5; cursor: default; }
+.hint-cost { color: rgb(255 255 255 / 60%); font-weight: 500; }
+.hint-text {
+  background: rgb(245 158 36 / 18%); color: #fff;
+  border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 14px;
+}
+.hint-text--error { background: rgb(242 99 33 / 26%); }
+.parsons + .hint { margin-top: var(--gap); }
+
+/* ---------------------------------------------------------------- Bug Catcher */
+.catch-task { color: #fff; font-weight: 600; }
+.catch-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; color: rgb(255 255 255 / 80%); font-family: var(--font-ui); font-size: 13px; font-weight: 600; }
+.catch-inputs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.catch-input, .catch-option {
+  background: #fff; color: var(--text-dark);
+  border: 2px solid transparent; border-radius: var(--radius-sm);
+  padding: 0.4rem 0.7rem; cursor: pointer;
+}
+.catch-input code, .catch-option code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; background: none; color: inherit; padding: 0; }
+.catch-input:disabled { opacity: 0.45; cursor: default; }
+.catch-input--on { border-color: var(--amber); background: #FFF6E6; }
+.catch-input:focus-visible, .catch-option:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.catch-tests { list-style: none; display: grid; gap: 0.6rem; }
+.catch-test { background: rgb(255 255 255 / 8%); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; display: grid; gap: 0.45rem; }
+.catch-test-q { color: #fff; font-size: 14px; }
+.catch-test-q code { background: rgb(255 255 255 / 14%); color: #fff; padding: 0.05rem 0.35rem; border-radius: 4px; }
+.catch-options { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.catch-option--on { border-color: var(--amber); box-shadow: 0 0 0 2px rgb(245 158 36 / 35%); }
+
+.catch-ran { list-style: none; display: grid; gap: 0.5rem; margin-bottom: var(--gap-lg); }
+.catch-ran li {
+  display: flex; flex-wrap: wrap; gap: 0.3rem 0.75rem; align-items: baseline;
+  background: var(--surface); border-radius: var(--radius-sm); padding: 0.6rem 0.85rem;
+  border-left: 4px solid var(--brand); box-shadow: var(--shadow);
+}
+.catch-ran li.catch-ran--no { border-left-color: var(--accent); }
+
+/* ---------------------------------------------------------------- Trace Runner */
+.trace-streak { color: #FFD166; }
+.trace { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+@media (max-width: 760px) { .trace { grid-template-columns: minmax(0, 1fr); } }
+.trace-code { background: #fff; border-radius: var(--radius-sm); overflow: hidden; padding: 0.3rem 0; }
+.trace-line {
+  display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); align-items: center;
+  border-left: 4px solid transparent; padding: 0.2rem 0.6rem 0.2rem 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; color: var(--text-dark);
+  transition: background 0.2s ease;
+}
+.trace-line code { white-space: pre; overflow-x: auto; background: none; padding: 0; color: inherit; }
+.trace-line-n { color: var(--text-light); text-align: right; padding-right: 0.7rem; font-size: 12px; }
+.trace-line--now { background: #FFF1EA; border-left-color: var(--accent); }
+.trace-line--now .trace-line-n { color: var(--accent-dark); font-weight: 700; }
+.trace-side { display: grid; gap: var(--gap); }
+.trace-vars { display: grid; gap: 0.4rem; }
+.trace-var { display: flex; justify-content: space-between; gap: 0.75rem; background: rgb(255 255 255 / 8%); border-radius: var(--radius-sm); padding: 0.45rem 0.75rem; color: #fff; }
+.trace-var dt { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; }
+.trace-var dd code { background: rgb(255 255 255 / 14%); color: #fff; padding: 0.05rem 0.4rem; border-radius: 4px; }
+.trace-ask { display: grid; gap: 0.5rem; color: #fff; font-size: 15px; }
+.trace-row { display: flex; gap: 0.5rem; }
+.trace-row input {
+  flex: 1; min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 16px;
+  border: 2px solid transparent; border-radius: var(--radius-sm); padding: 0.5rem 0.7rem;
+}
+.trace-row input:focus-visible { outline: none; border-color: var(--amber); }
+.trace-done { color: #fff; font-weight: 600; }
+
+.trace-result { margin-bottom: var(--gap-lg); }
+.trace-steps { list-style: none; display: grid; gap: 0.35rem; margin: 0.75rem 0; }
+.trace-steps li {
+  display: grid; grid-template-columns: 1.4rem minmax(0, 11rem) minmax(0, 1fr); gap: 0.6rem; align-items: baseline;
+  background: var(--surface); border-radius: var(--radius-sm); padding: 0.45rem 0.75rem; font-size: 14px;
+}
+@media (max-width: 520px) { .trace-steps li { grid-template-columns: 1.4rem minmax(0, 1fr); } .trace-steps li > span:last-child { grid-column: 2; } }
+.trace-step-mark { font-weight: 700; color: var(--brand); }
+.trace-step--no .trace-step-mark { color: var(--accent-dark); }
+.trace-step-line { color: var(--text-light); white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pyra--happy .pyra-bot, .pyra--proud .pyra-bot { animation: none; }
+}
+.fb-code-line { display: block; }
+.fb-code-changed { background: #FFE4D6; box-shadow: inset 3px 0 0 var(--accent); margin: 0 -0.4rem; padding: 0 0.4rem; }

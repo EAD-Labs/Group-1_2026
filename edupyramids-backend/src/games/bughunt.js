@@ -1,5 +1,5 @@
 const {
-  token, shuffle, isText, duplicates, checker,
+  token, shuffle, isText, duplicates, checker, GameError,
 } = require('./common');
 
 /*
@@ -55,6 +55,18 @@ module.exports = {
       fix: Object.fromEntries(items.map((it, i) => [token(game.id, `b${i}`), token(game.id, `b${i}f${it.fix}`)])),
       explanation: Object.fromEntries(items.map((it, i) => [token(game.id, `b${i}`), it.explanation ?? null])),
     };
+  },
+
+  /** Level 1 narrows the search to a few lines, level 2 names the line. */
+  hint(game, itemId, level) {
+    const it = game.content.items.find((_, i) => token(game.id, `b${i}`) === itemId);
+    if (!it) throw new GameError('No such program in this game');
+    const count = it.code.split('\n').length;
+    if (level === 1 && count > 3) {
+      const from = Math.max(1, Math.min(it.bugLine - 1, count - 2));
+      return { text: `The bug is somewhere in lines ${from} to ${from + 2}.`, maxLevel: 2 };
+    }
+    return { text: `The bug is on line ${it.bugLine}.`, maxLevel: count > 3 ? 2 : 1 };
   },
 
   /** answers: { [itemId]: { line: 1-based number, fix: fixId } } */

@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import Hint from '../Hint';
 
 /*
  * Predict the output: read each program and type exactly what it prints.
  * Enter makes a new line, because some programs print several.
  */
-export default function PredictBoard({ game, onFinish, sending }) {
+export default function PredictBoard({ game, onFinish, sending, hint }) {
   const [typed, setTyped] = useState({});
   const done = game.items.filter((it) => (typed[it.id] || '').trim()).length;
 
@@ -29,6 +30,7 @@ export default function PredictBoard({ game, onFinish, sending }) {
                 disabled={sending}
               />
             </label>
+            <Hint ask={hint} item={it.id} disabled={sending} />
           </li>
         ))}
       </ol>
