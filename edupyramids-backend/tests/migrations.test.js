@@ -21,3 +21,12 @@ test('every migration runs again on a database that already holds games of every
       .resolves.toBeDefined();
   }
 });
+
+test('the old placeholder topics are removed only when nothing uses them', async () => {
+  const run = () => pool.query(fs.readFileSync(path.join(dir, '012_drop_empty_seed_topics.sql'), 'utf8'));
+  await pool.query("INSERT INTO topics (name, level) VALUES ('Files', 1) ON CONFLICT (name) DO NOTHING");
+  await run();
+  expect(await queryOne("SELECT id FROM topics WHERE name = 'Files'")).toBeNull();
+  // 'Variables' holds a sample quiz in the test database, so it stays.
+  expect(await queryOne("SELECT id FROM topics WHERE name = 'Variables'")).not.toBeNull();
+});

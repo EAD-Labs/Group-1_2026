@@ -17,9 +17,7 @@ const { pool, query, queryOne } = require('../src/config/database');
 
 const PASSWORD = 'password123';
 
-const TOPICS = [
-  'Variables', 'Loops', 'Lists', 'Dictionaries', 'Functions', 'Files',
-];
+// Topics come from the content files (the importers), not from here.
 
 const USERS = [
   ['student1@school.com', 'Aditya Sharma', 'student', 'school_001'],
@@ -32,14 +30,6 @@ const USERS = [
 
 async function main() {
   const hash = await bcrypt.hash(PASSWORD, 10);
-
-  for (const [i, name] of TOPICS.entries()) {
-    await query(
-      `INSERT INTO topics (name, level, sort_order) VALUES ($1, $2, $3)
-       ON CONFLICT (name) DO NOTHING`,
-      [name, Math.floor(i / 2) + 1, i],
-    );
-  }
 
   for (const [email, name, role, schoolId] of USERS) {
     await query(

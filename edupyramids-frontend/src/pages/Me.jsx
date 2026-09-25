@@ -13,7 +13,7 @@ import { DailyStrip, GoalSettings } from '../components/Daily';
  */
 export default function Me() {
   const user = auth.getCurrentUser();
-  const { loading, error, data } = useApi([`/progress/${user.id}`, '?/practice/mastery', '?/me/daily']);
+  const { loading, error, data } = useApi([`/progress/${user.id}`, '?/practice/mastery', '?/me/daily', '?/path']);
   const [changed, setChanged] = useState(null);
 
   if (loading || error) {
@@ -24,7 +24,10 @@ export default function Me() {
     );
   }
 
-  const [{ summary, badges }, concepts, loaded] = data;
+  const [{ summary, badges }, concepts, loaded, path] = data;
+  // A tier is built when every brick in it, keystone included, is set.
+  const tiers = path?.units ?? [];
+  const built = tiers.filter((u) => u.progress.total > 0 && u.progress.done === u.progress.total).length;
   const daily = changed || loaded;
   const practisable = concepts.filter((c) => c.questions > 0);
   const mastered = practisable.filter((c) => c.status === 'mastered' || c.status === 'review').length;
@@ -34,7 +37,7 @@ export default function Me() {
       {daily?.streak && <DailyStrip daily={daily} />}
 
       <div className="stat-row">
-        <Stat label="Topics finished" value={`${summary.topicsLearnt} / ${summary.topics}`} note="80% or better" />
+        <Stat label="Tiers built" value={`${built} / ${tiers.length}`} note="every brick set" />
         <Stat label="Concepts mastered" value={`${mastered} / ${practisable.length}`} note="95% estimated" />
         <Stat label="Quizzes and games" value={summary.attempts} note="finished" />
         <Stat label="Badges" value={badges.length} />
