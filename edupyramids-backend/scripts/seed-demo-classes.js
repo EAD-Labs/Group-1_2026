@@ -11,6 +11,13 @@
  * and every address is @demo.example, a domain reserved for examples. The
  * password is password123, as for the other test accounts.
  *
+ * Generating takes a few minutes, and on the hosted pilot it runs in the
+ * background after the server starts. The run is only counted as done when it
+ * finishes (the "demo_classes" flag in app_flags). If the server restarts part
+ * way through, the next start finds the classes without the flag, removes the
+ * half-made ones and generates them again, so the demo is never left partial.
+ * Pages opened while it runs show the numbers so far.
+ *
  * Nothing is typed in by hand. Each student is played through the app's own
  * services (the pyramid picks the next brick, quizzes and games are marked,
  * keystones taken, practice answered, hints asked for), day by day over the
@@ -32,6 +39,7 @@ const { lessonsFor } = require('../src/services/lessonService');
 const { dayOf } = require('../src/services/dailyService');
 
 const DOMAIN = 'demo.example';
+const FLAG = 'demo_classes';
 const PASSWORD = 'password123';
 const DAYS = 21;
 
@@ -281,6 +289,7 @@ async function live(student) {
 const email = (first, last, n = '') => `${first}.${last}${n}@${DOMAIN}`.toLowerCase();
 
 async function remove() {
+  await query('DELETE FROM app_flags WHERE name = $1', [FLAG]);
   await query('DELETE FROM classes WHERE name = ANY($1)', [CLASSES.map((c) => c.name)]);
   const gone = await query(`DELETE FROM users WHERE email LIKE $1 RETURNING id`, [`%@${DOMAIN}`]);
   console.log(`Removed ${gone.length} demo account(s) and their classes.`);
@@ -327,6 +336,11 @@ async function create() {
     process.stdout.write(`\n${cls.name}: ${activities} activities\n`);
   }
 
+  await query(
+    `INSERT INTO app_flags (name, value) VALUES ($1, 'done')
+     ON CONFLICT (name) DO UPDATE SET value = 'done', updated_at = now()`,
+    [FLAG],
+  );
   console.log('\nDemo classes ready. Every account signs in with the password: password123');
   summary.forEach((s) => console.log(`  ${s.cls}: teacher ${s.teacher} · 20 students, e.g. ${s.sample}`));
 }
@@ -336,10 +350,16 @@ async function main() {
   if (args.includes('--remove') || args.includes('--reset')) await remove();
   if (args.includes('--remove')) return;
 
-  const there = await queryOne('SELECT COUNT(*)::int AS n FROM classes WHERE name = ANY($1)', [CLASSES.map((c) => c.name)]);
-  if (there.n > 0) {
+  const done = await queryOne('SELECT 1 AS yes FROM app_flags WHERE name = $1', [FLAG]);
+  if (done) {
     console.log('Demo classes already exist; nothing to do. Use --reset to make them again.');
     return;
+  }
+  const there = await queryOne('SELECT COUNT(*)::int AS n FROM classes WHERE name = ANY($1)', [CLASSES.map((c) => c.name)]);
+  if (there.n > 0) {
+    // Started before but never finished: the server restarted part way through.
+    console.log('Demo classes were left half-made; removing them and starting again.');
+    await remove();
   }
   const quizzes = await queryOne('SELECT COUNT(*)::int AS n FROM questions');
   if (!quizzes.n) {
