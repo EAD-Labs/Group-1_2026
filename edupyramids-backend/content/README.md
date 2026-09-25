@@ -34,6 +34,22 @@ list of questions.
 ]
 ```
 
+## Shuffle the options before loading
+
+Exports from Moodle list the right answer first, so every answer comes out as
+"a", and a student who always picks A scores 100%. Before loading a new file:
+
+```bash
+node scripts/shuffle-options.js content/your-questions.json
+```
+
+It puts each question's options in a fixed shuffled order (running it again
+changes nothing), keeps "None of the above" and the like at the end, and keeps
+an option that appears twice only once. The importer warns about a file whose
+answers are all one letter, or a question with two identical options.
+Importing a shuffled file into a database that already has the questions
+re-orders them and re-letters the answers students have already given.
+
 ## Rules the importer enforces
 
 An import either loads the whole file or changes nothing at all. There is no
