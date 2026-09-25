@@ -1,4 +1,5 @@
 const Quiz = require('../models/Quiz');
+const { lessonsFor } = require('./lessonService');
 
 /*
  * Delivering a quiz to a student.
@@ -27,12 +28,23 @@ async function listQuizzes({ topicId } = {}) {
  * dropped here for the same reason, since an explanation usually gives the
  * answer away. Both come back from scoringService once the attempt is marked.
  */
-async function getQuizForStudent(quizId) {
+async function getQuizForStudent(quizId, lesson = null) {
   const quiz = await Quiz.findById(quizId);
   if (!quiz) throw new QuizNotFound();
 
   const questions = await Quiz.questionsFor(quizId);
-  return { ...quiz, questions };
+  if (!lesson) return { ...quiz, questions };
+
+  // One lesson: only its questions, in lesson order.
+  const lessons = await lessonsFor(quizId);
+  const one = lessons[lesson - 1];
+  if (!one) throw new QuizNotFound();
+  const byId = new Map(questions.map((q) => [q.id, q]));
+  return {
+    ...quiz,
+    lesson: { index: one.index, count: lessons.length, title: one.title },
+    questions: one.questionIds.map((id) => byId.get(id)),
+  };
 }
 
 module.exports = { listQuizzes, getQuizForStudent, QuizNotFound };

@@ -18,8 +18,14 @@ import Stars from './Stars';
  */
 
 const iconOf = (brick) => (brick.type === 'quiz' ? '📝' : kindOf(brick.kind).icon);
-const hrefOf = (brick) => (brick.type === 'quiz' ? `/quiz/${brick.id}` : `/game/${brick.id}`);
-const labelOf = (brick) => (brick.type === 'quiz' ? 'Quiz' : kindOf(brick.kind).label);
+const hrefOf = (brick) => {
+  if (brick.type !== 'quiz') return `/game/${brick.id}`;
+  return brick.lesson ? `/quiz/${brick.id}?lesson=${brick.lesson}` : `/quiz/${brick.id}`;
+};
+const labelOf = (brick) => {
+  if (brick.type !== 'quiz') return kindOf(brick.kind).label;
+  return brick.lesson ? 'Lesson' : 'Quiz';
+};
 const STATUS = {
   done: 'set', current: 'build this next', open: 'ready to build', locked: 'locked',
 };
@@ -122,7 +128,7 @@ export default function Pyramid({ units }) {
 
               <ol className="bricks">
                 {u.review && <CrackedBrick review={u.review} />}
-                {u.nodes.map((n) => <Brick key={`${n.type}${n.id}`} brick={n} nowRef={nowRef} />)}
+                {u.nodes.map((n) => <Brick key={`${n.type}${n.id}-${n.lesson ?? 0}`} brick={n} nowRef={nowRef} />)}
                 {u.hasCheckpoint && <Keystone unit={u} nowRef={nowRef} />}
               </ol>
 

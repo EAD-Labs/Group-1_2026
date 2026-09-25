@@ -4,6 +4,7 @@ const Game = require('../models/Game');
 const { recordResponse, summariseChanges, masteryFor } = require('./masteryService');
 const { shuffle } = require('../games/common');
 const { quizStars } = require('./xp');
+const { lessonsForMany } = require('./lessonService');
 
 /*
  * The learning path: one route through the course, after Duolingo's 2022
@@ -63,14 +64,20 @@ async function unitsWithContent(studentId) {
     ),
   ]);
 
+  const lessonNodes = await lessonNodesFor(studentId, quizzes);
+  const lastTopic = topics.filter((t) => quizzes.some((q) => q.topicId === t.id)
+    || games.some((g) => g.topicId === t.id)).pop()?.id;
+
   return topics.map((t) => {
     const cp = checkpoints.find((c) => c.topicId === t.id) || { tries: 0, passed: false, bestPercent: null };
     const topicGames = games.filter((g) => g.topicId === t.id);
     const nodes = [
-      ...quizzes.filter((q) => q.topicId === t.id).map((q) => ({
-        type: 'quiz', id: q.id, title: q.title, kind: 'quiz',
-        attempts: q.attempts, bestPercent: q.bestPercent, stars: quizStars(q.bestPercent),
-      })),
+      // A long quiz is its lessons; the last unit's quiz is the final test and stays whole.
+      ...quizzes.filter((q) => q.topicId === t.id).flatMap((q) => (
+        t.id !== lastTopic && lessonNodes.get(q.id)?.length ? lessonNodes.get(q.id) : [{
+          type: 'quiz', id: q.id, title: q.title, kind: 'quiz',
+          attempts: q.attempts, bestPercent: q.bestPercent, stars: quizStars(q.bestPercent),
+        }])),
       ...topicGames.filter((g) => !WARM_UPS.includes(g.kind))
         .sort((a, b) => (CORE_ORDER.indexOf(a.kind) - CORE_ORDER.indexOf(b.kind)) || a.id - b.id)
         .map((g) => ({
@@ -109,6 +116,47 @@ async function reviewsFor(studentId) {
     byTopic.get(t.topicId).push({ slug: t.slug, name: due.get(t.slug) });
   });
   return byTopic;
+}
+
+/**
+ * Each long quiz as lesson bricks, with this student's best on each. An
+ * attempt at one lesson counts for that lesson; an attempt at the whole quiz
+ * counts for every lesson, marked on that lesson's questions from what was
+ * answered.
+ */
+async function lessonNodesFor(studentId, quizzes) {
+  const lessons = await lessonsForMany(quizzes.map((q) => q.id));
+  const split = quizzes.filter((q) => lessons.get(q.id).length);
+  if (!split.length) return new Map();
+
+  const ids = split.map((q) => q.id);
+  const [attempts, keys] = await Promise.all([
+    query(
+      `SELECT quiz_id AS "quizId", lesson, score, max_score AS "maxScore", answers
+         FROM attempts WHERE student_id = $1 AND quiz_id = ANY($2)`,
+      [studentId, ids],
+    ),
+    query('SELECT id, correct_answer AS correct FROM questions WHERE quiz_id = ANY($1)', [ids]),
+  ]);
+  const correct = new Map(keys.map((k) => [k.id, k.correct]));
+
+  const out = new Map();
+  split.forEach((q) => {
+    out.set(q.id, lessons.get(q.id).map((l) => {
+      const mine = attempts.filter((a) => a.quizId === q.id && (a.lesson === l.index || a.lesson === null));
+      const percents = mine.map((a) => {
+        if (a.lesson !== null) return Math.round((a.score / a.maxScore) * 100);
+        const right = l.questionIds.filter((id) => (a.answers || {})[id] === correct.get(id)).length;
+        return Math.round((right / l.questionIds.length) * 100);
+      });
+      const best = percents.length ? Math.max(...percents) : null;
+      return {
+        type: 'quiz', id: q.id, lesson: l.index, title: l.title, kind: 'quiz',
+        attempts: mine.length, bestPercent: best, stars: quizStars(best),
+      };
+    }));
+  });
+  return out;
 }
 
 /** The whole path for one student, with what is open and what comes next. */

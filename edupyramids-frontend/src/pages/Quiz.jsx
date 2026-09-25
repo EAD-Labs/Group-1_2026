@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  useParams, useNavigate, useSearchParams, Link,
+} from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
 import { auth } from '../utils/auth';
@@ -18,12 +20,12 @@ const LETTERS = ['a', 'b', 'c', 'd', 'e'];
  * localStorage, not the server: nothing is worth recording until the attempt is
  * finished, which is the same rule the marking follows.
  */
-const progressKey = (quizId) =>
-  `edupyramids.quiz.${auth.getCurrentUser()?.id ?? 'anon'}.${quizId}`;
+const progressKey = (quizId, lesson = null) =>
+  `edupyramids.quiz.${auth.getCurrentUser()?.id ?? 'anon'}.${quizId}${lesson ? `.lesson${lesson}` : ''}`;
 
-function loadProgress(quizId) {
+function loadProgress(quizId, lesson) {
   try {
-    return JSON.parse(localStorage.getItem(progressKey(quizId))) || null;
+    return JSON.parse(localStorage.getItem(progressKey(quizId, lesson))) || null;
   } catch {
     return null;
   }
@@ -39,10 +41,13 @@ function loadProgress(quizId) {
 export default function Quiz() {
   const { id } = useParams();
   const navigate = useNavigate();
+  // A lesson is a short slice of a long quiz (?lesson=2), as the pyramid shows it.
+  const [params] = useSearchParams();
+  const lesson = Number(params.get('lesson')) || null;
 
   const [quiz, setQuiz] = useState(null);
   const [error, setError] = useState(null);
-  const saved = useMemo(() => loadProgress(id), [id]);
+  const saved = useMemo(() => loadProgress(id, lesson), [id, lesson]);
   const [at, setAt] = useState(saved?.at ?? 0);
   const [answers, setAnswers] = useState(saved?.answers ?? {});
   const [resumed, setResumed] = useState(Boolean(saved?.answers
@@ -57,12 +62,12 @@ export default function Quiz() {
   useEffect(() => {
     if (result) return;
     try {
-      localStorage.setItem(progressKey(id), JSON.stringify({ at, answers, verdicts }));
+      localStorage.setItem(progressKey(id, lesson), JSON.stringify({ at, answers, verdicts }));
     } catch { /* private window, or storage full: resuming is a convenience */ }
-  }, [id, at, answers, verdicts, result]);
+  }, [id, lesson, at, answers, verdicts, result]);
 
   function startAgain() {
-    try { localStorage.removeItem(progressKey(id)); } catch { /* ignore */ }
+    try { localStorage.removeItem(progressKey(id, lesson)); } catch { /* ignore */ }
     setAt(0); setAnswers({}); setVerdicts({}); setResumed(false);
   }
 
@@ -72,12 +77,12 @@ export default function Quiz() {
 
   // Set when the quiz came from the offline pack: marking then happens on
   // the device, and the attempt waits in the outbox until there is a network.
-  const offlineQuiz = useMemo(() => findQuiz(id), [id]);
+  const offlineQuiz = useMemo(() => findQuiz(id, lesson), [id, lesson]);
   const [offline, setOffline] = useState(false);
 
   useEffect(() => {
     let live = true;
-    client.get(`/quizzes/${id}`)
+    client.get(`/quizzes/${id}${lesson ? `?lesson=${lesson}` : ''}`)
       .then((res) => live && setQuiz(res.data))
       .catch((err) => {
         if (!live) return;
@@ -91,7 +96,7 @@ export default function Quiz() {
         }
       });
     return () => { live = false; };
-  }, [id, offlineQuiz]);
+  }, [id, lesson, offlineQuiz]);
 
   if (error) {
     return (
@@ -135,17 +140,19 @@ export default function Quiz() {
 
   async function finish() {
     setSending(true);
-    const body = { answers, clientAttemptId, answeredAt: new Date().toISOString() };
+    const body = {
+      answers, clientAttemptId, answeredAt: new Date().toISOString(), ...(lesson ? { lesson } : {}),
+    };
     try {
       if (offline) throw Object.assign(new Error('offline'), { status: 0 });
       const res = await client.post(`/quizzes/${id}/attempts`, body);
-      try { localStorage.removeItem(progressKey(id)); } catch { /* ignore */ }
+      try { localStorage.removeItem(progressKey(id, lesson)); } catch { /* ignore */ }
       setResult(res.data);
     } catch (err) {
       if (err.status === 0 && offlineQuiz) {
         // Marked here for the student now; uploaded and marked again later.
         enqueue({ path: `/quizzes/${id}/attempts`, body, title: offlineQuiz.title });
-        try { localStorage.removeItem(progressKey(id)); } catch { /* ignore */ }
+        try { localStorage.removeItem(progressKey(id, lesson)); } catch { /* ignore */ }
         setResult({ ...markQuiz(offlineQuiz, answers), savedOffline: true });
       } else {
         setError(err.message);
@@ -163,7 +170,9 @@ export default function Quiz() {
 
       <div className="quiz">
         <div className="quiz-top">
-          <p className="quiz-topic">{quiz.title}</p>
+          <p className="quiz-topic">
+            {quiz.lesson ? `${quiz.lesson.title} · ${quiz.lesson.index} of ${quiz.lesson.count}` : quiz.title}
+          </p>
           <div className="quiz-meta">
             {rightSoFar > 0 && (
               <span className="tally" key={rightSoFar}>

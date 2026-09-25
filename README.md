@@ -74,8 +74,10 @@ finding that public leaderboards discourage weaker students, so there are
 none.
 
 - **Pyramid.** Each level is a tier, built from the foundation (Bronze) up to
-  the capstone. A tier's bricks are its quiz, then its games from the easiest
-  skill to the hardest, then a keystone (10 mixed questions, 70% to pass).
+  the capstone. A tier's bricks are its quiz, as short lessons of about eight
+  questions grouped by concept (the final test stays whole), then its games
+  from the easiest skill to the hardest, then a keystone (10 mixed questions,
+  70% to pass).
   A brick opens when the one before has a star, and is coloured by its stars
   (sandstone, bronze, gold). Anything already played stays open, and a locked
   tier can be reached by setting the keystone below it. The logic is the

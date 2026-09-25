@@ -14,8 +14,12 @@ import { useApi } from '../utils/useApi';
  * Fading concepts are cracked bricks; mastery details live in Practice and
  * Progress.
  */
-const hrefOf = (next) => ({ quiz: `/quiz/${next.id}`, game: `/game/${next.id}`, checkpoint: `/checkpoint/${next.id}` }[next.type]);
-const kindLabel = (next) => ({ quiz: 'Quiz', checkpoint: 'Keystone' }[next.type] || kindOf(next.kind).label);
+const hrefOf = (next) => ({
+  quiz: `/quiz/${next.id}${next.lesson ? `?lesson=${next.lesson}` : ''}`,
+  game: `/game/${next.id}`,
+  checkpoint: `/checkpoint/${next.id}`,
+}[next.type]);
+const kindLabel = (next) => ({ quiz: next.lesson ? 'Lesson' : 'Quiz', checkpoint: 'Keystone' }[next.type] || kindOf(next.kind).label);
 
 export default function StudentHome() {
   const user = auth.getCurrentUser();

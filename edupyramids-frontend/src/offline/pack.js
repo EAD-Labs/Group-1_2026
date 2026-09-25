@@ -65,8 +65,18 @@ export function refreshInBackground() {
   if (isEnabled() && navigator.onLine) download().catch(() => {});
 }
 
-export function findQuiz(id) {
-  return getPack()?.quizzes.find((q) => q.id === Number(id)) ?? null;
+/** A downloaded quiz, or one lesson of it: the same quiz with only that lesson's questions. */
+export function findQuiz(id, lesson = null) {
+  const quiz = getPack()?.quizzes.find((q) => q.id === Number(id)) ?? null;
+  if (!quiz || !lesson) return quiz;
+  const one = quiz.lessons?.[lesson - 1];
+  if (!one) return null;
+  const byId = new Map(quiz.questions.map((q) => [q.id, q]));
+  return {
+    ...quiz,
+    lesson: { index: one.index, count: quiz.lessons.length, title: one.title },
+    questions: one.questionIds.map((qid) => byId.get(qid)).filter(Boolean),
+  };
 }
 
 export function findGame(id) {

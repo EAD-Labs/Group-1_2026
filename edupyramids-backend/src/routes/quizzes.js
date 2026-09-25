@@ -33,7 +33,11 @@ router.get('/:id', async (req, res, next) => {
       return res.status(400).json({ error: 'Quiz id must be a number' });
     }
 
-    return res.json({ success: true, data: await getQuizForStudent(id) });
+    const lesson = req.query.lesson === undefined ? null : Number(req.query.lesson);
+    if (lesson !== null && !(Number.isInteger(lesson) && lesson >= 1)) {
+      return res.status(400).json({ error: 'lesson must be a whole number from 1' });
+    }
+    return res.json({ success: true, data: await getQuizForStudent(id, lesson) });
   } catch (err) {
     if (err instanceof QuizNotFound) {
       return res.status(err.status).json({ error: err.message });
@@ -90,9 +94,14 @@ router.post('/:id/attempts', async (req, res, next) => {
       return res.status(400).json({ error: 'Quiz id must be a number' });
     }
 
-    const { answers, clientAttemptId, answeredAt } = req.body || {};
+    const {
+      answers, clientAttemptId, answeredAt, lesson,
+    } = req.body || {};
     if (answers !== undefined && (typeof answers !== 'object' || Array.isArray(answers))) {
       return res.status(400).json({ error: 'answers must be an object of questionId to letter' });
+    }
+    if (lesson !== undefined && lesson !== null && !(Number.isInteger(lesson) && lesson >= 1)) {
+      return res.status(400).json({ error: 'lesson must be a whole number from 1' });
     }
     if (clientAttemptId !== undefined && !UUID.test(String(clientAttemptId))) {
       return res.status(400).json({ error: 'clientAttemptId must be a UUID' });
@@ -104,6 +113,7 @@ router.post('/:id/attempts', async (req, res, next) => {
       answers: answers || {},
       clientAttemptId,
       answeredAt,
+      lesson: lesson ?? null,
     });
 
     return res.status(result.duplicate ? 200 : 201).json({ success: true, data: result });

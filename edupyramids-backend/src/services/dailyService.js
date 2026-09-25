@@ -55,7 +55,7 @@ const weekday = (day) => new Date(`${day}T00:00:00Z`).getUTCDay();
 async function eventsForMany(studentIds) {
   const [attempts, checkpoints, practice] = await Promise.all([
     query(
-      `SELECT student_id, kind, quiz_id, game_id, score, max_score, stars, hints_used, created_at
+      `SELECT student_id, kind, quiz_id, game_id, lesson, score, max_score, stars, hints_used, created_at
          FROM attempts WHERE student_id = ANY($1) ORDER BY created_at, id`,
       [studentIds],
     ),
@@ -66,7 +66,7 @@ async function eventsForMany(studentIds) {
   const out = new Map(studentIds.map((id) => [id, []]));
   const best = new Map();
   attempts.forEach((a) => {
-    const key = `${a.student_id}:${a.kind === 'quiz' ? `q${a.quiz_id}` : `g${a.game_id}`}`;
+    const key = `${a.student_id}:${a.kind === 'quiz' ? `q${a.quiz_id}:${a.lesson ?? ''}` : `g${a.game_id}`}`;
     const stars = a.kind === 'quiz'
       ? quizStars(Math.round((a.score / a.max_score) * 100))
       : a.stars ?? starsFor({ score: a.score, maxScore: a.max_score, hintsUsed: a.hints_used });

@@ -3,6 +3,7 @@ const { recordResponse, summariseChanges } = require('./masteryService');
 const { attemptTime } = require('./attemptTime');
 const { xpForAttempt, quizStars } = require('./xp');
 const { checksFor, firstChecked } = require('./checkService');
+const { lessonsFor } = require('./lessonService');
 
 /*
  * Marking a quiz attempt.
@@ -32,7 +33,9 @@ class ScoringError extends Error {
  * @param {object}  input.answers          { [questionId]: 'a' | 'b' | 'c' | 'd' }
  * @param {string} [input.clientAttemptId] UUID made by the client when it opened the quiz
  */
-async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptId, answeredAt }) {
+async function markQuizAttempt({
+  quizId, studentId, answers = {}, clientAttemptId, answeredAt, lesson = null,
+}) {
   const client = await pool.connect();
 
   try {
@@ -45,11 +48,19 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
     if (!quiz.rows.length) throw new ScoringError('No such quiz', 404);
     const { topic_id: topicId, topic } = quiz.rows[0];
 
-    const questions = (await client.query(
+    let questions = (await client.query(
       `SELECT id, text, correct_answer, explanation
          FROM questions WHERE quiz_id = $1 ORDER BY id`,
       [quizId],
     )).rows;
+
+    // A lesson is marked on its own questions only.
+    if (lesson) {
+      const one = (await lessonsFor(quizId))[lesson - 1];
+      if (!one) throw new ScoringError('That quiz has no such lesson', 400);
+      const inLesson = new Set(one.questionIds);
+      questions = questions.filter((q) => inLesson.has(q.id));
+    }
 
     if (!questions.length) {
       throw new ScoringError('That quiz has no questions loaded yet', 409);
@@ -82,8 +93,8 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
 
     const bestBefore = (await client.query(
       `SELECT MAX(ROUND(score::numeric / max_score * 100))::int AS percent
-         FROM attempts WHERE student_id = $1 AND quiz_id = $2`,
-      [studentId, quizId],
+         FROM attempts WHERE student_id = $1 AND quiz_id = $2 AND lesson IS NOT DISTINCT FROM $3`,
+      [studentId, quizId, lesson],
     )).rows[0].percent;
 
     await client.query('BEGIN');
@@ -92,13 +103,13 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
     // rows that carry a client id, so an attempt sent without one still saves.
     const inserted = await client.query(
       `INSERT INTO attempts
-         (student_id, kind, quiz_id, topic_id, score, max_score, answers, client_attempt_id, created_at)
-       VALUES ($1, 'quiz', $2, $3, $4, $5, $6, $7, COALESCE($8, now()))
+         (student_id, kind, quiz_id, topic_id, score, max_score, answers, client_attempt_id, created_at, lesson)
+       VALUES ($1, 'quiz', $2, $3, $4, $5, $6, $7, COALESCE($8, now()), $9)
        ON CONFLICT (client_attempt_id) WHERE client_attempt_id IS NOT NULL
        DO NOTHING
        RETURNING id, created_at`,
       [studentId, quizId, topicId, score, maxScore,
-        JSON.stringify(answers), clientAttemptId ?? null, attemptTime(answeredAt)],
+        JSON.stringify(answers), clientAttemptId ?? null, attemptTime(answeredAt), lesson],
     );
 
     let attempt = inserted.rows[0];
@@ -132,6 +143,7 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
     return {
       attemptId: attempt.id,
       duplicate,
+      lesson,
       xp: duplicate ? 0 : xpForAttempt(quizStars(bestBefore), quizStars(Math.round((score / maxScore) * 100)), score / maxScore),
       mastery,
       quizId,

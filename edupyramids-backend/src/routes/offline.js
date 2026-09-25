@@ -4,6 +4,7 @@ const { query } = require('../config/database');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 const Game = require('../models/Game');
 const { kindOf } = require('../games');
+const { lessonsForMany } = require('../services/lessonService');
 
 /*
  * GET /api/offline/pack — everything a student's device needs to run quizzes
@@ -33,9 +34,11 @@ async function buildPack() {
             correct_answer AS correct, explanation
        FROM questions ORDER BY id`,
   );
+  const lessons = await lessonsForMany(quizRows.map((z) => z.id));
   const quizzes = quizRows.map((z) => ({
     ...z,
     questions: questionRows.filter((q) => q.quizId === z.id).map(({ quizId, ...q }) => q),
+    lessons: lessons.get(z.id),
   }));
 
   const games = [];
