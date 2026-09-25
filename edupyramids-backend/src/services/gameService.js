@@ -5,6 +5,7 @@ const { GameError, token } = require('../games/common');
 const { attemptTime } = require('./attemptTime');
 const { starsFor } = require('../games/stars');
 const { xpForAttempt } = require('./xp');
+const { recordGame } = require('./masteryService');
 
 /*
  * Delivering and marking games, for every kind.
@@ -105,6 +106,9 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
         'SELECT id FROM attempts WHERE client_attempt_id = $1', [clientAttemptId],
       )).rows[0].id;
     }
+    // The game is evidence for the concepts it practises, stored with the
+    // attempt. A duplicate submit adds none.
+    const mastery = duplicate ? [] : await recordGame(client, { studentId, gameId: game.id, ratio: score / maxScore });
     await client.query('COMMIT');
 
     return {
@@ -120,6 +124,7 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
       stars,
       hintsUsed: hints,
       xp: duplicate ? 0 : xpForAttempt(before, stars, score / maxScore),
+      mastery,
       ...extra,
       feedback,
       revisit: score < maxScore ? [game.topic] : [],

@@ -8,6 +8,7 @@ import { markGame } from '../offline/markers';
 import { enqueue } from '../offline/outbox';
 import Pyra, { pyraOnResult } from '../components/Pyra';
 import Stars from '../components/Stars';
+import { MasteryMoves } from './Practice';
 
 /*
  * One game, start to finish, whatever its kind.
@@ -211,6 +212,13 @@ function GameResult({ result, onAgain }) {
       </div>
 
       <Pyra mood={pyra.mood}>{pyra.text}</Pyra>
+
+      {result.mastery?.length > 0 && (
+        <>
+          <h2 className="h2">What moved</h2>
+          <div className="card"><MasteryMoves changes={result.mastery} dark={false} /></div>
+        </>
+      )}
 
       {result.revisit.length > 0 && (
         <p className="revisit"><strong>Worth another look:</strong> {result.revisit.join(', ')}</p>

@@ -123,7 +123,6 @@ async function recordResponse(client, { studentId, questionId, correct, source }
     [questionId],
   )).rows[0];
   if (!question) return [];
-  const guess = guessFor(question.options);
 
   const concepts = (await client.query(
     `SELECT c.id, c.slug, c.name FROM question_concepts qc
@@ -132,6 +131,45 @@ async function recordResponse(client, { studentId, questionId, correct, source }
     [questionId],
   )).rows;
 
+  return recordEvidence(client, {
+    studentId, concepts, correct, guess: guessFor(question.options), source, questionId,
+  });
+}
+
+/*
+ * A finished game as evidence. Games are not multiple choice: typing an
+ * output, ordering lines or choosing a test leaves less to luck, so a good
+ * result says more than one right option. One piece of evidence per concept
+ * per game: right at 80% or more, wrong below 50%. A result in between is
+ * left out, because it says neither.
+ *
+ * The guess rates are kept at 15% or more on purpose. Lower, and a single
+ * good game took a concept from under half to mastered, which is more than
+ * one game can show; mastery should take several pieces of evidence.
+ */
+const GAME_GUESS = {
+  matching: 0.3, drag_drop: 0.3, memory: 0.3, fillblank: 0.25,
+  parsons: 0.15, bughunt: 0.2, predict: 0.15, trace: 0.15, bugcatch: 0.15,
+};
+const GAME_RIGHT = 0.8;
+const GAME_WRONG = 0.5;
+
+async function recordGame(client, { studentId, gameId, ratio }) {
+  if (ratio < GAME_RIGHT && ratio >= GAME_WRONG) return [];
+  const game = (await client.query('SELECT kind, concepts FROM games WHERE id = $1', [gameId])).rows[0];
+  if (!game || !game.concepts.length) return [];
+  const concepts = (await client.query(
+    'SELECT id, slug, name FROM concepts WHERE slug = ANY($1) ORDER BY sort_order', [game.concepts],
+  )).rows;
+  return recordEvidence(client, {
+    studentId, concepts, correct: ratio >= GAME_RIGHT, guess: GAME_GUESS[game.kind] ?? 0.2, source: 'game', gameId,
+  });
+}
+
+/** One piece of evidence for each concept: the BKT step, the review schedule and the log. */
+async function recordEvidence(client, {
+  studentId, concepts, correct, guess, source, questionId = null, gameId = null,
+}) {
   const changes = [];
   for (const concept of concepts) {
     // Create the row if this is the first answer, then lock it, so two answers
@@ -160,9 +198,9 @@ async function recordResponse(client, { studentId, questionId, correct, source }
     )).rows[0];
 
     await client.query(
-      `INSERT INTO responses (student_id, question_id, concept_id, source, correct, p_before, p_after)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [studentId, questionId, concept.id, source, correct, before, after],
+      `INSERT INTO responses (student_id, question_id, game_id, concept_id, source, correct, p_before, p_after)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [studentId, questionId, gameId, concept.id, source, correct, before, after],
     );
 
     changes.push({
@@ -501,7 +539,7 @@ async function classMastery(classId) {
 module.exports = {
   BKT, MASTERED, READY,
   guessFor, bktUpdate, predictCorrect, schedule, statusOf,
-  recordResponse, summariseChanges, masteryFor, nextPracticeQuestion, answerPractice,
+  GAME_GUESS, recordResponse, recordGame, summariseChanges, masteryFor, nextPracticeQuestion, answerPractice,
   mistakesFor, videosFor,
   classMastery, PracticeError,
 };

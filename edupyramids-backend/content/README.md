@@ -198,6 +198,14 @@ endings are ignored, everything else must match.
 One entry in `blanks` per `___`, in order. At least one decoy, and no decoy may
 also be a right answer.
 
+### Concepts
+
+Every game should name the concepts it practises, with slugs from
+`concepts.json`, for example `"concepts": ["loops", "conditions"]`. A finished
+game then counts as evidence for those concepts in the mastery model. The
+importer refuses an unknown slug and warns about a game with none. Tags are
+refreshed on every import, even for games already loaded.
+
 ## Games whose answers come from running Python
 
 For these two kinds you write the code; `scripts/run-python-games.py` runs it

@@ -17,6 +17,7 @@ const { pool } = require('../src/config/database');
 
 const { registry, kindNames, kindOf } = require('../src/games');
 const { isText, duplicates } = require('../src/games/common');
+const CONCEPT_SLUGS = new Set(require('../content/concepts.json').map((c) => c.slug));
 
 /**
  * Check the whole file. The file-level rules (topics, titles, a known kind)
@@ -64,6 +65,12 @@ function validate(raw) {
       const result = kind.validate(game, gAt);
       errors.push(...result.errors);
       warnings.push(...result.warnings);
+      // The concepts a game practises: what it feeds in the mastery model.
+      if (game.concepts === undefined) {
+        warnings.push(`${gAt} (${game.title}): no "concepts", so it will not count towards mastery`);
+      } else if (!Array.isArray(game.concepts) || !game.concepts.every((c) => CONCEPT_SLUGS.has(c))) {
+        errors.push(`${gAt} (${game.title}): "concepts" must list slugs from concepts.json`);
+      }
     });
   });
 
@@ -91,24 +98,25 @@ async function load(topics, { replace }) {
 
       for (const game of topic.games) {
         const values = [game.title.trim(), game.kind, topicId,
-          game.instructions ?? null, JSON.stringify(contentOf(game))];
+          game.instructions ?? null, JSON.stringify(contentOf(game)), game.concepts ?? []];
 
         const result = await client.query(
           replace
-            ? `INSERT INTO games (title, kind, topic_id, instructions, content)
-               VALUES ($1, $2, $3, $4, $5)
+            ? `INSERT INTO games (title, kind, topic_id, instructions, content, concepts)
+               VALUES ($1, $2, $3, $4, $5, $6)
                ON CONFLICT (topic_id, title) DO UPDATE
                   SET kind = EXCLUDED.kind, instructions = EXCLUDED.instructions,
-                      content = EXCLUDED.content
-               RETURNING id`
+                      content = EXCLUDED.content, concepts = EXCLUDED.concepts
+               RETURNING id, (xmax = 0) AS inserted`
             // Already loaded is left alone, so this can run on every deploy.
-            : `INSERT INTO games (title, kind, topic_id, instructions, content)
-               VALUES ($1, $2, $3, $4, $5)
-               ON CONFLICT (topic_id, title) DO NOTHING
-               RETURNING id`,
+            // Only the concept tags are refreshed: they change no answer.
+            : `INSERT INTO games (title, kind, topic_id, instructions, content, concepts)
+               VALUES ($1, $2, $3, $4, $5, $6)
+               ON CONFLICT (topic_id, title) DO UPDATE SET concepts = EXCLUDED.concepts
+               RETURNING id, (xmax = 0) AS inserted`,
           values,
         );
-        counts.games += result.rowCount;
+        counts.games += replace ? result.rowCount : result.rows.filter((r) => r.inserted).length;
       }
     }
 

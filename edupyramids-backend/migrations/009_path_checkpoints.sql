@@ -18,8 +18,11 @@ CREATE TABLE IF NOT EXISTS checkpoint_attempts (
 );
 CREATE INDEX IF NOT EXISTS idx_checkpoint_attempts_student ON checkpoint_attempts (student_id, topic_id);
 
+-- Keep this list the same as the one in 011. Migrations re-run on every
+-- start, so a shorter list here would reject rows a later migration allows
+-- and stop the server; tests/migrations.test.js catches that.
 ALTER TABLE responses DROP CONSTRAINT IF EXISTS responses_source_check;
 ALTER TABLE responses ADD CONSTRAINT responses_source_check
-  CHECK (source IN ('quiz', 'practice', 'live', 'checkpoint'));
+  CHECK (source IN ('quiz', 'practice', 'live', 'checkpoint', 'game'));
 
 COMMIT;

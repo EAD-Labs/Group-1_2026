@@ -84,6 +84,13 @@ weaker students.
   and their own share, never a ranking; teachers also see who has not
   practised yet.
 
+- **Adaptive practice.** Mastery is estimated per concept (Bayesian Knowledge
+  Tracing) from quiz, practice and keystone answers and from finished games,
+  which count as stronger evidence because they leave less to guessing. The
+  Practice tab offers a smart mix, repairs for fading concepts, a "fix my
+  mistakes" round and any single concept; a wrong answer links to the Spoken
+  Tutorial video that teaches it.
+
 All of it is worked out from what students actually did, in India time
 (`APP_TIMEZONE`), so offline attempts count on the day they were done.
 

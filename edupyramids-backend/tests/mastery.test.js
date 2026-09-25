@@ -4,8 +4,9 @@ const request = require('supertest');
 const app = require('../src/app');
 const { pool, query, queryOne } = require('../src/config/database');
 const { resetThrottle } = require('../src/services/authService');
+const { token } = require('../src/games/common');
 const {
-  bktUpdate, guessFor, schedule, statusOf, MASTERED,
+  bktUpdate, guessFor, schedule, statusOf, MASTERED, GAME_GUESS,
 } = require('../src/services/masteryService');
 
 const login = async (email, role) => {
@@ -191,6 +192,67 @@ describe('the practice hub', () => {
     const again = await request(app).get(`/api/practice/next?mode=mistakes&exclude=${pick.question.id}`).set(student);
     if (after === 0) expect(again.status).toBe(404);
     else expect(again.body.data.question.id).not.toBe(pick.question.id);
+  });
+});
+
+describe('games feed the model', () => {
+  /** A predict game answered with the first `right` items correct and the rest wrong. */
+  const predictAnswers = (g, right) => Object.fromEntries(g.content.items.map((it, i) => [
+    token(g.id, `o${i}`), i < right ? it.output : 'not it',
+  ]));
+
+  let game;
+  beforeAll(async () => {
+    game = await queryOne(
+      "SELECT id, content, concepts FROM games WHERE kind = 'predict' AND array_length(concepts, 1) > 0 ORDER BY id LIMIT 1",
+    );
+  });
+
+  test('every game in the content names the concepts it practises', async () => {
+    const untagged = await query("SELECT title FROM games WHERE concepts = '{}'");
+    expect(untagged).toEqual([]);
+  });
+
+  test('a good game result raises mastery of its concepts, logged with the game', async () => {
+    const res = await request(app).post(`/api/games/${game.id}/results`).set(student)
+      .send({ answers: predictAnswers(game, game.content.items.length) });
+    expect(res.body.data.mastery.map((m) => m.slug).sort()).toEqual([...game.concepts].sort());
+    res.body.data.mastery.forEach((m) => expect(m.after).toBeGreaterThan(m.before));
+
+    const logged = await query(
+      "SELECT question_id, game_id FROM responses WHERE student_id = $1 AND source = 'game'", [studentId],
+    );
+    expect(logged.length).toBe(game.concepts.length);
+    logged.forEach((r) => expect(r).toEqual({ question_id: null, game_id: game.id }));
+  });
+
+  test('a middling result says neither, so it changes nothing; a poor one lowers the estimate', async () => {
+    const n = game.content.items.length;
+    const middling = Math.ceil(n * 0.5);
+    expect(middling / n).toBeLessThan(0.8);
+    const mid = await request(app).post(`/api/games/${game.id}/results`).set(student)
+      .send({ answers: predictAnswers(game, middling) });
+    expect(mid.body.data.mastery).toEqual([]);
+
+    const poor = await request(app).post(`/api/games/${game.id}/results`).set(student)
+      .send({ answers: predictAnswers(game, 0) });
+    poor.body.data.mastery.forEach((m) => expect(m.after).toBeLessThan(m.before));
+  });
+
+  test('a game is weightier evidence than a multiple-choice answer, but one game never masters a concept', () => {
+    const fromGame = bktUpdate(0.3, true, GAME_GUESS.predict);
+    const fromChoice = bktUpdate(0.3, true, guessFor(4));
+    expect(fromGame).toBeGreaterThan(fromChoice);
+    // From a middling estimate, the strongest single game stays short of the mastery bar.
+    const strongest = Math.min(...Object.values(GAME_GUESS));
+    expect(bktUpdate(0.5, true, strongest)).toBeLessThan(MASTERED);
+  });
+
+  test('the importer refuses a concept that does not exist', () => {
+    const { validate } = require('../scripts/import-games');
+    const content = JSON.parse(JSON.stringify(require('../content/python-games.json')));
+    content[0].games[0].concepts = ['no-such-concept'];
+    expect(validate(content).errors.join(' ')).toMatch(/concepts/);
   });
 });
 

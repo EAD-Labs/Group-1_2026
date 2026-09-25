@@ -6,6 +6,10 @@
       {
         "title": "Name the type",
         "kind": "matching",
+        "concepts": [
+          "basics",
+          "numbers"
+        ],
         "instructions": "Match each expression to the type Python gives it.",
         "pairs": [
           {
@@ -43,6 +47,10 @@
       {
         "title": "Can it change?",
         "kind": "drag_drop",
+        "concepts": [
+          "lists",
+          "strings"
+        ],
         "instructions": "Sort each value by whether it can be changed in place.",
         "buckets": [
           "Can be changed",
@@ -84,6 +92,10 @@
       {
         "title": "Output pairs",
         "kind": "memory",
+        "concepts": [
+          "numbers",
+          "lists"
+        ],
         "instructions": "Flip two tiles at a time to find each piece of code and its output.",
         "pairs": [
           {
@@ -121,6 +133,10 @@
       {
         "title": "Complete the code",
         "kind": "fillblank",
+        "concepts": [
+          "numbers",
+          "strings"
+        ],
         "instructions": "Tap a gap, then tap the chip that makes the comment true.",
         "items": [
           {
@@ -164,6 +180,10 @@
       {
         "title": "What does it print?",
         "kind": "predict",
+        "concepts": [
+          "numbers",
+          "strings"
+        ],
         "instructions": "Type exactly what each program prints.",
         "items": [
           {
@@ -202,6 +222,10 @@
       {
         "title": "Ranges and slices",
         "kind": "matching",
+        "concepts": [
+          "loops",
+          "lists"
+        ],
         "instructions": "Match each expression to its value.",
         "pairs": [
           {
@@ -239,6 +263,10 @@
       {
         "title": "Sort by type",
         "kind": "drag_drop",
+        "concepts": [
+          "numbers",
+          "basics"
+        ],
         "instructions": "Put each expression under the type of value it produces.",
         "buckets": [
           "int",
@@ -297,6 +325,9 @@
       {
         "title": "Loop outputs",
         "kind": "memory",
+        "concepts": [
+          "loops"
+        ],
         "instructions": "Find each loop and what it prints.",
         "pairs": [
           {
@@ -334,6 +365,10 @@
       {
         "title": "Sum of even numbers",
         "kind": "parsons",
+        "concepts": [
+          "loops",
+          "conditions"
+        ],
         "instructions": "Build a program that adds up the even numbers from 1 to 10. Two lines do not belong.",
         "lines": [
           {
@@ -366,6 +401,10 @@
       {
         "title": "Count the vowels",
         "kind": "parsons",
+        "concepts": [
+          "loops",
+          "strings"
+        ],
         "instructions": "Build a program that counts the vowels in a word. One line does not belong.",
         "lines": [
           {
@@ -401,6 +440,10 @@
       {
         "title": "Ranges and slices: fill the gaps",
         "kind": "fillblank",
+        "concepts": [
+          "loops",
+          "strings"
+        ],
         "instructions": "Fill each gap so the program prints what the comment says.",
         "items": [
           {
@@ -443,6 +486,9 @@
       {
         "title": "Trace the loop",
         "kind": "predict",
+        "concepts": [
+          "loops"
+        ],
         "instructions": "Type exactly what each loop prints. Where it prints several values, put each on its own line.",
         "items": [
           {
@@ -465,6 +511,9 @@
       {
         "title": "Catch the loop bugs",
         "kind": "bugcatch",
+        "concepts": [
+          "loops"
+        ],
         "instructions": "Pyra copied these functions, and some copies have bugs. Pick test inputs and say what the right answer is. A test catches every copy that answers differently.",
         "items": [
           {
@@ -625,6 +674,10 @@
       {
         "title": "Trace the loops",
         "kind": "trace",
+        "concepts": [
+          "loops",
+          "conditions"
+        ],
         "instructions": "Pyra runs the program one line at a time. Each time a variable changes, type its new value. Get a streak going!",
         "items": [
           {
@@ -733,6 +786,9 @@
       {
         "title": "What does it return?",
         "kind": "matching",
+        "concepts": [
+          "functions"
+        ],
         "instructions": "Match each function call to the value it returns.",
         "pairs": [
           {
@@ -770,6 +826,9 @@
       {
         "title": "Error or fine?",
         "kind": "drag_drop",
+        "concepts": [
+          "errors"
+        ],
         "instructions": "Sort each line by whether it runs or raises an error.",
         "buckets": [
           "Runs fine",
@@ -821,6 +880,10 @@
       {
         "title": "Dictionaries and scope",
         "kind": "memory",
+        "concepts": [
+          "sets-dicts",
+          "functions"
+        ],
         "instructions": "Find each piece of code and what it prints.",
         "pairs": [
           {
@@ -858,6 +921,10 @@
       {
         "title": "Fix the function",
         "kind": "bughunt",
+        "concepts": [
+          "functions",
+          "errors"
+        ],
         "instructions": "Each program has one bug. Tap the line, then choose the fix.",
         "items": [
           {
@@ -898,6 +965,10 @@
       {
         "title": "Find the largest",
         "kind": "parsons",
+        "concepts": [
+          "functions",
+          "loops"
+        ],
         "instructions": "Build a function that returns the largest number in a list. One line does not belong.",
         "lines": [
           {
@@ -937,6 +1008,10 @@
       {
         "title": "Functions and dictionaries",
         "kind": "predict",
+        "concepts": [
+          "functions",
+          "sets-dicts"
+        ],
         "instructions": "Type exactly what each program prints.",
         "items": [
           {
@@ -959,6 +1034,9 @@
       {
         "title": "Catch the condition bugs",
         "kind": "bugcatch",
+        "concepts": [
+          "conditions"
+        ],
         "instructions": "Each function has bugged copies hiding. Boundary values, the exact number where the rule changes, are your best tests.",
         "items": [
           {
@@ -1129,6 +1207,10 @@
       {
         "title": "Trace strings and lists",
         "kind": "trace",
+        "concepts": [
+          "strings",
+          "lists"
+        ],
         "instructions": "Type each new value the way Python would show it: strings in quotes, lists in square brackets.",
         "items": [
           {
@@ -1253,6 +1335,10 @@
       {
         "title": "Commands and what they do",
         "kind": "matching",
+        "concepts": [
+          "tools",
+          "numpy"
+        ],
         "instructions": "Match each IPython command to what it does.",
         "pairs": [
           {
@@ -1290,6 +1376,9 @@
       {
         "title": "True or false?",
         "kind": "drag_drop",
+        "concepts": [
+          "basics"
+        ],
         "instructions": "Sort each statement into true or false.",
         "buckets": [
           "True",
@@ -1331,6 +1420,10 @@
       {
         "title": "NumPy and plotting slips",
         "kind": "bughunt",
+        "concepts": [
+          "numpy",
+          "plotting"
+        ],
         "instructions": "Each program has one bug. Tap the line, then choose the fix.",
         "items": [
           {
