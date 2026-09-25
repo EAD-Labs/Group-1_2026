@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { client } from '../api/client';
 
 /*
- * The daily picture: streak, today's XP against the goal, and the week.
+ * The daily picture: build streak, today's XP against the goal, and the week.
  *
  * Kept small on purpose. It answers "have I done my bit today?" and nothing
- * else; the path answers "what next?".
+ * else; the pyramid answers "what next?".
  */
 
 const DAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const STATE_LABEL = {
-  active: 'practised', frozen: 'covered by a freeze', missed: 'missed', weekend: 'weekend', today: 'today, not yet', none: 'nothing',
+  active: 'built', frozen: 'covered by a shield', missed: 'missed', weekend: 'weekend', today: 'today, not yet', none: 'nothing',
 };
 
 /** A ring that fills as today's XP approaches the goal. */
@@ -33,13 +33,13 @@ export function DailyStrip({ daily }) {
   return (
     <section className="daily" aria-label="Today">
       <div className={`daily-streak${today.done ? ' daily-streak--lit' : ''}`}>
-        <span className="daily-flame" aria-hidden="true">🔥</span>
+        <span className="daily-flame" aria-hidden="true">🧱</span>
         <span>
-          <strong>{streak.current}</strong> day{streak.current === 1 ? '' : 's'}
-          <span className="daily-sub">{today.done ? 'streak kept today' : streak.current ? 'play once to keep it' : 'start a streak today'}</span>
+          <strong>{streak.current}</strong>-day build streak
+          <span className="daily-sub">{today.done ? 'kept today' : streak.current ? 'build once to keep it' : 'start one today'}</span>
         </span>
         {streak.freezes > 0 && (
-          <span className="daily-freeze" title="A freeze covers a missed school day by itself">🧊 {streak.freezes}</span>
+          <span className="daily-freeze" title="A shield covers a missed school day by itself">🛡️ {streak.freezes}</span>
         )}
       </div>
 
@@ -54,7 +54,7 @@ export function DailyStrip({ daily }) {
       <ol className="daily-week" aria-label="The last seven days">
         {week.map((d) => (
           <li key={d.day} className={`daily-day daily-day--${d.state}`} title={`${d.day}: ${STATE_LABEL[d.state]}${d.xp ? `, ${d.xp} XP` : ''}`}>
-            <span className="daily-dot" aria-hidden="true">{d.state === 'active' ? '🔥' : d.state === 'frozen' ? '🧊' : ''}</span>
+            <span className="daily-dot" aria-hidden="true">{d.state === 'active' ? '🧱' : d.state === 'frozen' ? '🛡️' : ''}</span>
             <span className="daily-letter">{DAY_LETTERS[d.weekday]}</span>
             <span className="sr-only">{d.day}: {STATE_LABEL[d.state]}</span>
           </li>
@@ -98,9 +98,9 @@ export function GoalSettings({ daily, onChange }) {
       </div>
       {error && <p className="alert" role="alert">{error}</p>}
       <p className="muted small">
-        Best streak: {daily.streak.longest} day{daily.streak.longest === 1 ? '' : 's'} · {daily.xp.total} XP in all.
-        Finishing a quiz or game gives up to 10 XP, depending on your score, and 5 more for each new star; passing a checkpoint gives 20. Weekends never break a
-        streak, and every {daily.streak.freezeEvery} days in a row earn a 🧊 freeze (up to {daily.streak.maxFreezes})
+        Best build streak: {daily.streak.longest} day{daily.streak.longest === 1 ? '' : 's'} · {daily.xp.total} XP in all.
+        Finishing a quiz or game gives up to 10 XP, depending on your score, and 5 more for each new star; setting a keystone gives 20. Weekends never break a
+        streak, and every {daily.streak.freezeEvery} days in a row earn a 🛡️ shield (up to {daily.streak.maxFreezes})
         that covers a missed school day.
       </p>
     </section>

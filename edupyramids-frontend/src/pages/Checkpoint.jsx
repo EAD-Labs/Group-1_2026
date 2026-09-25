@@ -7,12 +7,12 @@ import { client } from '../api/client';
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 
 /*
- * A checkpoint: the mixed challenge at the end of a unit.
+ * A keystone: the mixed challenge that completes a tier of the pyramid.
  *
  * Ten questions, mostly from this unit and a few from earlier ones, because
  * mixing topics makes practice harder and learning last longer (Bjork's
  * desirable difficulties). No instant feedback and no hints: it is a test of
- * what has stuck. Passing it opens the next unit.
+ * what has stuck. Setting it (passing) opens the tier above.
  */
 export default function Checkpoint() {
   const { topicId } = useParams();
@@ -31,7 +31,7 @@ export default function Checkpoint() {
     client.get(`/path/checkpoints/${topicId}`)
       .then((res) => live && setCp(res.data))
       .catch((err) => live && setError(err.status === 0
-        ? 'Checkpoints need a connection, because each one is picked fresh from the whole unit.'
+        ? 'Keystones need a connection, because each one is picked fresh from the whole tier.'
         : err.message));
     return () => { live = false; };
   }, [topicId, round]);
@@ -52,16 +52,16 @@ export default function Checkpoint() {
     setResult(null); setAnswers({}); setAt(0); setStarted(false); setRound((r) => r + 1);
   }
 
-  const back = { to: '/dashboard/student', label: 'Path' };
+  const back = { to: '/dashboard/student', label: 'Pyramid' };
 
   if (error) {
-    return <DashboardShell title="Checkpoint" back={back}><p className="alert" role="alert">{error}</p></DashboardShell>;
+    return <DashboardShell title="Keystone" back={back}><p className="alert" role="alert">{error}</p></DashboardShell>;
   }
-  if (!cp) return <DashboardShell title="Checkpoint" back={back}><p className="muted">Loading…</p></DashboardShell>;
+  if (!cp) return <DashboardShell title="Keystone" back={back}><p className="muted">Loading…</p></DashboardShell>;
 
   if (result) {
     return (
-      <DashboardShell title={`${cp.topic} checkpoint — ${result.passed ? 'passed' : 'not yet'}`} back={back}>
+      <DashboardShell title={`${cp.topic} keystone — ${result.passed ? 'set' : 'not yet'}`} back={back}>
         <div className="result-score">
           {result.xp > 0 && <p className="xp-chip">+{result.xp} XP</p>}
           <p className="stat-value big">{result.score} / {result.maxScore}</p>
@@ -69,8 +69,8 @@ export default function Checkpoint() {
         </div>
         <Pyra mood={result.passed ? 'proud' : 'thinking'}>
           {result.passed
-            ? 'Checkpoint passed! The next unit is open. 🏰'
-            : `Not this time: ${result.passPercent}% opens the next unit. Read the explanations below, then have another go. You get new questions each time.`}
+            ? 'Keystone set! The tier above is open. 🗝️'
+            : `Not this time: ${result.passPercent}% sets the keystone. Read the explanations below, then have another go. You get new questions each time.`}
         </Pyra>
 
         <h2 className="h2">Every answer</h2>
@@ -85,7 +85,7 @@ export default function Checkpoint() {
           ))}
         </ol>
         <div className="result-actions">
-          <Link className="btn btn--sm" to="/dashboard/student">Back to the path</Link>
+          <Link className="btn btn--sm" to="/dashboard/student">Back to your pyramid</Link>
           {!result.passed && <button className="btn btn--ghost btn--sm" type="button" onClick={again}>Try again</button>}
         </div>
       </DashboardShell>
@@ -94,14 +94,14 @@ export default function Checkpoint() {
 
   if (!started) {
     return (
-      <DashboardShell title={`${cp.topic} checkpoint`} back={back}>
+      <DashboardShell title={`${cp.topic} keystone`} back={back}>
         <div className="checkpoint-intro">
-          <p className="checkpoint-castle" aria-hidden="true">🏰</p>
+          <p className="checkpoint-castle" aria-hidden="true">🗝️</p>
           <Pyra mood="hello">
             {cp.questions.length} questions, mostly from {cp.topic} and a few from earlier. No hints, and you see
-            the answers at the end. Get {cp.passPercent}% to open the next unit.
+            the answers at the end. Get {cp.passPercent}% to set the keystone and open the tier above.
           </Pyra>
-          <button className="btn" type="button" onClick={() => setStarted(true)}>Start the checkpoint</button>
+          <button className="btn" type="button" onClick={() => setStarted(true)}>Start the keystone challenge</button>
         </div>
       </DashboardShell>
     );
@@ -110,10 +110,10 @@ export default function Checkpoint() {
   const q = cp.questions[at];
   const answered = Object.keys(answers).length;
   return (
-    <DashboardShell title={`${cp.topic} checkpoint`} back={back} note="Nothing is saved until you finish">
+    <DashboardShell title={`${cp.topic} keystone`} back={back} note="Nothing is saved until you finish">
       <div className="quiz">
         <div className="quiz-top">
-          <p className="quiz-topic">🏰 Checkpoint · {cp.topic}</p>
+          <p className="quiz-topic">🗝️ Keystone · {cp.topic}</p>
           <p className="quiz-count">{at + 1}<span>/{cp.questions.length}</span></p>
         </div>
         <ol className="pips" aria-label={`Question ${at + 1} of ${cp.questions.length}`}>

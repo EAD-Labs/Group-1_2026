@@ -6,9 +6,11 @@ const { shuffle } = require('../games/common');
 const { quizStars } = require('./xp');
 
 /*
- * The learning path: one road through the course, after Duolingo's 2022
+ * The learning path: one route through the course, after Duolingo's 2022
  * redesign, which replaced a tree of choices with a single path and measured
- * better learning for it. The student always knows what is next.
+ * better learning for it. The student always knows what is next. The
+ * interface draws it as a pyramid (components/Pyramid.jsx): units are
+ * tiers, nodes are bricks, and the checkpoint is the keystone.
  *
  * A unit is a level (Bronze, Silver, Gold, ...). Inside it, in order: the
  * quiz, then the games from easiest to hardest skill, then a checkpoint, a
@@ -139,7 +141,7 @@ async function pathFor(studentId) {
         : u.unlocked && coreDone ? 'open' : 'locked';
     if (u.checkpoint.state === 'open' && !next) {
       u.checkpoint.state = 'current';
-      next = { type: 'checkpoint', id: u.topicId, title: `${u.topic} checkpoint`, topic: u.topic };
+      next = { type: 'checkpoint', id: u.topicId, title: `${u.topic} keystone`, topic: u.topic };
     }
     // A locked unit can be reached by passing the checkpoint before it.
     u.jumpFrom = !u.unlocked && units[i - 1].hasCheckpoint ? units[i - 1].topicId : null;

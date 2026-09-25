@@ -1987,102 +1987,8 @@ tr.is-open > td { border-bottom-color: transparent; }
 .fb-code-line { display: block; }
 .fb-code-changed { background: #FFE4D6; box-shadow: inset 3px 0 0 var(--accent); margin: 0 -0.4rem; padding: 0 0.4rem; }
 
-/* ================================================================
-   The learning path (Home): one winding road of nodes per unit.
-   ================================================================ */
-.home-next { margin-bottom: var(--gap-lg); }
-.home-review { margin-bottom: var(--gap-lg); }
-
-.path { list-style: none; display: grid; gap: var(--gap-xl); }
-
-.unit {
-  position: relative;
-  background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow);
-  padding: var(--gap-lg) var(--gap) var(--gap-lg); overflow: hidden;
-}
-.unit::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--tile, var(--brand)); }
-.unit--locked { background: color-mix(in srgb, var(--surface) 70%, var(--light-bg)); }
-
-.unit-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.75rem; align-items: center; }
-.unit-icon { font-size: 28px; width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: var(--radius); background: color-mix(in srgb, var(--tile, var(--brand)) 16%, #fff); }
-.unit-eyebrow { display: block; font-family: var(--font-ui); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-light); }
-.unit-title h2 { font-size: 20px; color: var(--text-heading); }
-.unit-progress { display: grid; gap: 0.25rem; justify-items: end; min-width: 6rem; color: var(--text-light); }
-.unit-progress .tile-bar { width: 6rem; }
-.unit-jump { margin-top: var(--gap); font-size: 14px; color: var(--text-light); }
-.unit-jump a { color: var(--brand); font-weight: 600; }
-
-.road { list-style: none; display: grid; justify-items: center; gap: 1.1rem; padding: var(--gap-lg) 0 var(--gap); }
-
-.node { transform: translateX(var(--x, 0)); }
-.node-link {
-  position: relative; display: grid; justify-items: center; gap: 0.35rem;
-  text-decoration: none; color: inherit; width: 9.5rem; text-align: center;
-}
-.node-circle {
-  width: 4.4rem; height: 4.4rem; border-radius: 50%;
-  display: grid; place-items: center; font-size: 30px;
-  background: #fff; border: 3px solid color-mix(in srgb, var(--tile, var(--brand)) 70%, #fff);
-  box-shadow: 0 5px 0 color-mix(in srgb, var(--tile, var(--brand)) 55%, #000);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-.node-circle--big { width: 5.2rem; height: 5.2rem; font-size: 36px; }
-a.node-link:hover .node-circle { transform: translateY(-2px); }
-a.node-link:active .node-circle { transform: translateY(4px); box-shadow: 0 1px 0 color-mix(in srgb, var(--tile, var(--brand)) 55%, #000); }
-a.node-link:focus-visible { outline: none; }
-a.node-link:focus-visible .node-circle { outline: 3px solid var(--brand); outline-offset: 4px; }
-
-.node-label { display: grid; gap: 0.05rem; justify-items: center; }
-.node-title { font-weight: 600; font-size: 14px; color: var(--text-heading); line-height: 1.25; }
-.node-kind { font-family: var(--font-ui); font-size: 12px; color: var(--text-light); }
-
-.node--done .node-circle { background: var(--tile, var(--brand)); border-color: var(--tile, var(--brand)); }
-.node--current .node-circle {
-  background: var(--accent); border-color: var(--accent);
-  box-shadow: 0 5px 0 var(--accent-dark), 0 0 0 0 rgb(242 99 33 / 45%);
-  animation: node-pulse 1.8s ease-out infinite;
-}
-.node--locked .node-circle { background: #EEF0F4; border-color: #D8DCE4; box-shadow: 0 5px 0 #C5CAD4; font-size: 22px; filter: grayscale(1); }
-.node--locked .node-title { color: var(--text-light); }
-
-.node-start {
-  position: absolute; top: -2.3rem; z-index: 1;
-  background: #fff; color: var(--accent); border: 2px solid var(--accent);
-  font-family: var(--font-ui); font-weight: 800; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase;
-  padding: 0.2rem 0.7rem; border-radius: var(--radius-sm);
-  animation: node-bob 1.4s ease-in-out infinite;
-}
-.node-start::after {
-  content: ''; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%);
-  border: 6px solid transparent; border-bottom: 0; border-top-color: var(--accent);
-}
-.node--current { margin-top: 1.6rem; }
-
-@keyframes node-pulse { 70% { box-shadow: 0 5px 0 var(--accent-dark), 0 0 0 14px rgb(242 99 33 / 0%); } 100% { box-shadow: 0 5px 0 var(--accent-dark), 0 0 0 0 rgb(242 99 33 / 0%); } }
-@keyframes node-bob { 50% { transform: translateY(-4px); } }
-
-.warmups { border-top: 1px dashed var(--line); padding-top: var(--gap); }
-.warmups-head { font-weight: 600; color: var(--text-heading); margin-bottom: 0.5rem; }
-.warmups-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.warmup {
-  display: inline-flex; align-items: center; gap: 0.35rem;
-  background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px;
-  padding: 0.35rem 0.8rem; font-size: 14px; color: var(--text-dark); text-decoration: none;
-}
-a.warmup:hover { border-color: var(--tile, var(--brand)); }
-.warmup--locked { color: var(--text-light); }
-
 .checkpoint-intro { display: grid; justify-items: center; gap: var(--gap); text-align: left; max-width: 34rem; margin: 0 auto; }
 .checkpoint-castle { font-size: 64px; line-height: 1; }
-
-@media (max-width: 400px) {
-  .node { transform: translateX(calc(var(--x, 0) * 0.6)); }
-  .unit-progress .tile-bar { width: 4.5rem; }
-  .unit-progress { min-width: 4.5rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .node--current .node-circle, .node-start { animation: none; }
-}
 
 /* ---------------------------------------------------------------- daily: streak, goal, week */
 .daily {
@@ -2140,11 +2046,6 @@ a.warmup:hover { border-color: var(--tile, var(--brand)); }
 .goal-choice--on { border-color: var(--accent); background: var(--accent-tint); }
 .goal-choice:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 
-/* a review node: a concept from this unit is fading */
-.node--review { margin-top: 1.6rem; }
-.node--review .node-circle { background: #FFF6E6; border-color: var(--amber); box-shadow: 0 5px 0 #C27A12; }
-.node-start--review { color: #B45309; border-color: var(--amber); animation: none; }
-.node-start--review::after { border-top-color: var(--amber); }
 
 /* ---------------------------------------------------------------- class goal */
 .class-goal {
@@ -2162,7 +2063,7 @@ a.warmup:hover { border-color: var(--tile, var(--brand)); }
 .class-goal-quiet summary { cursor: pointer; color: var(--brand); font-weight: 600; }
 .class-goal-quiet p { margin-top: 0.35rem; color: var(--text-dark); }
 
-/* Home, slimmed: the path starts on the first screen */
+/* Home, slimmed: the pyramid starts on the first screen */
 .up-next {
   display: flex; align-items: center; justify-content: space-between; gap: var(--gap);
   background: var(--gradient); color: #fff; text-decoration: none;
@@ -2184,3 +2085,130 @@ a.warmup:hover { border-color: var(--tile, var(--brand)); }
 .class-goal--compact .class-goal-bar { height: 8px; }
 .class-goal--compact .class-goal-sub { grid-column: 1 / -1; margin: 0; font-size: 13px; }
 .daily { margin-bottom: 0.75rem; }
+
+/* ================================================================
+   The pyramid (Home): each level a tier, each quiz or game a brick.
+   Drawn capstone first, so the foundation sits on the ground.
+   ================================================================ */
+.pyramid-scene {
+  position: relative;
+  background: linear-gradient(180deg, #F4F5FF 0%, #FFFFFF 60%, #FFF8EE 100%);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow);
+  padding: 1.6rem 0.75rem 0; overflow: hidden;
+}
+.pyramid { list-style: none; display: grid; justify-items: center; gap: 6px; position: relative; }
+
+.pyramid-cap {
+  width: 0; height: 0; margin: 0 auto 6px;
+  border-left: 38px solid transparent; border-right: 38px solid transparent;
+  border-bottom: 34px solid #D8DCE4;
+}
+.pyramid-cap--lit { border-bottom-color: #F2C14E; filter: drop-shadow(0 0 10px rgb(242 193 78 / 70%)); }
+
+.tier {
+  width: var(--w, 100%);
+  background: color-mix(in srgb, var(--tile, var(--brand)) 20%, #FBF3E4);
+  border: 1px solid color-mix(in srgb, var(--tile, var(--brand)) 45%, #E9D9BC);
+  border-radius: 10px 10px 4px 4px;
+  padding: 0.55rem 0.55rem 0.65rem;
+  box-shadow: inset 0 -5px 0 rgb(120 84 30 / 12%);
+}
+.tier--locked { background: #F1F2F5; border-color: #DDE0E6; }
+
+.tier-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; padding: 0 0.2rem 0.45rem; }
+.tier-name { font-family: var(--font-ui); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-light); }
+.tier-name strong { color: var(--text-heading); text-transform: none; letter-spacing: 0; font-size: 15px; }
+.tier-count { font-family: var(--font-ui); font-size: 12px; font-weight: 700; color: var(--text-light); white-space: nowrap; }
+.tier-jump { font-size: 13px; padding: 0 0.2rem 0.5rem; }
+.tier-jump a { color: var(--brand); font-weight: 600; }
+
+.bricks { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+.brick { flex: 1 1 7.6rem; max-width: 10rem; min-width: 6.4rem; position: relative; }
+.brick-face {
+  position: relative; height: 100%; min-height: 5.6rem;
+  display: grid; align-content: start; justify-items: center; gap: 0.1rem;
+  padding: 0.55rem 0.4rem 0.45rem; text-align: center; text-decoration: none; color: var(--text-dark);
+  background: #FFF9EE; border: 2px dashed #D9C3A0; border-radius: 4px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.brick-icon { font-size: 22px; line-height: 1.2; }
+.brick-title {
+  font-weight: 600; font-size: 13px; line-height: 1.25; color: var(--text-heading);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.brick-kind { font-family: var(--font-ui); font-size: 11px; color: var(--text-light); }
+.brick .stars { margin: 0.1rem 0 0; }
+a.brick-face:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgb(120 84 30 / 18%); }
+a.brick-face:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+
+/* set bricks: solid, with mortar below; the colour follows the stars */
+.brick--done .brick-face, .brick--keystone.brick--s3 .brick-face {
+  border: 0; border-bottom: 5px solid rgb(0 0 0 / 14%);
+  box-shadow: inset 0 2px 0 rgb(255 255 255 / 45%);
+}
+.brick--s0 .brick-face, .brick--s1 .brick-face { background: #F1D9A8; }
+.brick--s2 .brick-face { background: #E2AE6A; }
+.brick--s3 .brick-face { background: linear-gradient(135deg, #F7D774 0%, #EDB93A 55%, #F9E29A 100%); }
+.brick--s3 .brick-title, .brick--s2 .brick-title { color: #4A2E05; }
+.brick--s3 .brick-kind, .brick--s2 .brick-kind { color: #6B4A12; }
+.brick--done .star { color: rgb(74 46 5 / 22%); }
+.brick--done .star--on { color: #8A4B00; }
+
+/* the brick to build next */
+.brick--current .brick-face {
+  background: #fff; border: 3px solid var(--accent); border-style: solid;
+  box-shadow: 0 0 0 0 rgb(242 99 33 / 45%); animation: brick-glow 1.8s ease-out infinite;
+}
+.brick-tag {
+  position: absolute; top: -0.7rem; left: 50%; transform: translateX(-50%); z-index: 1;
+  background: var(--accent); color: #fff; border-radius: 999px; padding: 0.05rem 0.55rem;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.brick--current { margin-top: 0.4rem; }
+
+.brick--locked .brick-face { background: #E9EBF0; border: 2px solid #DDE0E6; }
+.brick--locked .brick-icon { font-size: 16px; opacity: 0.7; }
+.brick--locked .brick-title { color: var(--text-light); font-weight: 500; }
+
+/* the keystone: wider, and marked out */
+.brick--keystone { flex-basis: 100%; max-width: 13rem; }
+.brick--keystone:not(.brick--s3):not(.brick--locked) .brick-face { border: 2px solid #C7A15A; background: #FFF4DC; }
+
+/* a cracked brick: something set here is fading */
+.brick--cracked .brick-face { background: #F1D9A8; border: 0; border-bottom: 5px solid rgb(0 0 0 / 14%); }
+.brick-crack { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.brick-crack path { fill: none; stroke: #7A4F1B; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.3; vector-effect: non-scaling-stroke; }
+.brick--cracked .brick-icon, .brick--cracked .brick-title, .brick--cracked .brick-kind { position: relative; }
+.brick-tag--repair { background: #B45309; }
+.brick--cracked { margin-top: 0.4rem; }
+
+@keyframes brick-glow { 70% { box-shadow: 0 0 0 10px rgb(242 99 33 / 0%); } 100% { box-shadow: 0 0 0 0 rgb(242 99 33 / 0%); } }
+
+.stones { margin-top: 0.5rem; font-size: 13px; }
+.stones summary { cursor: pointer; color: var(--brand); font-weight: 600; padding: 0 0.2rem; }
+.stones-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
+.stone {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: #fff; border: 1px solid #E3D3B4; border-radius: 999px; padding: 0.25rem 0.65rem;
+  color: var(--text-dark); text-decoration: none;
+}
+a.stone:hover { border-color: var(--tile, var(--brand)); }
+.stone--locked { color: var(--text-light); }
+
+.pyramid-ground {
+  height: 1.4rem; margin: 6px -0.75rem 0;
+  background: linear-gradient(180deg, #F1DDB6 0%, #E7CD9C 100%);
+  box-shadow: inset 0 3px 0 rgb(120 84 30 / 15%);
+}
+
+@media (max-width: 600px) {
+  .tier { width: var(--wp, var(--w, 100%)); }
+}
+@media (max-width: 480px) {
+  .pyramid-scene { padding-left: 0.4rem; padding-right: 0.4rem; }
+  .brick { flex-basis: 6.6rem; min-width: 5.9rem; }
+  .pyramid-ground { margin-left: -0.4rem; margin-right: -0.4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brick--current .brick-face { animation: none; }
+}

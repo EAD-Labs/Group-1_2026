@@ -16,11 +16,11 @@ const MAX_LENGTH = 20;
  * it — and a teacher or examiner can check that it does what it claims.
  */
 export default function Practice() {
-  // A review from the path keeps to its concepts and is shorter: ?focus=a,b&n=5
+  // Repairing a cracked brick keeps to its concepts and is shorter: ?focus=a,b&n=5
   const [params] = useSearchParams();
   const focus = params.get('focus') || '';
   const length = Math.min(MAX_LENGTH, Math.max(1, Number(params.get('n')) || SESSION_LENGTH));
-  const title = focus ? 'Review' : 'Practice';
+  const title = focus ? 'Repair' : 'Practice';
   const [pick, setPick] = useState(null);
   const [seen, setSeen] = useState([]);
   const [chosen, setChosen] = useState(null);

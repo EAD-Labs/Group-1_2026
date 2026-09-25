@@ -9,12 +9,12 @@ import SyncStatus from '../offline/SyncStatus';
  * along the bottom, where a thumb reaches. The tabs depend on the role, so a
  * student never sees teacher tools and a teacher is not shown games.
  *
- * `match` lists the other paths that belong to a tab, so the Path tab stays
+ * `match` lists the other paths that belong to a tab, so the Pyramid tab stays
  * lit while a quiz is open and Play stays lit during a game.
  */
 const NAV = {
   student: [
-    { to: '/dashboard/student', label: 'Path', icon: '🗺️', match: ['/quiz/', '/game/', '/checkpoint/'] },
+    { to: '/dashboard/student', label: 'Pyramid', icon: '🔺', match: ['/quiz/', '/game/', '/checkpoint/'] },
     { to: '/practice', label: 'Practice', icon: '🎯' },
     { to: '/play', label: 'All games', short: 'Games', icon: '🎮' },
     { to: '/me', label: 'Progress', icon: '📈' },
