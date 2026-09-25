@@ -1,15 +1,15 @@
 [
-  { "slug": "basics", "name": "Python basics", "description": "Syntax, indentation, names and where Python came from.", "requires": [] },
-  { "slug": "numbers", "name": "Numbers and operators", "description": "int, float and complex; //, %, ** and how mixed types combine.", "requires": ["basics"] },
-  { "slug": "strings", "name": "Strings", "description": "Quoting, indexing, slicing, methods and why strings cannot change.", "requires": ["basics"] },
-  { "slug": "conditions", "name": "Conditions", "description": "if blocks, boolean logic and short-circuiting.", "requires": ["numbers"] },
-  { "slug": "lists", "name": "Lists and tuples", "description": "Indexing, slicing, appending and unpacking sequences.", "requires": ["strings"] },
-  { "slug": "sets-dicts", "name": "Sets and dictionaries", "description": "Unique values, keys and membership tests.", "requires": ["lists"] },
-  { "slug": "loops", "name": "Loops and range", "description": "for loops, range and building results step by step.", "requires": ["lists", "conditions"] },
-  { "slug": "functions", "name": "Functions", "description": "def, arguments, return values and scope.", "requires": ["loops"] },
-  { "slug": "errors", "name": "Errors", "description": "Which code raises an exception, and which one.", "requires": ["functions"] },
-  { "slug": "modules-oop", "name": "Classes and modules", "description": "Classes, packages, imports and assert.", "requires": ["functions"] },
-  { "slug": "tools", "name": "IPython and tools", "description": "Help, history, saving sessions and Sage.", "requires": ["basics"] },
-  { "slug": "numpy", "name": "NumPy and SciPy", "description": "Arrays, loadtxt, linear algebra and solvers.", "requires": ["lists"] },
-  { "slug": "plotting", "name": "Plotting", "description": "plot, labels, legends, bar and pie charts, saving figures.", "requires": ["numpy"] }
+  {"slug": "basics", "name": "Python basics", "description": "Syntax, indentation, names and where Python came from.", "requires": [], "video": "basic-datatypes-and-operators"},
+  {"slug": "numbers", "name": "Numbers and operators", "description": "int, float and complex; //, %, ** and how mixed types combine.", "requires": ["basics"], "video": "basic-datatypes-and-operators"},
+  {"slug": "strings", "name": "Strings", "description": "Quoting, indexing, slicing, methods and why strings cannot change.", "requires": ["basics"], "video": "getting-started-with-strings"},
+  {"slug": "conditions", "name": "Conditions", "description": "if blocks, boolean logic and short-circuiting.", "requires": ["numbers"], "video": "conditional-statements"},
+  {"slug": "lists", "name": "Lists and tuples", "description": "Indexing, slicing, appending and unpacking sequences.", "requires": ["strings"], "video": "getting-started-with-lists"},
+  {"slug": "sets-dicts", "name": "Sets and dictionaries", "description": "Unique values, keys and membership tests.", "requires": ["lists"], "video": "dictionaries"},
+  {"slug": "loops", "name": "Loops and range", "description": "for loops, range and building results step by step.", "requires": ["lists", "conditions"], "video": "getting-started-with-for"},
+  {"slug": "functions", "name": "Functions", "description": "def, arguments, return values and scope.", "requires": ["loops"], "video": "getting-started-with-functions"},
+  {"slug": "errors", "name": "Errors", "description": "Which code raises an exception, and which one.", "requires": ["functions"], "video": "handling-errors-and-exceptions"},
+  {"slug": "modules-oop", "name": "Classes and modules", "description": "Classes, packages, imports and assert.", "requires": ["functions"], "video": "using-python-modules"},
+  {"slug": "tools", "name": "IPython and tools", "description": "Help, history, saving sessions and Sage.", "requires": ["basics"], "video": "getting-started-with-ipython"},
+  {"slug": "numpy", "name": "NumPy and SciPy", "description": "Arrays, loadtxt, linear algebra and solvers.", "requires": ["lists"], "video": "getting-started-with-arrays"},
+  {"slug": "plotting", "name": "Plotting", "description": "plot, labels, legends, bar and pie charts, saving figures.", "requires": ["numpy"], "video": "using-plot-command-interactively"}
 ]

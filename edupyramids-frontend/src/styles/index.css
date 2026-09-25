@@ -2212,3 +2212,36 @@ a.stone:hover { border-color: var(--tile, var(--brand)); }
 @media (prefers-reduced-motion: reduce) {
   .brick--current .brick-face { animation: none; }
 }
+
+/* ---------------------------------------------------------------- practice hub */
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin-bottom: var(--gap-lg); }
+@media (max-width: 720px) { .modes { grid-template-columns: minmax(0, 1fr); } }
+.mode {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.1rem 0.75rem; align-items: center;
+  background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+  border-left: 4px solid var(--brand); padding: 0.85rem 1rem; text-decoration: none; color: inherit;
+}
+a.mode:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.mode-icon { grid-row: span 2; font-size: 26px; width: 2.8rem; height: 2.8rem; display: grid; place-items: center; border-radius: var(--radius); background: var(--brand-tint); }
+.mode-title { font-weight: 700; color: var(--text-heading); }
+.mode-sub { font-size: 13px; color: var(--text-light); }
+.mode-count { display: inline-block; min-width: 1.5rem; text-align: center; background: var(--accent); color: #fff; border-radius: 999px; font-size: 12px; padding: 0.05rem 0.4rem; margin-left: 0.25rem; }
+.mode--repair { border-left-color: var(--amber); }
+.mode--mistakes { border-left-color: var(--accent); }
+.mode--off { opacity: 0.6; box-shadow: none; border-left-color: var(--border); }
+
+.concept-picks { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+@media (max-width: 720px) { .concept-picks { grid-template-columns: minmax(0, 1fr); } }
+.concept-pick { display: grid; gap: 0.4rem; background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow); padding: 0.75rem 0.9rem; }
+.concept-pick-head, .concept-pick-foot { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.concept-pick-name { font-weight: 600; color: var(--text-heading); }
+.concept-pick-status { font-family: var(--font-ui); font-size: 12px; font-weight: 700; color: var(--text-light); }
+.concept-pick--mastered .concept-pick-status { color: var(--brand); }
+.concept-pick--review .concept-pick-status { color: #B45309; }
+.concept-pick-actions { display: flex; align-items: center; gap: 0.6rem; flex: none; }
+.concept-pick-video { font-size: 13px; font-weight: 600; color: var(--brand); text-decoration: none; white-space: nowrap; }
+.concept-pick-video:hover { text-decoration: underline; }
+
+.revisit-video { color: #fff; font-size: 14px; margin: -0.4rem 0 var(--gap); }
+.revisit-video a { color: #FFD166; font-weight: 600; }

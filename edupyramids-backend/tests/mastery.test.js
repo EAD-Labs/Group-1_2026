@@ -149,6 +149,51 @@ describe('adaptive practice', () => {
   });
 });
 
+describe('the practice hub', () => {
+  const wrongFor = (correct) => (correct === 'a' ? 'b' : 'a');
+
+  test('a wrong answer points to the Spoken Tutorial video that teaches it', async () => {
+    const { data: pick } = (await request(app).get('/api/practice/next').set(student)).body;
+    const q = await queryOne('SELECT correct_answer FROM questions WHERE id = $1', [pick.question.id]);
+    const res = await request(app).post('/api/practice/answer').set(student)
+      .send({ questionId: pick.question.id, answer: wrongFor(q.correct_answer) });
+    expect(res.body.data.correct).toBe(false);
+    expect(res.body.data.revisit).toMatchObject({ title: expect.any(String) });
+    expect(res.body.data.revisit.url).toMatch(/^https:\/\/spoken-tutorial\.org\//);
+  });
+
+  test('the overview lists every concept with its videos, and counts the mistakes to fix', async () => {
+    const { body } = await request(app).get('/api/practice/overview').set(student);
+    expect(body.data.mistakes).toBeGreaterThanOrEqual(1);
+    const basics = body.data.concepts.find((c) => c.slug === 'basics');
+    expect(basics.videos.length).toBeGreaterThan(0);
+  });
+
+  test('each concept names its introductory video, and the importer refuses one that does not exist', () => {
+    const { validate } = require('../scripts/import-concepts');
+    const concepts = require('../content/concepts.json');
+    expect(validate(concepts)).toEqual([]);
+    const typo = concepts.map((c, i) => (i === 0 ? { ...c, video: 'no-such-video' } : c));
+    expect(validate(typo).join(' ')).toMatch(/no-such-video/);
+  });
+
+  test('"fix my mistakes" serves wrong answers until they are put right', async () => {
+    const before = (await request(app).get('/api/practice/overview').set(student)).body.data.mistakes;
+    const { data: pick } = (await request(app).get('/api/practice/next?mode=mistakes').set(student)).body;
+    expect(pick.reason).toMatch(/wrong before/);
+
+    const q = await queryOne('SELECT correct_answer FROM questions WHERE id = $1', [pick.question.id]);
+    await request(app).post('/api/practice/answer').set(student)
+      .send({ questionId: pick.question.id, answer: q.correct_answer });
+
+    const after = (await request(app).get('/api/practice/overview').set(student)).body.data.mistakes;
+    expect(after).toBe(before - 1);
+    const again = await request(app).get(`/api/practice/next?mode=mistakes&exclude=${pick.question.id}`).set(student);
+    if (after === 0) expect(again.status).toBe(404);
+    else expect(again.body.data.question.id).not.toBe(pick.question.id);
+  });
+});
+
 describe('quizzes feed the model', () => {
   test('a submitted quiz reports what moved, once', async () => {
     const quiz = await queryOne(

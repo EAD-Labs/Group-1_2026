@@ -12,6 +12,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const { pool } = require('../src/config/database');
+const VIDEO_SLUGS = new Set(require('../content/spoken-tutorial-videos.json').map((v) => v.slug));
 
 const SLUG = /^[a-z0-9-]+$/;
 
@@ -27,6 +28,9 @@ function validate(raw) {
       return;
     }
     if (typeof c.name !== 'string' || !c.name.trim()) errors.push(`${at} (${c.slug}): "name" is required`);
+    if (c.video !== undefined && !VIDEO_SLUGS.has(c.video)) {
+      errors.push(`${at} (${c.slug}): video "${c.video}" is not in spoken-tutorial-videos.json`);
+    }
     (c.requires || []).forEach((r) => {
       if (!slugs.has(r)) errors.push(`${at} (${c.slug}): requires "${r}", which is not in the file`);
     });

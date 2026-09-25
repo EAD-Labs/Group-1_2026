@@ -1,4 +1,5 @@
 const { pool, query } = require('../config/database');
+const VIDEOS = require('../../content/spoken-tutorial-videos.json');
 
 /*
  * Adaptive learning.
@@ -21,6 +22,10 @@ const { pool, query } = require('../config/database');
  *    whose prerequisites are known), then the question within it whose
  *    difficulty best suits the student's current estimate.
  *
+ * 4. Back to the lesson. Every concept knows which Spoken Tutorial videos
+ *    teach it, so a wrong answer can point to the right video rather than
+ *    only to the right letter.
+ *
  * Practice only ever suggests. A student can still pick any topic, quiz or
  * game themselves (HLD Section 6.3: "suggests weak topics but never forces an
  * order").
@@ -38,6 +43,20 @@ const FIRST_REVIEW_DAYS = 1;
 const REVIEW_GROWTH = 2.5;
 const MAX_REVIEW_DAYS = 60;
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+const INTRO_VIDEO = Object.fromEntries(require('../../content/concepts.json').map((c) => [c.slug, c.video]));
+
+/**
+ * The Spoken Tutorial videos that teach a concept: the one chosen as its
+ * introduction (concepts.json "video") first, then the others in course order.
+ */
+function videosFor(slug, limit = 2) {
+  const intro = INTRO_VIDEO[slug];
+  return VIDEOS.filter((v) => v.slug === intro || v.concepts.includes(slug))
+    .sort((a, b) => (b.slug === intro) - (a.slug === intro) || a.order - b.order)
+    .slice(0, limit)
+    .map(({ title, url, duration }) => ({ title, url, duration }));
+}
 
 /** P(guess): one in the number of options, kept within sensible bounds. */
 function guessFor(optionCount) {
@@ -205,8 +224,67 @@ async function masteryFor(studentId) {
       nextReview: r.next_review,
       requires: r.requires,
       waitingOn: waitingOn.map((s) => bySlug[s].name),
+      videos: videosFor(r.slug),
     };
   });
+}
+
+/**
+ * Questions this student got wrong and has not got right since, oldest
+ * mistake first. Going back to a mistake with the answer explained is what
+ * makes it stick, most of all a mistake made with confidence (Butterfield &
+ * Metcalfe's hypercorrection effect).
+ */
+async function mistakesFor(studentId) {
+  const rows = await query(
+    `SELECT question_id AS id, created_at FROM (
+       SELECT DISTINCT ON (question_id) question_id, correct, created_at
+         FROM responses
+        WHERE student_id = $1 AND question_id IS NOT NULL
+        ORDER BY question_id, created_at DESC
+     ) latest
+     WHERE NOT correct
+     ORDER BY created_at`,
+    [studentId],
+  );
+  return rows.map((r) => r.id);
+}
+
+/** A question as practice shows it: no answer, with its option count and topic. */
+async function practiceQuestion(id) {
+  const question = (await query(
+    `SELECT q.id, q.text, q.option_a AS "optionA", q.option_b AS "optionB",
+            q.option_c AS "optionC", q.option_d AS "optionD", q.option_e AS "optionE",
+            t.name AS topic
+       FROM questions q JOIN quizzes z ON z.id = q.quiz_id JOIN topics t ON t.id = z.topic_id
+      WHERE q.id = $1`,
+    [id],
+  ))[0];
+  if (!question) return null;
+  const optionCount = ['optionA', 'optionB', 'optionC', 'optionD', 'optionE'].filter((k) => question[k]).length;
+  return { ...question, optionCount };
+}
+
+/** The next mistake to fix, skipping any already shown in this session. */
+async function nextMistake(studentId, exclude) {
+  const id = (await mistakesFor(studentId)).find((q) => !exclude.includes(q));
+  if (!id) return null;
+  const question = await practiceQuestion(id);
+  const [slug] = (await query(
+    `SELECT c.slug FROM question_concepts qc JOIN concepts c ON c.id = qc.concept_id
+      WHERE qc.question_id = $1 ORDER BY c.sort_order LIMIT 1`,
+    [id],
+  )).map((r) => r.slug);
+  const concept = (await masteryFor(studentId)).find((c) => c.slug === slug);
+  const p = concept?.p ?? Math.round(BKT.init * 100);
+  return {
+    question,
+    concept: concept
+      ? { slug: concept.slug, name: concept.name, p, status: concept.status }
+      : { slug: null, name: 'Mixed', p, status: 'learning' },
+    reason: 'You got this one wrong before. Another go, with the explanation, is how a mistake turns into something you know.',
+    predicted: Math.round(predictCorrect(p / 100, guessFor(question.optionCount)) * 100),
+  };
 }
 
 /**
@@ -215,8 +293,10 @@ async function masteryFor(studentId) {
  * @param {number}   studentId
  * @param {number[]} exclude   question ids already seen in this session
  * @param {string[]} focus     concept slugs to keep to (a review from the path); all when empty
+ * @param {string}   mode      'mistakes' to go back over wrong answers; otherwise the adaptive mix
  */
-async function nextPracticeQuestion(studentId, exclude = [], focus = []) {
+async function nextPracticeQuestion(studentId, exclude = [], focus = [], mode = 'mix') {
+  if (mode === 'mistakes') return nextMistake(studentId, exclude.filter(Number.isInteger));
   const concepts = (await masteryFor(studentId))
     .filter((c) => c.questions > 0 && (!focus.length || focus.includes(c.slug)));
   if (!concepts.length) return null;
@@ -324,18 +404,7 @@ async function chooseQuestion(studentId, concept, exclude) {
   }).sort((a, b) => a.score - b.score);
 
   const best = scored[0];
-  const question = (await query(
-    `SELECT q.id, q.text, q.option_a AS "optionA", q.option_b AS "optionB",
-            q.option_c AS "optionC", q.option_d AS "optionD", q.option_e AS "optionE",
-            t.name AS topic
-       FROM questions q JOIN quizzes z ON z.id = q.quiz_id JOIN topics t ON t.id = z.topic_id
-      WHERE q.id = $1`,
-    [best.id],
-  ))[0];
-
-  const optionCount = ['optionA', 'optionB', 'optionC', 'optionD', 'optionE']
-    .filter((k) => question[k]).length;
-  return { ...question, optionCount, difficulty: Math.round(best.difficulty * 100) };
+  return { ...(await practiceQuestion(best.id)), difficulty: Math.round(best.difficulty * 100) };
 }
 
 class PracticeError extends Error {
@@ -359,8 +428,19 @@ async function answerPractice({ studentId, questionId, answer }) {
     const mastery = await recordResponse(client, { studentId, questionId, correct, source: 'practice' });
     await client.query('COMMIT');
 
+    // A wrong answer points back to the lesson that teaches it.
+    let revisit = null;
+    if (!correct) {
+      const [first] = (await client.query(
+        `SELECT c.slug FROM question_concepts qc JOIN concepts c ON c.id = qc.concept_id
+          WHERE qc.question_id = $1 ORDER BY c.sort_order LIMIT 1`,
+        [questionId],
+      )).rows;
+      revisit = first ? videosFor(first.slug, 1)[0] ?? null : null;
+    }
+
     return {
-      questionId, correct, correctAnswer: q.correct_answer, explanation: q.explanation, mastery,
+      questionId, correct, correctAnswer: q.correct_answer, explanation: q.explanation, mastery, revisit,
     };
   } catch (err) {
     await client.query('ROLLBACK').catch(() => {});
@@ -422,5 +502,6 @@ module.exports = {
   BKT, MASTERED, READY,
   guessFor, bktUpdate, predictCorrect, schedule, statusOf,
   recordResponse, summariseChanges, masteryFor, nextPracticeQuestion, answerPractice,
+  mistakesFor, videosFor,
   classMastery, PracticeError,
 };

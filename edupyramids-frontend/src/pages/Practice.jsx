@@ -2,25 +2,133 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import { client } from '../api/client';
+import { useApi } from '../utils/useApi';
 
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 const SESSION_LENGTH = 10;
 const MAX_LENGTH = 20;
 
 /*
- * Adaptive practice: ten questions, each picked by the mastery model.
+ * Practice: a hub of ways to practise, and the session itself.
+ *
+ *   /practice                          the hub: choose how to practise
+ *   /practice?mode=mix                 ten questions picked by the mastery model
+ *   /practice?mode=mistakes            wrong answers, until they are put right
+ *   /practice?focus=a,b&n=5            one or more concepts (a repair, or a pick)
+ *
+ * Choosing is the student's; the model only suggests (HLD Section 6.3), and a
+ * choice of how to practise supports autonomy (self-determination theory).
+ */
+export default function Practice() {
+  const [params] = useSearchParams();
+  const mode = params.get('mode') === 'mistakes' ? 'mistakes' : 'mix';
+  const focus = params.get('focus') || '';
+  if (!params.get('mode') && !focus) return <PracticeHub />;
+
+  const length = Math.min(MAX_LENGTH, Math.max(1, Number(params.get('n')) || SESSION_LENGTH));
+  let title = 'Smart mix';
+  if (mode === 'mistakes') title = 'Fix my mistakes';
+  else if (focus) title = params.get('kind') === 'focus' ? 'Focus' : 'Repair';
+  return <Session key={params.toString()} mode={mode} focus={focus} length={length} title={title} />;
+}
+
+const STATUS_LABEL = {
+  new: 'Not started', learning: 'Learning', mastered: 'Mastered', review: 'Fading: repair it',
+};
+
+/** The hub: four ways in, and every concept with its video. */
+function PracticeHub() {
+  const { loading, error, data } = useApi(['/practice/overview']);
+  if (loading || error) {
+    return (
+      <DashboardShell title="Practice">
+        {error ? <p className="alert" role="alert">{error}</p> : <p className="muted">Loading…</p>}
+      </DashboardShell>
+    );
+  }
+  const [{ concepts, mistakes }] = data;
+  const practisable = concepts.filter((c) => c.questions > 0);
+  const due = practisable.filter((c) => c.status === 'review');
+
+  return (
+    <DashboardShell title="Practice">
+      <p className="page-intro muted">Questions picked from everything you have answered. Choose how you want to practise.</p>
+
+      <div className="modes">
+        <Link className="mode mode--mix" to="/practice?mode=mix">
+          <span className="mode-icon" aria-hidden="true">🎯</span>
+          <span className="mode-title">Smart mix</span>
+          <span className="mode-sub">10 questions picked for you: what is due, then where you can grow most</span>
+        </Link>
+        {due.length > 0 ? (
+          <Link className="mode mode--repair" to={`/practice?focus=${due.map((c) => c.slug).join(',')}&n=5`}>
+            <span className="mode-icon" aria-hidden="true">🔨</span>
+            <span className="mode-title">Repair fading <span className="mode-count">{due.length}</span></span>
+            <span className="mode-sub">{due.map((c) => c.name).join(', ')}</span>
+          </Link>
+        ) : (
+          <span className="mode mode--off">
+            <span className="mode-icon" aria-hidden="true">🔨</span>
+            <span className="mode-title">Repair fading</span>
+            <span className="mode-sub">Nothing is fading. Mastered concepts come back here when they are due.</span>
+          </span>
+        )}
+        {mistakes > 0 ? (
+          <Link className="mode mode--mistakes" to={`/practice?mode=mistakes&n=${Math.min(10, mistakes)}`}>
+            <span className="mode-icon" aria-hidden="true">❌</span>
+            <span className="mode-title">Fix my mistakes <span className="mode-count">{mistakes}</span></span>
+            <span className="mode-sub">Questions you got wrong and have not got right since</span>
+          </Link>
+        ) : (
+          <span className="mode mode--off">
+            <span className="mode-icon" aria-hidden="true">❌</span>
+            <span className="mode-title">Fix my mistakes</span>
+            <span className="mode-sub">No mistakes waiting. Wrong answers collect here to try again.</span>
+          </span>
+        )}
+      </div>
+
+      <h2 className="h2">Or pick a concept</h2>
+      <ul className="concept-picks">
+        {practisable.map((c) => (
+          <li key={c.slug} className={`concept-pick concept-pick--${c.status}`}>
+            <span className="concept-pick-head">
+              <span className="concept-pick-name">{c.name}</span>
+              <span className="concept-pick-status">{STATUS_LABEL[c.status] || c.status}</span>
+            </span>
+            <span className="concept-bar"><span style={{ width: `${c.p}%` }} /></span>
+            <span className="concept-pick-foot">
+              <span className="muted small">
+                {c.p}% sure{c.waitingOn.length > 0 && ` · builds on ${c.waitingOn.join(' and ')}`}
+              </span>
+              <span className="concept-pick-actions">
+                {c.videos[0] && (
+                  <a className="concept-pick-video" href={c.videos[0].url} target="_blank" rel="noreferrer"
+                    title={`${c.videos[0].title} (${c.videos[0].duration}), Spoken Tutorial`}>
+                    📺 Watch
+                  </a>
+                )}
+                <Link className="btn btn--sm" to={`/practice?focus=${c.slug}&n=5&kind=focus`}>Practise</Link>
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </DashboardShell>
+  );
+}
+
+/*
+ * One session, a question at a time, each picked by the mastery model.
  *
  * The screen shows its working. Every question says why it was chosen and
  * what the model expects, and every answer shows the estimate moving, because
  * a student who can see why the app does something is more likely to trust
  * it — and a teacher or examiner can check that it does what it claims.
  */
-export default function Practice() {
-  // Repairing a cracked brick keeps to its concepts and is shorter: ?focus=a,b&n=5
-  const [params] = useSearchParams();
-  const focus = params.get('focus') || '';
-  const length = Math.min(MAX_LENGTH, Math.max(1, Number(params.get('n')) || SESSION_LENGTH));
-  const title = focus ? 'Repair' : 'Practice';
+function Session({
+  mode, focus, length, title,
+}) {
   const [pick, setPick] = useState(null);
   const [seen, setSeen] = useState([]);
   const [chosen, setChosen] = useState(null);
@@ -35,7 +143,7 @@ export default function Practice() {
     setChosen(null);
     setVerdict(null);
     try {
-      const res = await client.get(`/practice/next?exclude=${exclude.join(',')}${focus ? `&focus=${encodeURIComponent(focus)}` : ''}`);
+      const res = await client.get(`/practice/next?exclude=${exclude.join(',')}${focus ? `&focus=${encodeURIComponent(focus)}` : ''}${mode === 'mistakes' ? '&mode=mistakes' : ''}`);
       setPick(res.data);
     } catch (err) {
       if (err.status === 404) setFinished(true);
@@ -87,7 +195,7 @@ export default function Practice() {
     );
   }
 
-  if (finished) return <Summary history={history} onAgain={again} />;
+  if (finished) return <Summary title={title} history={history} onAgain={again} />;
 
   if (!pick) {
     return <DashboardShell title={title}><p className="muted">Choosing your first question…</p></DashboardShell>;
@@ -148,6 +256,13 @@ export default function Practice() {
               <strong>{verdict.correct ? 'Correct' : 'Not correct'}</strong>
               {verdict.explanation ? ` — ${verdict.explanation}` : ' — the right answer is highlighted above.'}
             </p>
+            {verdict.revisit && (
+              <p className="revisit-video">
+                <span aria-hidden="true">📺</span> Rewatch the lesson:{' '}
+                <a href={verdict.revisit.url} target="_blank" rel="noreferrer">{verdict.revisit.title}</a>
+                {' '}<span className="muted-on-dark">({verdict.revisit.duration}, Spoken Tutorial)</span>
+              </p>
+            )}
             <MasteryMoves changes={verdict.mastery} />
           </>
         )}
@@ -189,7 +304,7 @@ export function MasteryMoves({ changes, dark = true }) {
   );
 }
 
-function Summary({ history, onAgain }) {
+function Summary({ title, history, onAgain }) {
   const right = history.filter((h) => h.correct).length;
   const moved = new Map();
   history.flatMap((h) => h.mastery).forEach((c) => {
@@ -218,7 +333,7 @@ function Summary({ history, onAgain }) {
 
       <div className="result-actions note-foot">
         <button className="btn btn--sm" type="button" onClick={onAgain}>Practise again</button>
-        <Link className="btn btn--ghost btn--sm" to="/dashboard/student">Back home</Link>
+        <Link className="btn btn--ghost btn--sm" to="/practice">Other ways to practise</Link>
       </div>
     </DashboardShell>
   );

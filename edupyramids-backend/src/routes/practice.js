@@ -1,7 +1,7 @@
 const express = require('express');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 const {
-  masteryFor, nextPracticeQuestion, answerPractice, PracticeError,
+  masteryFor, nextPracticeQuestion, answerPractice, mistakesFor, PracticeError,
 } = require('../services/masteryService');
 
 /*
@@ -23,17 +23,29 @@ router.get('/mastery', async (req, res, next) => {
   }
 });
 
+/** GET /api/practice/overview — the practice hub: every concept, and how many mistakes wait to be fixed. */
+router.get('/overview', async (req, res, next) => {
+  try {
+    const [concepts, mistakes] = await Promise.all([masteryFor(req.user.userId), mistakesFor(req.user.userId)]);
+    res.json({ success: true, data: { concepts, mistakes: mistakes.length } });
+  } catch (err) {
+    next(err);
+  }
+});
+
 /**
- * GET /api/practice/next?exclude=1,2,3&focus=loops,strings — the next
- * question, and why it was chosen. focus keeps to those concepts (a review
- * started from the path).
+ * GET /api/practice/next?exclude=1,2,3&focus=loops,strings&mode=mistakes —
+ * the next question, and why it was chosen. focus keeps to those concepts
+ * (a repair started from the pyramid); mode=mistakes goes back over wrong
+ * answers instead.
  */
 router.get('/next', async (req, res, next) => {
   try {
     const exclude = String(req.query.exclude || '')
       .split(',').filter(Boolean).map(Number).filter(Number.isInteger).slice(0, 200);
     const focus = String(req.query.focus || '').split(',').map((s) => s.trim()).filter(Boolean).slice(0, 20);
-    const pick = await nextPracticeQuestion(req.user.userId, exclude, focus);
+    const mode = req.query.mode === 'mistakes' ? 'mistakes' : 'mix';
+    const pick = await nextPracticeQuestion(req.user.userId, exclude, focus, mode);
     if (!pick) return res.status(404).json({ error: 'No more questions to practise right now' });
     return res.json({ success: true, data: pick });
   } catch (err) {
