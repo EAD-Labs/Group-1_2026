@@ -114,7 +114,7 @@ export default function Game() {
           </p>
         </div>
         {game.instructions && <p className="game-instructions">{game.instructions}</p>}
-        <Board key={round} game={game} onFinish={finish} sending={sending} hint={askHint} />
+        <Board key={round} game={game} onFinish={finish} sending={sending} hint={askHint} attemptId={clientAttemptId} />
       </div>
     </DashboardShell>
   );

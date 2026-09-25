@@ -47,13 +47,19 @@ router.get('/:id', async (req, res, next) => {
 
 /**
  * POST /api/games/:id/check — an instant check during play, for kinds that
- * have one (memory tiles: { first, second }). Records nothing.
+ * have one (memory: { first, second }; trace: { step, value }), with the
+ * attempt's clientAttemptId. Recorded, and the marking uses what was checked.
  */
 router.post('/:id/check', async (req, res, next) => {
   const id = idFrom(req, res);
   if (id === null) return undefined;
+  const clientAttemptId = req.body?.clientAttemptId;
+  if (!UUID.test(String(clientAttemptId))) return res.status(400).json({ error: 'clientAttemptId must be a UUID' });
   try {
-    return res.json({ success: true, data: await checkMove(id, req.body) });
+    return res.json({
+      success: true,
+      data: await checkMove(id, req.body, { studentId: req.user.userId, clientAttemptId }),
+    });
   } catch (err) {
     return handle(err, res, next);
   }

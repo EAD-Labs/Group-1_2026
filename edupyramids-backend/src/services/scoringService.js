@@ -2,6 +2,7 @@ const { pool } = require('../config/database');
 const { recordResponse, summariseChanges } = require('./masteryService');
 const { attemptTime } = require('./attemptTime');
 const { xpForAttempt, quizStars } = require('./xp');
+const { checksFor, firstChecked } = require('./checkService');
 
 /*
  * Marking a quiz attempt.
@@ -54,10 +55,16 @@ async function markQuizAttempt({ quizId, studentId, answers = {}, clientAttemptI
       throw new ScoringError('That quiz has no questions loaded yet', 409);
     }
 
+    // A question checked during play is marked on the letter checked first,
+    // not on whatever was sent after the answer was shown.
+    const checked = firstChecked(await checksFor({ clientAttemptId, studentId }));
+
     // Mark every question in the quiz, not every answer that was sent. A
     // question the student skipped is still counted, and counted as wrong.
     const feedback = questions.map((q) => {
-      const given = answers[q.id] ?? answers[String(q.id)] ?? null;
+      const given = checked.has(String(q.id))
+        ? checked.get(String(q.id))
+        : answers[q.id] ?? answers[String(q.id)] ?? null;
       const correct = given === q.correct_answer;
       return {
         questionId: q.id,

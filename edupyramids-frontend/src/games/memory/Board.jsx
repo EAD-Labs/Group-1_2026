@@ -12,7 +12,9 @@ import { checkMemory } from '../../offline/markers';
  */
 const FLIP_BACK_MS = 1100;
 
-export default function MemoryBoard({ game, onFinish, sending }) {
+export default function MemoryBoard({
+  game, onFinish, sending, attemptId,
+}) {
   const [up, setUp] = useState([]);                // tile ids face up, not yet matched
   const [matched, setMatched] = useState(new Set());
   const [moves, setMoves] = useState([]);
@@ -43,7 +45,7 @@ export default function MemoryBoard({ game, onFinish, sending }) {
       let data;
       try {
         if (game.offline) throw Object.assign(new Error('offline'), { status: 0 });
-        ({ data } = await client.post(`/games/${game.id}/check`, { first, second: id }));
+        ({ data } = await client.post(`/games/${game.id}/check`, { first, second: id, clientAttemptId: attemptId }));
       } catch (err) {
         if (err.status !== 0 || !game.key) throw err;
         data = checkMemory(game, first, id);

@@ -120,7 +120,7 @@ export default function Quiz() {
     try {
       if (offline) throw Object.assign(new Error('offline'), { status: 0 });
       const res = await client.post(`/quizzes/${id}/check`,
-        { questionId: question.id, answer: letter });
+        { questionId: question.id, answer: letter, clientAttemptId });
       setVerdicts((v) => ({ ...v, [question.id]: res.data }));
     } catch {
       // No connection: mark on the device if the quiz was downloaded. If not,

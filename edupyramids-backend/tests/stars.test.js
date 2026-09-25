@@ -163,11 +163,21 @@ describe('Trace Runner', () => {
     const step = token(withString.id, `t${i}s${k}`);
 
     const right = await request(app).post(`/api/games/${withString.id}/check`).set(student)
-      .send({ step, value: ` ${value.replace(/'/g, '"')} ` });
+      .send({ step, value: ` ${value.replace(/'/g, '"')} `, clientAttemptId: uuid() });
     expect(right.body.data).toEqual({ correct: true, value });
 
-    const wrong = await request(app).post(`/api/games/${withString.id}/check`).set(student).send({ step, value: 'nope' });
+    const wrong = await request(app).post(`/api/games/${withString.id}/check`).set(student).send({ step, value: 'nope', clientAttemptId: uuid() });
     expect(wrong.body.data).toEqual({ correct: false, value });
+  });
+
+  test('a step is marked on the value checked first, not one sent after the answer was shown', async () => {
+    const clientAttemptId = uuid();
+    const answers = {};
+    trace.content.items.forEach((it, i) => it.steps.forEach((s, k) => { answers[token(trace.id, `t${i}s${k}`)] = s.value; }));
+    const first = token(trace.id, 't0s0');
+    await request(app).post(`/api/games/${trace.id}/check`).set(student).send({ step: first, value: 'wrong', clientAttemptId });
+    const res = await request(app).post(`/api/games/${trace.id}/results`).set(student).send({ answers, clientAttemptId });
+    expect(res.body.data.score).toBe(res.body.data.maxScore - 1);
   });
 
   test('lists match whatever the spacing', () => {

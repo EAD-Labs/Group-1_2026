@@ -6,6 +6,7 @@ const { attemptTime } = require('./attemptTime');
 const { starsFor } = require('../games/stars');
 const { xpForAttempt } = require('./xp');
 const { recordGame } = require('./masteryService');
+const { recordCheck, checksFor } = require('./checkService');
 
 /*
  * Delivering and marking games, for every kind.
@@ -39,11 +40,20 @@ async function getGameForStudent(gameId) {
   };
 }
 
-/** An instant check during play, for kinds that have one. Records nothing. */
-async function checkMove(gameId, body) {
+/**
+ * An instant check during play, for kinds that have one. Recorded against the
+ * attempt, so the marking uses what was checked (services/checkService.js).
+ */
+async function checkMove(gameId, body, { studentId, clientAttemptId }) {
   const { game, kind } = await load(gameId);
   if (!kind.check) throw new GameError('This game has nothing to check during play');
-  return kind.check(game, body || {});
+  const { clientAttemptId: _drop, ...move } = body || {};
+  const verdict = kind.check(game, move);
+  await recordCheck({
+    clientAttemptId, studentId, gameId: game.id,
+    item: kind.checkItem(move), value: move, correct: verdict.correct ?? verdict.match,
+  });
+  return verdict;
 }
 
 /**
@@ -76,7 +86,12 @@ async function hintsUsed(clientAttemptId, studentId) {
 
 async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptId, answeredAt }) {
   const { game, kind } = await load(gameId);
-  const { feedback, score, maxScore, extra = {} } = kind.mark(game, answers);
+  // What was checked during play counts over what was sent at the end.
+  const checks = kind.fromChecks
+    ? (await checksFor({ clientAttemptId, studentId })).filter(Boolean)
+    : [];
+  const marked = kind.fromChecks ? kind.fromChecks(answers, checks) : answers;
+  const { feedback, score, maxScore, extra = {} } = kind.mark(game, marked);
   const hints = await hintsUsed(clientAttemptId, studentId);
   const stars = starsFor({ score, maxScore, hintsUsed: hints, parMet: extra.parMet });
   const before = (await pool.query(

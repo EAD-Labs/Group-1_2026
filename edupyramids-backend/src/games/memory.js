@@ -63,6 +63,12 @@ module.exports = {
     return { match, explanation: match ? game.content.pairs[index.get(first)].explanation ?? null : null };
   },
 
+  /** Every pair turned over is recorded; marking replays those, not the list sent at the end. */
+  checkItem: (body) => `${body.first}|${body.second}`,
+  fromChecks: (answers, checks) => (checks.length
+    ? { moves: checks.map((c) => [c.value.first, c.value.second]) }
+    : answers),
+
   /** What the device needs to check pairs and mark offline. */
   offlineKey(game) {
     const { pairs } = game.content;

@@ -92,6 +92,19 @@ module.exports = {
     return { correct: normaliseValue(body.value) === normaliseValue(step.value), value: step.value };
   },
 
+  /** The key a check is recorded under, and the answers rebuilt from checks. */
+  checkItem: (body) => body.step,
+  fromChecks(answers, checks) {
+    const out = { ...answers };
+    const seen = new Set();
+    checks.forEach((c) => {
+      if (seen.has(c.item)) return;
+      seen.add(c.item);
+      out[c.item] = c.value.value;
+    });
+    return out;
+  },
+
   /** Level 1: the values just before this line runs. */
   hint(game, stepId) {
     const steps = stepsOf(game);

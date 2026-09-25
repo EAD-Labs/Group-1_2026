@@ -2,6 +2,7 @@ const express = require('express');
 const { authMiddleware } = require('../middleware/auth');
 const { listQuizzes, getQuizForStudent, QuizNotFound } = require('../services/quizService');
 const { markQuizAttempt, checkAnswer, ScoringError } = require('../services/scoringService');
+const { recordCheck } = require('../services/checkService');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -48,19 +49,26 @@ router.get('/:id', async (req, res, next) => {
  * The answer key stays here rather than travelling with the questions, which is
  * why this needs a round trip at all.
  *
- * ponytail: nothing stops a determined student calling this repeatedly to find
- * the answer before committing. The score that counts still comes from the
- * submit below, which marks every question server-side. Record-on-first-check
- * if that ever matters.
+ * Body: { questionId, answer, clientAttemptId }. Every check is recorded
+ * against the attempt, and the first letter checked for a question is the one
+ * that is marked, so checking cannot be used to find the answer and then
+ * submit a different one (services/checkService.js).
  */
 router.post('/:id/check', async (req, res, next) => {
   try {
-    const { questionId, answer } = req.body || {};
+    const { questionId, answer, clientAttemptId } = req.body || {};
     if (!Number.isInteger(Number(questionId))) {
       return res.status(400).json({ error: 'questionId must be a number' });
     }
+    if (!UUID.test(String(clientAttemptId))) {
+      return res.status(400).json({ error: 'clientAttemptId must be a UUID' });
+    }
     const verdict = await checkAnswer(Number(req.params.id), Number(questionId), answer);
     if (!verdict) return res.status(404).json({ error: 'No such question' });
+    await recordCheck({
+      clientAttemptId, studentId: req.user.userId, quizId: Number(req.params.id),
+      item: Number(questionId), value: answer ?? null, correct: verdict.correct,
+    });
     return res.json({ success: true, data: verdict });
   } catch (err) {
     return next(err);

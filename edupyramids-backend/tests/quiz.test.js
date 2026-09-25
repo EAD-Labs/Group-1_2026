@@ -224,7 +224,7 @@ describe('telling the student straight away', () => {
   test('a right answer comes back right, a wrong one wrong', async () => {
     const q = questions[0];
     const right = await request(app).post(`/api/quizzes/${quiz.id}/check`)
-      .set(auth()).send({ questionId: q.id, answer: 'a' });
+      .set(auth()).send({ questionId: q.id, answer: 'a', clientAttemptId: crypto.randomUUID() });
 
     expect(right.status).toBe(200);
     const key = right.body.data.correctAnswer;
@@ -232,27 +232,46 @@ describe('telling the student straight away', () => {
 
     const other = ['a', 'b', 'c', 'd'].find((l) => l !== key);
     const wrong = await request(app).post(`/api/quizzes/${quiz.id}/check`)
-      .set(auth()).send({ questionId: q.id, answer: other });
+      .set(auth()).send({ questionId: q.id, answer: other, clientAttemptId: crypto.randomUUID() });
     expect(wrong.body.data.correct).toBe(false);
   });
 
   test('checking does not record an attempt', async () => {
     const before = await query('SELECT count(*)::int n FROM attempts');
     await request(app).post(`/api/quizzes/${quiz.id}/check`)
-      .set(auth()).send({ questionId: questions[0].id, answer: 'a' });
+      .set(auth()).send({ questionId: questions[0].id, answer: 'a', clientAttemptId: crypto.randomUUID() });
     const after = await query('SELECT count(*)::int n FROM attempts');
     expect(after[0].n).toBe(before[0].n);
   });
 
   test('a question from another quiz is refused', async () => {
     const res = await request(app).post('/api/quizzes/99999/check')
-      .set(auth()).send({ questionId: questions[0].id, answer: 'a' });
+      .set(auth()).send({ questionId: questions[0].id, answer: 'a', clientAttemptId: crypto.randomUUID() });
     expect(res.status).toBe(404);
+  });
+
+  test('a check must name the attempt it belongs to', async () => {
+    const res = await request(app).post(`/api/quizzes/${quiz.id}/check`)
+      .set(auth()).send({ questionId: questions[0].id, answer: 'a' });
+    expect(res.status).toBe(400);
+  });
+
+  test('the letter checked first is the one marked, even if a right one is sent after', async () => {
+    const clientAttemptId = crypto.randomUUID();
+    const q = questions[0];
+    const key = (await queryOne('SELECT correct_answer FROM questions WHERE id = $1', [q.id])).correct_answer;
+    const wrong = ['a', 'b', 'c', 'd'].find((l) => l !== key);
+    await request(app).post(`/api/quizzes/${quiz.id}/check`).set(auth())
+      .send({ questionId: q.id, answer: wrong, clientAttemptId });
+    // The check has shown the right answer; now send it.
+    const res = await request(app).post(`/api/quizzes/${quiz.id}/attempts`).set(auth())
+      .send({ answers: { [q.id]: key }, clientAttemptId });
+    expect(res.body.data.feedback.find((f) => f.questionId === q.id)).toMatchObject({ given: wrong, correct: false });
   });
 
   test('an unsigned-in caller cannot peek at the answer', async () => {
     const res = await request(app).post(`/api/quizzes/${quiz.id}/check`)
-      .send({ questionId: questions[0].id, answer: 'a' });
+      .send({ questionId: questions[0].id, answer: 'a', clientAttemptId: crypto.randomUUID() });
     expect(res.status).toBe(401);
   });
 });

@@ -14,7 +14,9 @@ import Hint from '../Hint';
  * Right answers in a row make a streak. The answers are sent at the end and
  * the server marks them again.
  */
-export default function TraceBoard({ game, onFinish, sending, hint }) {
+export default function TraceBoard({
+  game, onFinish, sending, hint, attemptId,
+}) {
   const steps = game.items.flatMap((it, p) => it.steps.map((s) => ({ ...s, program: p })));
   const [at, setAt] = useState(0);
   const [typed, setTyped] = useState('');
@@ -41,7 +43,7 @@ export default function TraceBoard({ game, onFinish, sending, hint }) {
       let data;
       try {
         if (game.offline) throw Object.assign(new Error('offline'), { status: 0 });
-        ({ data } = await client.post(`/games/${game.id}/check`, { step: step.id, value: typed }));
+        ({ data } = await client.post(`/games/${game.id}/check`, { step: step.id, value: typed, clientAttemptId: attemptId }));
       } catch (err) {
         if (err.status !== 0 || !game.key) throw err;
         data = checkTrace(game, step.id, typed);

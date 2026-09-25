@@ -114,13 +114,33 @@ describe('marking a game', () => {
   test('memory: the check endpoint says whether two tiles match', async () => {
     const game = byKind('memory');
     const hit = await request(app).post(`/api/games/${game.id}/check`).set(auth)
-      .send({ first: token(game.id, 'a0'), second: token(game.id, 'b0') });
+      .send({ first: token(game.id, 'a0'), second: token(game.id, 'b0'), clientAttemptId: crypto.randomUUID() });
     expect(hit.body.data.match).toBe(true);
     expect(hit.body.data.explanation).toBeTruthy();
 
     const miss = await request(app).post(`/api/games/${game.id}/check`).set(auth)
-      .send({ first: token(game.id, 'a0'), second: token(game.id, 'b1') });
+      .send({ first: token(game.id, 'a0'), second: token(game.id, 'b1'), clientAttemptId: crypto.randomUUID() });
     expect(miss.body.data).toEqual({ match: false, explanation: null });
+
+    const unnamed = await request(app).post(`/api/games/${game.id}/check`).set(auth)
+      .send({ first: token(game.id, 'a0'), second: token(game.id, 'b0') });
+    expect(unnamed.status).toBe(400);
+  });
+
+  test('memory: the pairs actually turned over are what count, not a tidy list sent at the end', async () => {
+    const game = byKind('memory');
+    const pairList = (await content(game.id)).pairs;
+    const pairs = pairList.length;
+    const clientAttemptId = crypto.randomUUID();
+    const flip = (first, second) => request(app).post(`/api/games/${game.id}/check`).set(auth)
+      .send({ first, second, clientAttemptId });
+    // Probe with wrong pairs first, then find every pair.
+    for (let i = 1; i < pairs; i += 1) await flip(token(game.id, 'a0'), token(game.id, `b${i}`));
+    for (let i = 0; i < pairs; i += 1) await flip(token(game.id, `a${i}`), token(game.id, `b${i}`));
+
+    const perfect = { moves: pairList.map((_, i) => [token(game.id, `a${i}`), token(game.id, `b${i}`)]) };
+    const res = await request(app).post(`/api/games/${game.id}/results`).set(auth).send({ answers: perfect, clientAttemptId });
+    expect(res.body.data.misses).toBe(pairs - 1);
   });
 
   test('submitting twice records one attempt', async () => {
