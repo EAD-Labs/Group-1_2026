@@ -134,6 +134,26 @@ describe('the API', () => {
     expect(res.body.data.xp).toBe(0);
   });
 
+  test('empty attempts alone do not keep a streak', async () => {
+    const hash = await bcrypt.hash('password123', 4);
+    const idle = (await queryOne(
+      `INSERT INTO users (email, password_hash, name, role, school_id)
+       VALUES ('idle@school.com', $1, 'Idle Tester', 'student', 'school_001') RETURNING id`,
+      [hash],
+    )).id;
+    resetThrottle();
+    const login = await request(app).post('/api/auth/login')
+      .send({ email: 'idle@school.com', password: 'password123', role: 'student' });
+    const idleAuth = { Authorization: `Bearer ${login.body.token}` };
+    const game = await queryOne("SELECT id FROM games WHERE kind = 'bughunt' ORDER BY id LIMIT 1");
+    await request(app).post(`/api/games/${game.id}/results`).set(idleAuth).send({ answers: {} });
+
+    const { body } = await request(app).get('/api/me/daily').set(idleAuth);
+    expect(body.data.today).toMatchObject({ xp: 0, done: false });
+    expect(body.data.streak.current).toBe(0);
+    await query('DELETE FROM users WHERE id = $1', [idle]);
+  });
+
   test('the goal can be changed to one of the choices only', async () => {
     const ok = await request(app).put('/api/me/goal').set(student).send({ goal: 30 });
     expect(ok.body.data.goal).toBe(30);

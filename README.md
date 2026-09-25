@@ -76,7 +76,7 @@ weaker students.
 - **XP.** Up to 10 for finishing, in proportion to the score, plus 5 per new
   star; 20 for passing a checkpoint; 2 per practice answer. Replays of
   three-star work earn little, and empty attempts earn nothing.
-- **Build streak and goal.** One finished activity keeps the day. Weekends
+- **Build streak and goal.** One finished activity that earns XP keeps the day. Weekends
   never break a streak. Every 5 active days earn a shield (up to 2) that covers
   a missed school day. A fading concept shows as a cracked brick, repaired by
   a five-question review. Students pick a daily goal of 10 to 50 XP.

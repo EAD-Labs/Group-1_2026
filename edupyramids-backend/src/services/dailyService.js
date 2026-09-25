@@ -18,7 +18,7 @@ const { quizStars } = require('./xp');
  *   a practice answer           2
  *
  * The streak follows Duolingo's, adjusted for school. One finished activity
- * keeps a day. Weekends never break a streak, but practising on one still
+ * that earns XP keeps a day (an empty attempt earns none, so does not). Weekends never break a streak, but practising on one still
  * counts. Every five active days in a row earns a freeze (at most two), and a
  * freeze covers a missed school day by itself: Duolingo found this slack cut
  * drop-off by a fifth among learners about to lose a streak.
@@ -135,7 +135,9 @@ async function dailyFor(studentId, now = new Date()) {
   const byDay = new Map();
   events.forEach((e) => byDay.set(e.day, (byDay.get(e.day) || 0) + e.xp));
 
-  const { streak, longest, freezes, days } = streakFrom([...byDay.keys()], today);
+  // A day counts only if it earned XP: an empty attempt (0 XP) does not keep a streak.
+  const activeDays = [...byDay].filter(([, xp]) => xp > 0).map(([day]) => day);
+  const { streak, longest, freezes, days } = streakFrom(activeDays, today);
 
   // The last seven days, oldest first, whether or not anything happened.
   const week = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6)).map((day) => {
@@ -151,7 +153,7 @@ async function dailyFor(studentId, now = new Date()) {
   return {
     goal: user?.goal ?? 20,
     goals: GOALS,
-    today: { day: today, xp: byDay.get(today) || 0, done: byDay.has(today) },
+    today: { day: today, xp: byDay.get(today) || 0, done: (byDay.get(today) || 0) > 0 },
     xp: { total: events.reduce((n, e) => n + e.xp, 0), week: week.reduce((n, d) => n + d.xp, 0) },
     streak: { current: streak, longest, freezes, maxFreezes: MAX_FREEZES, freezeEvery: FREEZE_EVERY },
     week,
