@@ -54,6 +54,15 @@ Test accounts, all with the password `password123`: `student1@school.com`
 (a fresh start), `student2@school.com` (some progress already),
 `teacher1@school.com`, `coordinator@school.com`.
 
+For demos with realistic numbers, `npm run seed:demo` adds four synthetic
+classes (Grade 9 Neem, Grade 9 Peepal, Grade 10 Banyan, Grade 10 Gulmohar),
+each with a teacher and 20 students, and plays three weeks of activity through
+the app itself, so the dashboards, class goals, streaks and mastery all have
+something real to show. Every name is made up and every address ends in
+`@demo.example`, e.g. teacher `anjali.deshpande@demo.example`; the password is
+`password123`. `--reset` makes them again, `--remove` deletes them. On Render
+this runs by itself when `SEED_DEMO_DATA=true`.
+
 `npm test` in the backend rebuilds a separate `edupyramids_test` database and
 runs the suite; `npm test` in the frontend checks that offline marking matches
 the server's. Both run on GitHub for every push, together with a check that
@@ -94,9 +103,9 @@ none.
 - **Build streak and goal.** One finished activity that earns XP keeps the
   day. Weekends never break a streak. Every 5 active days earn a shield (up to
   2) that covers a missed school day. Students pick a daily goal of 10 to 50 XP.
-- **Class goal.** 60 XP per student per week, shared. Students see the total
-  and their own share, never a ranking; teachers also see who has not
-  practised yet.
+- **Class goal.** 100 XP per student per week (five days of the default daily
+  goal), shared. Students see the total and their own share, never a ranking;
+  teachers also see who has not practised yet.
 - **Adaptive practice.** Mastery is estimated per concept (Bayesian Knowledge
   Tracing) from quiz, practice and keystone answers and from finished games,
   which count as stronger evidence because they leave less to guessing. The

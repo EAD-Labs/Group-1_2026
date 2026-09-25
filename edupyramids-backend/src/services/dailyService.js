@@ -167,7 +167,7 @@ async function dailyFor(studentId, now = new Date()) {
  * how many are active and their own share, never a ranking or a name.
  * Teachers also see who has not practised yet this week.
  */
-const CLASS_XP_PER_STUDENT = 60;     // about three days of the default goal
+const CLASS_XP_PER_STUDENT = 100;    // five school days at the default daily goal (20)
 
 /** Monday of the week containing `day`. */
 const mondayOf = (day) => addDays(day, -((weekday(day) + 6) % 7));

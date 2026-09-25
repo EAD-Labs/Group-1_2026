@@ -15,6 +15,9 @@ node scripts/import-games.js content/python-games.json --quiet
 # Leave SEED_DEMO_DATA unset on anything real.
 if [ "$SEED_DEMO_DATA" = "true" ]; then
   node scripts/seed.js
+  # Four synthetic classes with three weeks of activity. In the background, so
+  # the site is up at once; it does nothing if the classes already exist.
+  node scripts/seed-demo-classes.js &
 fi
 
 exec node src/server.js

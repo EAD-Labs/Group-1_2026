@@ -4,7 +4,7 @@ const app = require('../src/app');
 const { pool, query, queryOne } = require('../src/config/database');
 const { resetThrottle } = require('../src/services/authService');
 const {
-  streakFrom, dayOf, xpForAttempt, XP,
+  streakFrom, dayOf, xpForAttempt, XP, CLASS_XP_PER_STUDENT,
 } = require('../src/services/dailyService');
 const { token } = require('../src/games/common');
 
@@ -182,7 +182,7 @@ describe('the class goal', () => {
     expect(body.data).toHaveLength(1);
     const [week] = body.data;
     expect(week).toMatchObject({ name: 'Grade 9-A', students: 2 });
-    expect(week.goal).toBe(2 * 60);
+    expect(week.goal).toBe(2 * CLASS_XP_PER_STUDENT);
     expect(week.mine).toBeLessThanOrEqual(week.xp);
     expect(week).not.toHaveProperty('quiet');
     expect(JSON.stringify(body.data)).not.toMatch(/Priya|Aditya/);

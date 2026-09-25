@@ -11,7 +11,8 @@
     "seed": "node scripts/seed.js",
     "test": "jest --runInBand",
     "import": "node scripts/import-questions.js",
-    "import:games": "node scripts/import-games.js"
+    "import:games": "node scripts/import-games.js",
+    "seed:demo": "node scripts/seed-demo-classes.js"
   },
   "dependencies": {
     "axios": "^1.20.0",
