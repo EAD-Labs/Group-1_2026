@@ -50,18 +50,28 @@ npm install
 npm run dev                   # http://localhost:5173
 ```
 
-Test accounts, all with the password `password123`: `student1@school.com`,
+Test accounts, all with the password `password123`: `student1@school.com`
+(a fresh start), `student2@school.com` (some progress already),
 `teacher1@school.com`, `coordinator@school.com`.
 
 `npm test` in the backend rebuilds a separate `edupyramids_test` database and
-runs the suite. The same tests run on GitHub for every push.
+runs the suite; `npm test` in the frontend checks that offline marking matches
+the server's. Both run on GitHub for every push, together with a check that
+the Bug Catcher and Trace Runner answers still match what Python gives
+(`scripts/run-python-games.py --check`, see `edupyramids-backend/content/README.md`).
+
+To use the client's school database for school sign-in and rosters, see
+"Using the school data locally" in `edupyramids-backend/README.md`. It stays on
+your machine and is never committed.
 
 ## How progress works
 
 The design follows the research summarised for the course report: Duolingo's
-single learning path, streaks and daily goals; intrinsic integration
-(Habgood & Ainsworth); and the finding that public leaderboards discourage
-weaker students.
+single learning path, streaks and daily goals; intrinsic integration, where
+the programming skill is the game (Habgood & Ainsworth); feedback from a
+character, Pyra (Gidget); knowledge tracing and spaced review; and the
+finding that public leaderboards discourage weaker students, so there are
+none.
 
 - **Pyramid.** Each level is a tier, built from the foundation (Bronze) up to
   the capstone. A tier's bricks are its quiz, then its games from the easiest
@@ -73,23 +83,25 @@ weaker students.
   app looks like EduPyramids rather than any other learning app.
 - **Stars.** One at 60%, two for everything right, three for everything right
   with no hints (and, in Bug Catcher, no more tests than par).
+- **Hints.** Parsons, Predict, Bug hunt, Bug Catcher and Trace Runner have
+  hints, from a nudge upwards; a Parsons hint makes the puzzle smaller. The
+  server records every hint, and any hint costs the third star.
 - **XP.** Up to 10 for finishing, in proportion to the score, plus 5 per new
-  star; 20 for passing a checkpoint; 2 per practice answer. Replays of
+  star; 20 for setting a keystone; 2 per practice answer. Replays of
   three-star work earn little, and empty attempts earn nothing.
-- **Build streak and goal.** One finished activity that earns XP keeps the day. Weekends
-  never break a streak. Every 5 active days earn a shield (up to 2) that covers
-  a missed school day. A fading concept shows as a cracked brick, repaired by
-  a five-question review. Students pick a daily goal of 10 to 50 XP.
+- **Build streak and goal.** One finished activity that earns XP keeps the
+  day. Weekends never break a streak. Every 5 active days earn a shield (up to
+  2) that covers a missed school day. Students pick a daily goal of 10 to 50 XP.
 - **Class goal.** 60 XP per student per week, shared. Students see the total
   and their own share, never a ranking; teachers also see who has not
   practised yet.
-
 - **Adaptive practice.** Mastery is estimated per concept (Bayesian Knowledge
   Tracing) from quiz, practice and keystone answers and from finished games,
   which count as stronger evidence because they leave less to guessing. The
   Practice tab offers a smart mix, repairs for fading concepts, a "fix my
   mistakes" round and any single concept; a wrong answer links to the Spoken
-  Tutorial video that teaches it.
+  Tutorial video that teaches it. A concept that starts to fade shows on the
+  pyramid as a cracked brick, repaired by a five-question review.
 
 All of it is worked out from what students actually did, in India time
 (`APP_TIMEZONE`), so offline attempts count on the day they were done.
@@ -102,8 +114,8 @@ downloads every quiz and game, with the answers needed to mark them, about
 opens and runs with no connection. Quizzes and games are marked on the device
 for instant feedback; each finished attempt waits in a queue and uploads when
 the connection returns, where the server marks it again and records it with
-the time it was actually done. Practice, sign-in and the staff pages still need
-a connection.
+the time it was actually done. Sign-in, Practice, keystones, hints and the
+staff pages still need a connection.
 
 It is opt-in because it puts the answers on the device: fine for a lab tablet,
 and it cannot change a student's record, since the server re-marks every
@@ -136,7 +148,9 @@ and choose **Manual Deploy → Deploy latest commit**. Wait for the green tick o
 the commit in GitHub first; a red cross means the tests failed.
 
 On every start the service applies the migrations and loads any new questions
-and games; content already loaded is left alone. `SEED_DEMO_DATA=true` also
+and games; content already loaded is left alone, except that each game's
+concept tags are refreshed. Migrations run on every start, so each must be safe
+to repeat; `tests/migrations.test.js` runs them all a second time to check. `SEED_DEMO_DATA=true` also
 creates the test accounts. Set it to `false` before real students use the app.
 Question generation needs `GEMINI_API_KEY` set in the service's environment.
 It uses `GEMINI_MODEL` (default `gemini-3.5-flash-lite`). When Google answers
@@ -151,12 +165,18 @@ takes about a minute), and the free database expires after 30 days.
 | HLD plan | State |
 |---|---|
 | Weeks 3–4: sign-in for three roles, database, quiz module | Done |
-| Weeks 5–6: games | Done: 7 kinds, 21 games |
-| Week 7: points, levels and badges | Next |
-| Weeks 8–9: dashboards, content management | Class report, concept heatmap and question generator done; content editing to come |
+| Weeks 5–6: games | Done: 9 kinds, 25 games, with stars, hints and offline play |
+| Week 7: points, levels and badges | Done as XP, stars, the pyramid's tiers and keystones, a build streak and a class goal; badges for topics remain |
+| Weeks 8–9: dashboards, content management | Class report, class goal, concept heatmap and question generator done; content editing to come |
 
-Adaptive practice and generated questions go beyond the approved HLD (v2.0,
-Section 13.2) and need the client's sign-off in an updated version.
+Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated
+questions, offline use and the pyramid. The client approved trying these; the
+HLD needs updating to match.
 
-Waiting on the client: school sign-in and roster APIs (see the proposal shared
-on 18 September), and the mapping from their roles to ours.
+School data: the client chose (22 September) to use their school database
+locally, with no changes to their APIs for now. The hosted pilot has demo
+accounts only.
+
+Next: a classroom pilot for the course report (a pre-test, a week or two of
+use, the post-test), with one feature compared across two halves of a class.
+The app already records every answer and every change in mastery.
