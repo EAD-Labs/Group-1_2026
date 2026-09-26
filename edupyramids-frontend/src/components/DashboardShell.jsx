@@ -25,6 +25,7 @@ const NAV = {
   ],
   coordinator: [
     { to: '/dashboard/coordinator', label: 'Programme', icon: '🏫' },
+    { to: '/manage/questions', label: 'Questions', icon: '✏️' },
     { to: '/content', label: 'Question generator', short: 'Generator', icon: '✨' },
   ],
 };

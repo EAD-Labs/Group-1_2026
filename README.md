@@ -15,7 +15,7 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 |---|---|
 | Students | A pyramid to build (Home): one route through the course, level by level, each level a tier and each quiz or game a brick, with a keystone challenge that opens the tier above. On it: quizzes on the client's 136 questions and 25 games of 9 kinds, from warm-ups (matching, sorting, memory) to fill the blank, Parsons puzzles, predict the output, Trace Runner, bug hunt and Bug Catcher. Stars, hints, XP, a daily goal and a school-day streak; cracked bricks to repair when a concept starts to fade; adaptive practice; and a class goal shared with classmates |
 | Teachers | Their class: the weekly class goal and who has not practised yet, averages by topic, students who need help, the questions the class got wrong, and a students-by-concept mastery heatmap |
-| Coordinators | Every class, the school database (when connected), and the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve |
+| Coordinators | Every class; the question editor (edit, add and delete questions, answers, explanations and concepts, live for students at once); the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve; and the school database (when connected) |
 
 ## Layout
 
@@ -182,7 +182,7 @@ takes about a minute), and the free database expires after 30 days.
 | Weeks 3–4: sign-in for three roles, database, quiz module | Done |
 | Weeks 5–6: games | Done: 9 kinds, 25 games, with stars, hints and offline play |
 | Week 7: points, levels and badges | Done: XP, stars, levels (the pyramid's tiers, which only go up), topic badges by the HLD rule, a build streak and a class goal |
-| Weeks 8–9: dashboards, content management | Class report, class goal, concept heatmap and question generator done; content editing to come |
+| Weeks 8–9: dashboards, content management | Done: class report, class goal, concept heatmap, question generator, and the coordinator's question editor (edits are live for students and never overwritten by an import) |
 
 Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated
 questions, offline use and the pyramid. The client approved trying these; the

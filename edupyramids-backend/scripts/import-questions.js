@@ -134,7 +134,8 @@ async function tagQuestion(client, questionId, slugs = []) {
  */
 async function syncConcepts(client, quizId, fileQuestions) {
   const stored = (await client.query(
-    'SELECT id, text FROM questions WHERE quiz_id = $1 ORDER BY id', [quizId],
+    // A question the coordinator has edited is theirs now; the file does not overwrite it.
+    'SELECT id, text FROM questions WHERE quiz_id = $1 AND edited_at IS NULL ORDER BY id', [quizId],
   )).rows;
   const used = new Set();
   for (const q of fileQuestions) {
@@ -157,7 +158,7 @@ async function syncOptionOrder(client, quizId, fileQuestions) {
   const stored = (await client.query(
     `SELECT id, text, option_a AS a, option_b AS b, option_c AS c, option_d AS d, option_e AS e,
             correct_answer AS correct
-       FROM questions WHERE quiz_id = $1 ORDER BY id`,
+       FROM questions WHERE quiz_id = $1 AND edited_at IS NULL ORDER BY id`,
     [quizId],
   )).rows;
   const used = new Set();

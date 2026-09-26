@@ -10,6 +10,7 @@ import Game from './pages/Game';
 import Practice from './pages/Practice';
 import Checkpoint from './pages/Checkpoint';
 import QuestionGenerator from './pages/QuestionGenerator';
+import ManageQuestions from './pages/ManageQuestions';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CoordinatorDash from './pages/CoordinatorDash';
 import { auth } from './utils/auth';
@@ -83,6 +84,14 @@ export default function App() {
             element={(
               <ProtectedRoute role="student">
                 <Game />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/manage/questions"
+            element={(
+              <ProtectedRoute role="coordinator">
+                <ManageQuestions />
               </ProtectedRoute>
             )}
           />
