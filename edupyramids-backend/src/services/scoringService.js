@@ -37,6 +37,21 @@ class ScoringError extends Error {
 async function markQuizAttempt({
   quizId, studentId, answers = {}, clientAttemptId, answeredAt, lesson = null,
 }) {
+  // Everything read through the shared pool is read before this attempt takes
+  // a connection of its own. Asking the pool for a second connection while
+  // holding one deadlocks under load: with every connection held by an
+  // attempt waiting for another, none is ever given back (found by the D4
+  // load test, scripts/load-test.js).
+  let inLesson = null;
+  if (lesson) {
+    const one = (await lessonsFor(quizId))[lesson - 1];
+    if (!one) throw new ScoringError('That quiz has no such lesson', 400);
+    inLesson = new Set(one.questionIds);
+  }
+  // A question checked during play is marked on the letter checked first,
+  // not on whatever was sent after the answer was shown.
+  const checked = firstChecked(await checksFor({ clientAttemptId, studentId }));
+
   const client = await pool.connect();
 
   try {
@@ -56,20 +71,11 @@ async function markQuizAttempt({
     )).rows;
 
     // A lesson is marked on its own questions only.
-    if (lesson) {
-      const one = (await lessonsFor(quizId))[lesson - 1];
-      if (!one) throw new ScoringError('That quiz has no such lesson', 400);
-      const inLesson = new Set(one.questionIds);
-      questions = questions.filter((q) => inLesson.has(q.id));
-    }
+    if (inLesson) questions = questions.filter((q) => inLesson.has(q.id));
 
     if (!questions.length) {
       throw new ScoringError('That quiz has no questions loaded yet', 409);
     }
-
-    // A question checked during play is marked on the letter checked first,
-    // not on whatever was sent after the answer was shown.
-    const checked = firstChecked(await checksFor({ clientAttemptId, studentId }));
 
     // Mark every question in the quiz, not every answer that was sent. A
     // question the student skipped is still counted, and counted as wrong.

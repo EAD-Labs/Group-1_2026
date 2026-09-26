@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { client } from '../api/client';
 import MasteryHeatmap from './MasteryHeatmap';
+import { classReportCsv } from '../utils/classCsv';
 
 /*
  * One class, reported on. Shared by the teacher dashboard (their own class) and
@@ -53,19 +54,7 @@ export default function ClassReport({ classId, className }) {
     .sort((a, b) => a.averagePercent - b.averagePercent);
 
   function downloadCsv() {
-    const rows = [
-      ['Student', 'Email', 'Attempts', 'Average %'],
-      ...byStudent.map((s) => [
-        s.name, s.email, s.attempts,
-        // Blank, not 0: a student who has not started has no average, and a 0
-        // in a spreadsheet reads as a score of zero.
-        s.averagePercent ?? '',
-      ]),
-    ];
-    const csv = rows
-      .map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-      .join('\n');
-
+    const csv = classReportCsv(byStudent);
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
     const a = document.createElement('a');
     a.href = url;

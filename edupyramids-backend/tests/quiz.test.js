@@ -150,7 +150,7 @@ describe('marking an attempt', () => {
     expect(stored.student_id).toBe(me);
   });
 
-  test('C9  a topic that went badly is suggested for another look', async () => {
+  test('topics to revisit: a topic that went badly is suggested for another look', async () => {
     const res = await request(app)
       .post(`/api/quizzes/${quiz.id}/attempts`)
       .set(auth())

@@ -25,6 +25,7 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 | `edupyramids-frontend/` | React + Vite interface for all three roles |
 | `render.yaml` | Render Blueprint for the hosted pilot |
 | `.github/workflows/ci.yml` | Tests and a build on every push and pull request |
+| `docs/acceptance-tests.md` | Every acceptance test in the HLD, its status and where it is checked |
 
 ## Running it
 
@@ -193,6 +194,8 @@ takes about a minute), and the free database expires after 30 days.
 | Weeks 5–6: games | Done: 9 kinds, 25 games, with stars, hints and offline play |
 | Week 7: points, levels and badges | Done: XP, stars, levels (the pyramid's tiers, which only go up), topic badges by the HLD rule, a build streak and a class goal |
 | Weeks 8–9: dashboards, content management | Done: class report, class goal, concept heatmap, question generator, and the coordinator's question editor (edits are live for students and never overwritten by an import) |
+| Section 4: roles, "manage users" | Done: the coordinator makes classes and teachers and adds students with starting passwords |
+| Section 14: acceptance tests | Of the HLD's 27 tests, 20 automated and passing, D4 (fifty students at once) measured and passing, D1–D2 automated in parts; B3, B4, D3 and D5 are checks by hand. See `docs/acceptance-tests.md` |
 
 Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated
 questions, offline use and the pyramid. The client approved trying these; the

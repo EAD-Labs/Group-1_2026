@@ -102,6 +102,17 @@ test('an attempt at the whole quiz counts for every lesson it covered', async ()
   expect(bricks.every((b) => b.stars === 3)).toBe(true);
 });
 
+test('more lesson attempts at once than the server has connections all save (no deadlock)', async () => {
+  // Fifteen at once, against a pool of ten: marking once asked for a second
+  // connection while holding one, and this froze (HLD test D4 found it).
+  const lessons = await lessonsFor(quizId);
+  const answers = Object.fromEntries(lessons[0].questionIds.map((id) => [id, 'a']));
+  const results = await Promise.all(Array.from({ length: 15 }, () => request(app)
+    .post(`/api/quizzes/${quizId}/attempts`).set(student)
+    .send({ answers, lesson: 1, clientAttemptId: require('crypto').randomUUID() })));
+  expect(results.map((r) => r.status)).toEqual(Array(15).fill(201));
+}, 15000);
+
 test('a lesson that does not exist is refused', async () => {
   expect((await request(app).get(`/api/quizzes/${quizId}?lesson=9`).set(student)).status).toBe(404);
   expect((await request(app).get(`/api/quizzes/${quizId}?lesson=0`).set(student)).status).toBe(400);
