@@ -316,6 +316,12 @@ function Result({ quiz, result }) {
           {result.unanswered > 0 && ` · ${result.unanswered} left blank, counted wrong`}
         </p>
       </div>
+      {result.badge && (
+        <p className="badge-new" role="status">
+          <span aria-hidden="true">🏅</span> New badge: <strong>{result.badge.topic}</strong> learnt!
+          Three activities at 80% or more.
+        </p>
+      )}
 
       {result.revisit.length > 0 && (
         <p className="revisit"><strong>Worth another look:</strong> {result.revisit.join(', ')}</p>

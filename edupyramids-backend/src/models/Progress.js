@@ -40,7 +40,7 @@ const Progress = {
   async summaryForStudent(studentId) {
     const rows = await Progress.forStudent(studentId);
     const started = rows.filter((r) => r.attempts > 0);
-    // A topic counts as learnt at 80% or better, the same bar the badge rules
+    // A topic counts as learnt at 80% or better, the same bar the badge rule
     // will use in Week 7 (HLD Section 6.3).
     const learnt = rows.filter((r) => (r.bestPercent ?? 0) >= 80).length;
 

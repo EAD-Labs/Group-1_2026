@@ -94,6 +94,10 @@ none.
   app looks like EduPyramids rather than any other learning app.
 - **Stars.** One at 60%, two for everything right, three for everything right
   with no hints (and, in Bug Catcher, no more tests than par).
+- **Badges and levels.** A topic's badge comes with 80% or more on three of
+  its lessons or games (the HLD's rule): never for logging in or streaks, given
+  once, and dated when earned. The level is the highest tier open to the
+  student, and tiers never close again, so a level only goes up.
 - **Hints.** Parsons, Predict, Bug hunt, Bug Catcher and Trace Runner have
   hints, from a nudge upwards; a Parsons hint makes the puzzle smaller. The
   server records every hint, and any hint costs the third star.
@@ -177,7 +181,7 @@ takes about a minute), and the free database expires after 30 days.
 |---|---|
 | Weeks 3–4: sign-in for three roles, database, quiz module | Done |
 | Weeks 5–6: games | Done: 9 kinds, 25 games, with stars, hints and offline play |
-| Week 7: points, levels and badges | Done as XP, stars, the pyramid's tiers and keystones, a build streak and a class goal; badges for topics remain |
+| Week 7: points, levels and badges | Done: XP, stars, levels (the pyramid's tiers, which only go up), topic badges by the HLD rule, a build streak and a class goal |
 | Weeks 8–9: dashboards, content management | Class report, class goal, concept heatmap and question generator done; content editing to come |
 
 Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated

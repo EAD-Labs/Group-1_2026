@@ -1,6 +1,7 @@
 const { query } = require('../config/database');
 
 const Badge = {
+  /** A student's badges, newest first. */
   forStudent(studentId) {
     return query(
       `SELECT b.id, b.badge_name AS "badgeName", b.topic_id AS "topicId",
@@ -17,8 +18,8 @@ const Badge = {
    *
    * The ON CONFLICT clause, resting on the table's UNIQUE constraint, is what
    * makes this safe to call from the rule engine as often as it likes: running
-   * it five times leaves one row (HLD test C1). The award logic that decides
-   * *when* to call this arrives in Week 7.
+   * it five times leaves one row (HLD test C1). When to award is decided in
+   * services/badgeService.js.
    */
   award(studentId, topicId, badgeName) {
     return query(

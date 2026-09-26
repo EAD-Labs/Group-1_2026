@@ -28,6 +28,10 @@ export default function Me() {
   // A tier is built when every brick in it, keystone included, is set.
   const tiers = path?.units ?? [];
   const built = tiers.filter((u) => u.progress.total > 0 && u.progress.done === u.progress.total).length;
+  // The level is the highest tier open to the student. Tiers never close
+  // again, so a level only ever goes up (HLD 6.3, test C2).
+  const open = tiers.filter((u) => u.unlocked);
+  const level = open.length ? { n: open.length, name: open[open.length - 1].topic } : null;
   const daily = changed || loaded;
   const practisable = concepts.filter((c) => c.questions > 0);
   const mastered = practisable.filter((c) => c.status === 'mastered' || c.status === 'review').length;
@@ -37,6 +41,7 @@ export default function Me() {
       {daily?.streak && <DailyStrip daily={daily} />}
 
       <div className="stat-row">
+        {level && <Stat label="Level" value={level.n} note={level.name} />}
         <Stat label="Tiers built" value={`${built} / ${tiers.length}`} note="every brick set" />
         <Stat label="Concepts mastered" value={`${mastered} / ${practisable.length}`} note="95% estimated" />
         <Stat label="Quizzes and games" value={summary.attempts} note="finished" />
@@ -61,15 +66,18 @@ export default function Me() {
       <h2 className="h2">Badges</h2>
       {badges.length === 0 ? (
         <p className="empty">
-          No badges yet. Badges are earned by doing well on a topic — not by logging in, and never by a daily streak.
+          No badges yet. A topic's badge comes with 80% or more on three of its lessons or games:
+          it is for what you have learnt, never for logging in or for streaks.
         </p>
       ) : (
         <ul className="badges">
           {badges.map((b) => (
             <li key={b.id} className="badge">
               <span className="badge-emblem" aria-hidden="true">🏅</span>
-              <strong>{b.badgeName}</strong>
-              <span className="muted small">{b.topic}</span>
+              <strong>{b.topic}</strong>
+              <span className="muted small">
+                learnt · {new Date(b.earnedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+              </span>
             </li>
           ))}
         </ul>

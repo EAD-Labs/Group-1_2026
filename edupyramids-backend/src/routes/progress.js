@@ -1,6 +1,7 @@
 const express = require('express');
 const Progress = require('../models/Progress');
 const Badge = require('../models/Badge');
+const { awardAll } = require('../services/badgeService');
 const Attempt = require('../models/Attempt');
 const { authMiddleware, requireSelfOrStaff } = require('../middleware/auth');
 
@@ -20,6 +21,8 @@ router.get('/:studentId', requireSelfOrStaff('studentId'), async (req, res, next
       return res.status(400).json({ error: 'Student id must be a number' });
     }
 
+    // Catch up on badges earned by work done before the rule existed.
+    await awardAll(studentId);
     const [summary, topics, badges, attempts] = await Promise.all([
       Progress.summaryForStudent(studentId),
       Progress.forStudent(studentId),

@@ -4,6 +4,7 @@ const { attemptTime } = require('./attemptTime');
 const { xpForAttempt, quizStars } = require('./xp');
 const { checksFor, firstChecked } = require('./checkService');
 const { lessonsFor } = require('./lessonService');
+const { awardIfEarned } = require('./badgeService');
 
 /*
  * Marking a quiz attempt.
@@ -138,12 +139,16 @@ async function markQuizAttempt({
       mastery = summariseChanges(changes);
     }
 
+    // A badge, if this attempt completes the rule for its topic (HLD 6.3).
+    const badge = duplicate ? null : await awardIfEarned(client, studentId, topicId);
+
     await client.query('COMMIT');
 
     return {
       attemptId: attempt.id,
       duplicate,
       lesson,
+      badge,
       xp: duplicate ? 0 : xpForAttempt(quizStars(bestBefore), quizStars(Math.round((score / maxScore) * 100)), score / maxScore),
       mastery,
       quizId,

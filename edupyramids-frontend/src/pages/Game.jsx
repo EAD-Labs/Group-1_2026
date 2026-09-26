@@ -211,6 +211,12 @@ function GameResult({ result, onAgain }) {
         </p>
       </div>
 
+      {result.badge && (
+        <p className="badge-new" role="status">
+          <span aria-hidden="true">🏅</span> New badge: <strong>{result.badge.topic}</strong> learnt!
+          Three activities at 80% or more.
+        </p>
+      )}
       <Pyra mood={pyra.mood}>{pyra.text}</Pyra>
 
       {result.mastery?.length > 0 && (

@@ -2245,3 +2245,11 @@ a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 
 .revisit-video { color: #fff; font-size: 14px; margin: -0.4rem 0 var(--gap); }
 .revisit-video a { color: #FFD166; font-weight: 600; }
+
+/* a badge earned just now */
+.badge-new {
+  background: linear-gradient(90deg, #FFF4DC, #FFFBF1); border: 1px solid #F2C14E;
+  border-radius: var(--radius); padding: 0.75rem 1rem; margin: 0 0 var(--gap-lg);
+  color: #5A3A00; font-size: 15px; animation: land 0.5s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+.badge-new span[aria-hidden] { font-size: 20px; margin-right: 0.2rem; }

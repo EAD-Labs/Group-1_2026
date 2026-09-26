@@ -7,6 +7,7 @@ const { starsFor } = require('../games/stars');
 const { xpForAttempt } = require('./xp');
 const { recordGame } = require('./masteryService');
 const { recordCheck, checksFor } = require('./checkService');
+const { awardIfEarned } = require('./badgeService');
 
 /*
  * Delivering and marking games, for every kind.
@@ -124,6 +125,7 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
     // The game is evidence for the concepts it practises, stored with the
     // attempt. A duplicate submit adds none.
     const mastery = duplicate ? [] : await recordGame(client, { studentId, gameId: game.id, ratio: score / maxScore });
+    const badge = duplicate ? null : await awardIfEarned(client, studentId, game.topicId);
     await client.query('COMMIT');
 
     return {
@@ -140,6 +142,7 @@ async function markGameAttempt({ gameId, studentId, answers = {}, clientAttemptI
       hintsUsed: hints,
       xp: duplicate ? 0 : xpForAttempt(before, stars, score / maxScore),
       mastery,
+      badge,
       ...extra,
       feedback,
       revisit: score < maxScore ? [game.topic] : [],
