@@ -15,7 +15,7 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 |---|---|
 | Students | A pyramid to build (Home): one route through the course, level by level, each level a tier and each quiz or game a brick, with a keystone challenge that opens the tier above. On it: quizzes on the client's 136 questions and 25 games of 9 kinds, from warm-ups (matching, sorting, memory) to fill the blank, Parsons puzzles, predict the output, Trace Runner, bug hunt and Bug Catcher. Stars, hints, XP, a daily goal and a school-day streak; cracked bricks to repair when a concept starts to fade; adaptive practice; and a class goal shared with classmates |
 | Teachers | Their class: the weekly class goal and who has not practised yet, averages by topic, students who need help, the questions the class got wrong, and a students-by-concept mastery heatmap |
-| Coordinators | Every class; the question editor (edit, add and delete questions, answers, explanations and concepts, live for students at once); the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve; and the school database (when connected) |
+| Coordinators | Every class; People (make classes and teachers, add students by pasting a list, with starting passwords to hand out, reset passwords); the question editor (edit, add and delete questions, answers, explanations and concepts, live for students at once); the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve; and the school database (when connected) |
 
 ## Layout
 
@@ -72,6 +72,16 @@ the Bug Catcher and Trace Runner answers still match what Python gives
 To use the client's school database for school sign-in and rosters, see
 "Using the school data locally" in `edupyramids-backend/README.md`. It stays on
 your machine and is never committed.
+
+## Setting up a real class
+
+Sign in as the coordinator and open **People**: add the teacher, make the
+class, and paste the students in, one per line as `Name, email` (a column
+copied from a spreadsheet works too). Each new account gets a starting
+password such as `mango-river-42`, shown once with a sheet to download and
+hand out. A student who already has an account is added to the class rather
+than made twice. Before real students use the hosted app, set
+`SEED_DEMO_DATA` to `false` so no test accounts are made.
 
 ## How progress works
 

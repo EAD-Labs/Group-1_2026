@@ -2285,3 +2285,29 @@ a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 .manage-delete { margin-left: auto; color: var(--danger); border-color: var(--danger); }
 .manage-newquiz { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
 .manage-newquiz select, .manage-newquiz input { font: inherit; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; }
+
+/* ---------------------------------------------------------------- people */
+.logins { background: #FFFBF1; border: 1px solid #F2C14E; border-radius: var(--radius); padding: 0.9rem 1rem; margin-bottom: var(--gap-lg); }
+.logins-head { display: flex; justify-content: space-between; align-items: center; gap: var(--gap); }
+.logins-head .h2 { margin: 0; }
+.logins-table code { font-size: 15px; font-weight: 700; color: var(--text-heading); }
+.people-forms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); margin-bottom: var(--gap-lg); }
+@media (max-width: 760px) { .people-forms { grid-template-columns: minmax(0, 1fr); } }
+.people-form { display: grid; gap: 0.5rem; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 0.9rem 1rem; }
+.people-form h3 { font-size: 16px; color: var(--text-heading); }
+.people-form input, .people-form select, .people-edit input, .people-edit select {
+  font: inherit; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.45rem 0.65rem;
+}
+.people-classes { list-style: none; display: grid; gap: 0.6rem; }
+.people-class { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 0.8rem 1rem; }
+.people-class-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.people-class-name { color: var(--text-heading); }
+.people-class-tools, .people-edit, .people-row-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.people-class-body { display: grid; gap: 0.6rem; margin-top: 0.75rem; border-top: 1px solid var(--line); padding-top: 0.75rem; }
+.people-class-body textarea { width: 100%; font: inherit; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 0.7rem; }
+.people-class-body .field { margin: 0; display: grid; gap: 0.3rem; font-weight: 600; font-size: 14px; }
+.people-results { list-style: none; display: grid; gap: 0.25rem; font-size: 14px; }
+.people-result { padding: 0.3rem 0.6rem; border-radius: 6px; background: var(--surface-2); }
+.people-result--created, .people-result--enrolled { background: #E9F7EF; }
+.people-result--refused { background: var(--danger-tint); }
+.people-row-tools { justify-content: flex-end; }
