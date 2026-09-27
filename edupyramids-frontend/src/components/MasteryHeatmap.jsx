@@ -7,6 +7,14 @@ import { client } from '../api/client';
  * pale row is a student who needs help, a pale column is a concept the whole
  * class needs retaught.
  */
+/*
+ * Cell shade: light below the model's "ready" bar (60%), dark from it, with
+ * dark and white text to match, so every number is readable (WCAG AA). The
+ * step itself says something: from 60% a concept no longer holds anything back.
+ */
+const READY = 0.6;
+export const shade = (p) => (p < READY ? 0.06 + p * 0.55 : 0.72 + (p - READY) * 0.65);
+
 export default function MasteryHeatmap({ classId }) {
   const [state, setState] = useState({ loading: true, error: null, data: null });
 
@@ -46,7 +54,8 @@ export default function MasteryHeatmap({ classId }) {
         </p>
       )}
 
-      <div className="heatmap-wrap">
+      {/* Scrolls sideways on a phone, so it takes keyboard focus too. */}
+      <div className="heatmap-wrap" tabIndex={0} role="region" aria-label="Concept mastery by student">
         <table className="heatmap">
           <thead>
             <tr>
@@ -72,9 +81,10 @@ export default function MasteryHeatmap({ classId }) {
       </div>
 
       <p className="heatmap-legend muted small">
-        <span className="legend-swatch" style={{ '--p': 0.1 }} /> not known
-        <span className="legend-swatch" style={{ '--p': 0.5 }} /> learning
-        <span className="legend-swatch" style={{ '--p': 0.95 }} /> mastered ({thresholds.mastered}%+)
+        <span className="legend-swatch" style={{ '--a': shade(0.1) }} /> not known
+        <span className="legend-swatch" style={{ '--a': shade(0.5) }} /> learning
+        <span className="legend-swatch" style={{ '--a': shade(0.8) }} /> ready (60%+)
+        <span className="legend-swatch" style={{ '--a': shade(0.95) }} /> mastered ({thresholds.mastered}%+)
         · — no answers yet. Estimates use Bayesian Knowledge Tracing.
       </p>
     </>
@@ -87,7 +97,7 @@ function Cell({ cell, mastered }) {
     ? `${cell.p}% · ${cell.correct} of ${cell.answered} right${cell.status === 'review' ? ' · review due' : ''}`
     : `${cell.p}% average over ${cell.students} student${cell.students === 1 ? '' : 's'}`;
   return (
-    <td className={`heat${cell.p >= 55 ? ' heat--dark' : ''}`} style={{ '--p': cell.p / 100 }} title={title}>
+    <td className={`heat${cell.p >= READY * 100 ? ' heat--dark' : ''}`} style={{ '--a': shade(cell.p / 100) }} title={title}>
       {cell.p}{cell.p >= mastered ? ' ✓' : ''}
     </td>
   );

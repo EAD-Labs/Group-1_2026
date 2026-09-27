@@ -12,6 +12,12 @@
  * navigation. Cards are 14px round with a navy-tinted shadow, controls 8px.
  *
  * Orange keeps the job it had in the app before: progress and anything earned.
+ *
+ * Contrast (WCAG 2 AA, 4.5:1 for text), checked with axe on every page:
+ * the site's own #F26321 gives white text only 3.2:1 and its grey #6B7280 falls
+ * below 4.5:1 on the tinted panels, so the orange that carries text is
+ * #C94A14 (4.7:1 with white) and secondary text is #555B69. #F26321 stays in
+ * the gradient's glow, where no small text sits on it alone.
  */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,8 +30,8 @@
   --brand-tint-2: #C5CEF7;
   --line: rgb(46 52 148 / 15%);
 
-  --accent: #F26321;
-  --accent-dark: #D9531A;
+  --accent: #C94A14;
+  --accent-dark: #A93F0C;
   --accent-tint: #FFF1EA;
   --amber: #F59E24;
 
@@ -38,11 +44,11 @@
   --border: #E2E8F0;
   --text-dark: #2B2B2B;
   --text-heading: #2B3280;
-  --text-light: #6B7280;
-  --danger: #D32F2F;
+  --text-light: #555B69;
+  --danger: #B71C1C;
   --danger-tint: #FDECEA;
 
-  --gradient: linear-gradient(153.7deg, #F26321 -3.36%, #2E3494 100%);
+  --gradient: linear-gradient(153.7deg, #C94A14 -3.36%, #2E3494 100%);
   --gradient-navy: linear-gradient(160deg, #2E3494 0%, #232A6E 100%);
 
   --font-body: 'Roboto', Helvetica, Arial, sans-serif;
@@ -1277,7 +1283,9 @@ tr.is-open > td { border-bottom-color: transparent; }
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   color: var(--text-dark);
-  background: rgb(46 52 148 / calc(0.06 + var(--p) * 0.9));
+  /* --a is set per cell (MasteryHeatmap.jsx): light below the 60% "ready" bar
+     with dark text, dark from it with white, so every number reads at 4.5:1 */
+  background: rgb(46 52 148 / var(--a, 0.06));
 }
 
 .heat--dark { color: #fff; }
@@ -1288,7 +1296,7 @@ tr.is-open > td { border-bottom-color: transparent; }
 
 .legend-swatch {
   display: inline-block; width: 1.1rem; height: 0.8rem; border-radius: 3px;
-  background: rgb(46 52 148 / calc(0.06 + var(--p) * 0.9));
+  background: rgb(46 52 148 / var(--a, 0.06));
   margin-left: 0.4rem;
 }
 
@@ -1739,7 +1747,8 @@ tr.is-open > td { border-bottom-color: transparent; }
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; color: var(--text-dark);
 }
 
-.bug-line code { white-space: pre; overflow-x: auto; background: none; padding: 0; color: inherit; }
+/* long lines wrap rather than scroll: a scroll area inside a button cannot be reached by keyboard */
+.bug-line code { white-space: pre-wrap; overflow-wrap: anywhere; background: none; padding: 0; color: inherit; }
 .bug-line:hover { background: var(--surface-2); }
 .bug-line:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
 .bug-line-n { color: var(--text-light); text-align: right; padding-right: 0.7rem; font-size: 12px; }
@@ -2150,7 +2159,7 @@ a.brick-face:focus-visible { outline: 3px solid var(--brand); outline-offset: 2p
 .brick--s2 .brick-face { background: #E2AE6A; }
 .brick--s3 .brick-face { background: linear-gradient(135deg, #F7D774 0%, #EDB93A 55%, #F9E29A 100%); }
 .brick--s3 .brick-title, .brick--s2 .brick-title { color: #4A2E05; }
-.brick--s3 .brick-kind, .brick--s2 .brick-kind { color: #6B4A12; }
+.brick--s3 .brick-kind, .brick--s2 .brick-kind { color: #5A3C0C; }
 .brick--done .star { color: rgb(74 46 5 / 22%); }
 .brick--done .star--on { color: #8A4B00; }
 
@@ -2311,3 +2320,5 @@ a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 .people-result--created, .people-result--enrolled { background: #E9F7EF; }
 .people-result--refused { background: var(--danger-tint); }
 .people-row-tools { justify-content: flex-end; }
+
+.heatmap-wrap:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
