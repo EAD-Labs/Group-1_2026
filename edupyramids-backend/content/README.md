@@ -65,6 +65,26 @@ half-loaded state to clean up.
 | `questions[].options` | At least `a` and `b`. `c` and `d` optional. |
 | `questions[].correct` | Required. Must be one of the option letters **that this question actually has**. |
 | `questions[].explanation` | Optional, but strongly wanted — see below. |
+| `questions[].concepts` | Optional. Concept slugs from `concepts.json`, for the mastery model. |
+| `questions[].formerly` | Only on a question corrected after it was loaded — see "Correcting questions students have answered". |
+
+## Code in a question
+
+Put code between two lines of three backticks. It keeps its lines and its
+indentation, and shows in a code font:
+
+````
+"text": "What does this print?
+```
+for i in range(3):
+    print(i)
+```"
+````
+
+A short piece of code inside a sentence, an option or an explanation goes
+between single backticks: `` "Which line adds 10 to `a_list`?" ``. The same
+works in the coordinator's question editor. Write Python 3: `print(x)`, not
+`print x`.
 
 A question whose `correct` letter has no matching option is the error worth
 naming: it looks fine to a reader and it silently marks every student wrong.
@@ -78,6 +98,30 @@ screen can only say right or wrong, which is the thing the whole project set out
 to fix (HLD Section 3.1). The importer allows a missing explanation but counts
 them and warns, so a file that has none is obvious rather than quiet.
 
+## Correcting questions students have answered
+
+Loading the file again brings questions already in the database into line
+with it, without losing anything students have done with them:
+
+- A question is matched by its text. Change its explanation, an option or the
+  answer, and the stored question is updated where it is: same id, same
+  attempts, same place in the mastery model.
+- If the wording of the question itself changes, add the old wording, so the
+  importer can still find it: `"formerly": { "text": "the old wording" }`.
+- If options were reworded **and** moved in the same change (for example by
+  the shuffle, which runs on the new wording), say where each old letter's
+  option went, so answers already given still point at the option the student
+  chose: `"formerly": { "text": "…", "letters": { "a": "c", "b": "a" } }`.
+  Without it, an option keeps its letter.
+- A question listed twice in the database but once in the file (a duplicate
+  that has been removed) is deleted; its mastery evidence moves to the copy
+  kept. No other question is ever deleted by an import.
+- A question the coordinator has edited in the app is theirs: the file never
+  overwrites it.
+
+`formerly` can stay in the file: once a database has the new version, it is
+not used again.
+
 ## Loading a file
 
 ```bash
@@ -85,8 +129,8 @@ node scripts/import-questions.js content/sample-questions.json
 node scripts/import-questions.js content/client-questions.json --replace
 ```
 
-Without `--replace`, topics and quizzes already present are left alone and only
-new ones are added. With `--replace`, the questions of any quiz named in the
+Without `--replace`, new topics and quizzes are added, and questions already
+loaded are brought into line with the file as described above. With `--replace`, the questions of any quiz named in the
 file are cleared and reloaded, which is what to use when the client sends a
 corrected version. Attempts already recorded are never touched.
 
@@ -116,7 +160,15 @@ Two things the converter does not do, on purpose:
   Dictionaries as topics, they need to say which question belongs where.
 - **It does not write explanations.** The export has no column for one. Every
   question imports with a warning, and the result screen can only say right or
-  wrong until the client supplies them.
+  wrong until someone writes them.
+
+The client's export was also Python 2, with each question's code run
+together on one line. `python-mcqs.json` has since been corrected by hand
+(September 2026): Python 3 throughout, code laid out as code, an explanation
+for every question, every "what does this print" answer checked by running the
+code, five questions whose marked answer was wrong and three with more than
+one right answer fixed, and two duplicate questions removed. A new
+export from Moodle would need the same work again.
 
 # Game content format
 

@@ -8,85 +8,147 @@
         "difficulty": 1,
         "questions": [
           {
-            "text": "What gets printed? print type(1/2)",
+            "text": "What does this print?\n```\nprint(type(1/2))\n```",
             "options": {
-              "a": "<type 'float'>",
-              "b": "<type 'int'>",
-              "c": "<type 'tuple'>",
-              "d": "<type 'double'>",
-              "e": "<type 'number'>"
+              "a": "`<class 'float'>`",
+              "b": "`<class 'tuple'>`",
+              "c": "`<class 'number'>`",
+              "d": "`<class 'double'>`",
+              "e": "`<class 'int'>`"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "In Python 3, `/` always gives a float, even between two whole numbers: `1/2` is `0.5`. Use `//` when you want whole-number division.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? print type(1/2)",
+              "letters": {
+                "a": "a",
+                "b": "e",
+                "c": "b",
+                "d": "d",
+                "e": "c"
+              }
+            }
           },
           {
-            "text": "What is the output of the following code? print type([1,2])",
+            "text": "What does this print?\n```\nprint(type([1, 2]))\n```",
             "options": {
-              "a": "<type 'set'>",
-              "b": "<type 'list'>",
-              "c": "<type 'complex'>",
-              "d": "<type 'tuple'>",
-              "e": "<type 'int'>"
+              "a": "`<class 'list'>`",
+              "b": "`<class 'set'>`",
+              "c": "`<class 'complex'>`",
+              "d": "`<class 'int'>`",
+              "e": "`<class 'tuple'>`"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "Square brackets make a list, so `type` reports `<class 'list'>`. Round brackets, `(1, 2)`, would make a tuple.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of the following code? print type([1,2])",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "e",
+                "e": "d"
+              }
+            }
           },
           {
             "text": "What is the largest integer value that can be represented in Python?",
             "options": {
-              "a": "2**32",
-              "b": "2**32 - 1",
-              "c": "No Limit",
+              "a": "`2**32 - 1`",
+              "b": "No Limit",
+              "c": "`2**32`",
               "d": "None of the above"
             },
-            "correct": "c",
+            "correct": "b",
+            "explanation": "Python's whole numbers grow as large as memory allows: `2**100` works fine. Fixed limits such as 2**32 belong to languages like C and Java.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What gets printed? name = \"snow storm\" name[5] = 'X' print name",
+            "text": "What happens when this runs?\n```\nname = \"snow storm\"\nname[5] = 'X'\nprint(name)\n```",
             "options": {
-              "a": "snowXstorm",
-              "b": "snow storm",
-              "c": "snow Xtorm",
-              "d": "ERROR, this code will not run"
-            },
-            "correct": "d",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "What gets printed? print \"hello\" 'world'",
-            "options": {
-              "a": "hello on one line and world on the next line",
-              "b": "syntax error, this python program will not run",
-              "c": "on one line the text: helloworld",
-              "d": "on one line the text: hello world"
-            },
-            "correct": "c",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "What is the output of the below program? a = [1,2,3,None,(),[],] print len(a)",
-            "options": {
-              "a": "6",
-              "b": "7",
-              "c": "4",
-              "d": "syntax error",
-              "e": "5"
+              "a": "An error: this code will not run",
+              "b": "snow Xtorm",
+              "c": "snow storm",
+              "d": "snowXstorm"
             },
             "correct": "a",
+            "explanation": "Strings cannot be changed in place, so `name[5] = 'X'` raises a TypeError. Build a new string instead: `name[:5] + 'X' + name[6:]`.",
+            "concepts": [
+              "strings"
+            ],
+            "formerly": {
+              "text": "What gets printed? name = \"snow storm\" name[5] = 'X' print name",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "b",
+                "d": "a"
+              }
+            }
+          },
+          {
+            "text": "What does this print?\n```\nprint(\"hello\" 'world')\n```",
+            "options": {
+              "a": "on one line the text: hello world",
+              "b": "on one line the text: helloworld",
+              "c": "hello on one line and world on the next line",
+              "d": "syntax error, this python program will not run"
+            },
+            "correct": "b",
+            "explanation": "Two strings written side by side are joined into one before the program runs, with nothing in between: `helloworld`. Mixing double and single quotes is fine.",
+            "concepts": [
+              "strings"
+            ],
+            "formerly": {
+              "text": "What gets printed? print \"hello\" 'world'",
+              "letters": {
+                "a": "c",
+                "b": "d",
+                "c": "b",
+                "d": "a"
+              }
+            }
+          },
+          {
+            "text": "What does this print?\n```\na = [1, 2, 3, None, (), [],]\nprint(len(a))\n```",
+            "options": {
+              "a": "5",
+              "b": "6",
+              "c": "4",
+              "d": "syntax error",
+              "e": "7"
+            },
+            "correct": "b",
+            "explanation": "The list holds six items: 1, 2, 3, `None`, an empty tuple and an empty list. Empty things still count as items, and a comma after the last item is allowed.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of the below program? a = [1,2,3,None,(),[],] print len(a)",
+              "letters": {
+                "a": "b",
+                "b": "e",
+                "c": "c",
+                "d": "d",
+                "e": "a"
+              }
+            }
           },
           {
             "text": "Which of the following data structures can be used with the \"in\" operator to check if an item is in the data structure?",
@@ -98,162 +160,276 @@
               "e": "None of the above"
             },
             "correct": "d",
+            "explanation": "`in` works on all three: for a dictionary it checks the keys, for a list it looks through the items, and for a set it checks membership directly (the fastest of the three).",
             "concepts": [
               "sets-dicts"
             ]
           },
           {
-            "text": "What gets printed? a = 1 b = 2 a,b = b,a print \"%d %d\" % (a,b)",
+            "text": "What does this print?\n```\na = 1\nb = 2\na, b = b, a\nprint(\"%d %d\" % (a, b))\n```",
             "options": {
-              "a": "2 1",
-              "b": "An exception is thrown",
-              "c": "This program has undefined behavior",
-              "d": "1 2"
+              "a": "An exception is thrown",
+              "b": "1 2",
+              "c": "2 1",
+              "d": "This program has undefined behavior"
             },
-            "correct": "a",
+            "correct": "c",
+            "explanation": "`a, b = b, a` builds the pair `(2, 1)` first and then unpacks it, so the two values swap without a spare variable.",
             "concepts": [
               "basics"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? a = 1 b = 2 a,b = b,a print \"%d %d\" % (a,b)",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "True or false? Code indentation must be 4 spaces when creating a code block?",
+            "text": "True or false? A code block must be indented by exactly 4 spaces.",
             "options": {
               "a": "TRUE",
               "b": "FALSE"
             },
             "correct": "b",
+            "explanation": "Any indentation works as long as every line in the block uses the same amount. Four spaces is the style guide's advice (PEP 8), not a rule of the language.",
             "concepts": [
               "basics"
-            ]
+            ],
+            "formerly": {
+              "text": "True or false? Code indentation must be 4 spaces when creating a code block?"
+            }
           },
           {
-            "text": "Which character is used at and end of the command in iptyhon to see the documentation of that command ?",
+            "text": "In IPython, which character do you type at the end of a command to see its documentation?",
             "options": {
-              "a": "ampersand (&)",
+              "a": "exclamation mark (!)",
               "b": "question mark (?)",
-              "c": "exclamation mark (!)",
-              "d": "underscore(_)"
+              "c": "underscore(_)",
+              "d": "ampersand (&)"
             },
             "correct": "b",
+            "explanation": "`len?` shows the documentation for `len`. Two question marks, `len??`, also show its source code where there is some.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "Which character is used at and end of the command in iptyhon to see the documentation of that command ?",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "a",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "What will the command linspace(-pi,pi,100) do ?",
+            "text": "What does `linspace(-pi, pi, 100)` return?",
             "options": {
-              "a": "return 100 evenly spaced samples from -pi to pi but excluding pi and including -pi.",
-              "b": "return 100 evenly spaced samples from -pi to pi but excluding -pi and including pi.",
-              "c": "return 100 evenly spaced samples from -pi to pi",
-              "d": "return 100 evenly spaced samples from -pi to pi including both -pi and pi"
-            },
-            "correct": "d",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "Which command is used to save a plot in ipython ?",
-            "options": {
-              "a": "savepicture()",
-              "b": "saveplot()",
-              "c": "saveplt()",
-              "d": "savefig()"
-            },
-            "correct": "d",
-            "concepts": [
-              "plotting"
-            ]
-          },
-          {
-            "text": "savefig('sine.png') saves the plot in which directory ?",
-            "options": {
-              "a": "will result in error as full path is not supplied",
-              "b": "the root directory \"/\" (on GNU/linux, unix based system), \"c:\" on windows",
-              "c": "predefined directory like \"/documents\"",
-              "d": "the current working directory"
-            },
-            "correct": "d",
-            "concepts": [
-              "plotting"
-            ]
-          },
-          {
-            "text": "Which of the following is correct ?",
-            "options": {
-              "a": "subplot(numRows,numCols)",
-              "b": "subplot(numRows, numCols, plotNum)",
-              "c": "subplot(numCols,numRows)"
-            },
-            "correct": "b",
-            "concepts": [
-              "plotting"
-            ]
-          },
-          {
-            "text": "What statement can be issued in ipython to generate a bar chart with vertical line hatching ?",
-            "options": {
-              "a": "bar(x,y,color=\"w\",hatch=')",
-              "b": "bar(x,y,fill=False,hatch=\"//\")",
-              "c": "bar(x,y,fill=False,hatch=\"|\")",
-              "d": "bar(x,y,color='w',hatch=\"/\")"
-            },
-            "correct": "c",
-            "concepts": [
-              "plotting"
-            ]
-          },
-          {
-            "text": "Which of the following is not a valid data type in python?",
-            "options": {
-              "a": "str",
-              "b": "int",
-              "c": "float",
-              "d": "double"
-            },
-            "correct": "d",
-            "concepts": [
-              "numbers"
-            ]
-          },
-          {
-            "text": "To print out the text as shown below, what code should we execute? I love to take a ride in his sport's car!",
-            "options": {
-              "a": "print I love to take a ride in his sport's car!",
-              "b": "print 'I love to take a ride in his sport's car!'",
-              "c": "print 'I love to take a ride in his sport\"s car!'",
-              "d": "print \"I love to take a ride in his sport's car!\""
-            },
-            "correct": "d",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "What paradigm does Python (programming language) belong to?",
-            "options": {
-              "a": "Scripting language",
-              "b": "Imperative programming",
-              "c": "Constraint programming",
-              "d": "Event-driven programming"
-            },
-            "correct": "b",
-            "concepts": [
-              "basics"
-            ]
-          },
-          {
-            "text": "Why was the language called \"Python \"?",
-            "options": {
-              "a": "The inventor is a fan of \"Monty Python's Flying Circus\".",
-              "b": "The inventor's best friend suggested him the name.",
-              "c": "The inventor was once attacked by a python in the Amazons.",
-              "d": "As a kid, the inventor liked to play the snake-and-ladder game."
+              "a": "return 100 evenly spaced samples from -pi to pi including both -pi and pi",
+              "b": "samples from -pi to pi, spaced 100 apart",
+              "c": "return 100 evenly spaced samples from -pi to pi but excluding -pi and including pi.",
+              "d": "return 100 evenly spaced samples from -pi to pi but excluding pi and including -pi."
             },
             "correct": "a",
+            "explanation": "`linspace(start, stop, num)` returns `num` evenly spaced points and, by default, includes both ends: the first point is -pi and the last is pi. (`arange` is the one that leaves out its end.)",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "What will the command linspace(-pi,pi,100) do ?",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "b",
+                "d": "a"
+              }
+            }
+          },
+          {
+            "text": "Which command saves a plot in IPython?",
+            "options": {
+              "a": "`saveplot()`",
+              "b": "`savefig()`",
+              "c": "`saveplt()`",
+              "d": "`savepicture()`"
+            },
+            "correct": "b",
+            "explanation": "`savefig('name.png')` saves the current figure. The file type comes from the name's extension.",
+            "concepts": [
+              "plotting"
+            ],
+            "formerly": {
+              "text": "Which command is used to save a plot in ipython ?",
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "c",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "Where does `savefig('sine.png')` save the plot?",
+            "options": {
+              "a": "Nowhere: it is an error, as the full path is not given",
+              "b": "the current working directory",
+              "c": "predefined directory like \"/documents\"",
+              "d": "the root directory \"/\" (on GNU/linux, unix based system), \"c:\" on windows"
+            },
+            "correct": "b",
+            "explanation": "A file name without a folder is taken as relative to the current working directory, the folder IPython is working in (see it with `%pwd`).",
+            "concepts": [
+              "plotting"
+            ],
+            "formerly": {
+              "text": "savefig('sine.png') saves the plot in which directory ?",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "Which of these is correct?",
+            "options": {
+              "a": "`subplot(numRows, numCols, plotNum)`",
+              "b": "`subplot(numRows, numCols)`",
+              "c": "`subplot(numCols, numRows)`"
+            },
+            "correct": "a",
+            "explanation": "`subplot` needs the grid size and which cell to draw in: `subplot(2, 1, 1)` is the top one of two plots stacked vertically. Cells are numbered from 1, left to right and then down.",
+            "concepts": [
+              "plotting"
+            ],
+            "formerly": {
+              "text": "Which of the following is correct ?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c"
+              }
+            }
+          },
+          {
+            "text": "Which command draws a bar chart with vertical line hatching?",
+            "options": {
+              "a": "`bar(x, y, fill=False, hatch=\"|\")`",
+              "b": "`bar(x, y, color=\"w\", hatch=\"/\")`",
+              "c": "`bar(x, y, color=\"w\", hatch=\"-\")`",
+              "d": "`bar(x, y, fill=False, hatch=\"//\")`"
+            },
+            "correct": "a",
+            "explanation": "The hatch pattern looks like what it draws: `|` vertical lines, `-` horizontal lines, `/` and `//` diagonal lines (doubling a character makes the lines denser).",
+            "concepts": [
+              "plotting"
+            ],
+            "formerly": {
+              "text": "What statement can be issued in ipython to generate a bar chart with vertical line hatching ?",
+              "letters": {
+                "a": "c",
+                "b": "d",
+                "c": "a",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "Which of the following is not a data type in Python?",
+            "options": {
+              "a": "`str`",
+              "b": "`float`",
+              "c": "`double`",
+              "d": "`int`"
+            },
+            "correct": "c",
+            "explanation": "Python has `str`, `int` and `float` (and a Python float is already double precision). There is no `double`: that name comes from C and Java.",
+            "concepts": [
+              "numbers"
+            ],
+            "formerly": {
+              "text": "Which of the following is not a valid data type in python?",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "b",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Which line prints exactly this?\n```\nI love to take a ride in his sport's car!\n```",
+            "options": {
+              "a": "`print(I love to take a ride in his sport's car!)`",
+              "b": "`print('I love to take a ride in his sport\"s car!')`",
+              "c": "`print('I love to take a ride in his sport's car!')`",
+              "d": "`print(\"I love to take a ride in his sport's car!\")`"
+            },
+            "correct": "d",
+            "explanation": "The apostrophe would end a string that starts with `'`, so wrap the text in double quotes. Escaping it also works: `'sport\\'s'`.",
+            "concepts": [
+              "strings"
+            ],
+            "formerly": {
+              "text": "To print out the text as shown below, what code should we execute? I love to take a ride in his sport's car!",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "Which programming style (paradigm) does Python support?",
+            "options": {
+              "a": "Constraint programming",
+              "b": "Scripting language",
+              "c": "Event-driven programming",
+              "d": "Imperative programming"
+            },
+            "correct": "d",
+            "explanation": "Python supports several styles: imperative (step-by-step statements), object-oriented and partly functional. \"Scripting language\" describes how it is often used, not a paradigm, and constraint and event-driven programming are not what Python is built around.",
             "concepts": [
               "basics"
-            ]
+            ],
+            "formerly": {
+              "text": "What paradigm does Python (programming language) belong to?",
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "a",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Why is the language called \"Python\"?",
+            "options": {
+              "a": "The inventor's best friend suggested him the name.",
+              "b": "As a kid, the inventor liked to play the snake-and-ladder game.",
+              "c": "The inventor was once attacked by a python in the Amazons.",
+              "d": "The inventor is a fan of \"Monty Python's Flying Circus\"."
+            },
+            "correct": "d",
+            "explanation": "Guido van Rossum named it after the BBC comedy series \"Monty Python's Flying Circus\", not after the snake.",
+            "concepts": [
+              "basics"
+            ],
+            "formerly": {
+              "text": "Why was the language called \"Python \"?",
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
             "text": "Which of these languages does Python resemble in its class syntax?",
@@ -264,6 +440,7 @@
               "d": "Perl"
             },
             "correct": "b",
+            "explanation": "The official Python tutorial describes Python's classes as a mixture of the class mechanisms of C++ and Modula-3.",
             "concepts": [
               "basics"
             ]
@@ -277,22 +454,33 @@
               "d": "ABC, Smalltalk"
             },
             "correct": "c",
+            "explanation": "Guido van Rossum worked on ABC, a teaching language, before he created Python, and took ideas such as indentation for blocks from it. Modules and exceptions came from Modula-3.",
             "concepts": [
               "basics"
             ]
           },
           {
-            "text": "In Python, the body of a decision is indicated by",
+            "text": "In Python, how is the body of an `if` (a decision) marked?",
             "options": {
-              "a": "a colon",
-              "b": "parenthesis",
+              "a": "parenthesis",
+              "b": "a colon",
               "c": "curly braces",
               "d": "indentation"
             },
             "correct": "d",
+            "explanation": "Python has no braces: the lines that belong to an `if`, a loop or a function are the ones indented under it. The colon only starts the block.",
             "concepts": [
               "conditions"
-            ]
+            ],
+            "formerly": {
+              "text": "In Python, the body of a decision is indicated by",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
           }
         ]
       }
@@ -307,390 +495,679 @@
         "difficulty": 2,
         "questions": [
           {
-            "text": "What does the following do? def myfunc(str, integer, flt): pass",
+            "text": "What does this code do?\n```\ndef myfunc(str, integer, flt):\n    pass\n```",
             "options": {
-              "a": "defines a function, which passes its parameters through",
-              "b": "defines a function, which does nothing",
-              "c": "defines an empty class",
-              "d": "defines a list and initializes it"
+              "a": "defines a function, which does nothing",
+              "b": "defines a list and initializes it",
+              "c": "defines a function, which passes its parameters through",
+              "d": "defines an empty class"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`pass` does nothing; it is there because a function body cannot be empty. So `myfunc` takes three arguments and ignores them.",
             "concepts": [
               "functions"
-            ]
+            ],
+            "formerly": {
+              "text": "What does the following do? def myfunc(str, integer, flt): pass",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "What gets printed? x = 4.5 y = 2 print x//y",
+            "text": "What does this print?\n```\nx = 4.5\ny = 2\nprint(x // y)\n```",
             "options": {
-              "a": "9",
+              "a": "2.0",
               "b": "2",
-              "c": "2.25",
-              "d": "20.25"
+              "c": "20.25",
+              "d": "2.25",
+              "e": "9"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`//` is floor division: 4.5 / 2 is 2.25, rounded down to 2. Because one of the numbers is a float, the answer is a float too: `2.0`.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? x = 4.5 y = 2 print x//y",
+              "letters": {
+                "a": "e",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "What gets printed? nums = set([1,1,2,3,3,3,4]) print len(nums)",
+            "text": "What does this print?\n```\nnums = set([1, 1, 2, 3, 3, 3, 4])\nprint(len(nums))\n```",
             "options": {
-              "a": "2",
-              "b": "5",
-              "c": "7",
-              "d": "1",
+              "a": "7",
+              "b": "1",
+              "c": "2",
+              "d": "5",
               "e": "4"
             },
             "correct": "e",
+            "explanation": "A set keeps each value once, so `nums` is {1, 2, 3, 4}: four items.",
             "concepts": [
               "sets-dicts"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? nums = set([1,1,2,3,3,3,4]) print len(nums)",
+              "letters": {
+                "a": "c",
+                "b": "d",
+                "c": "a",
+                "d": "b",
+                "e": "e"
+              }
+            }
           },
           {
-            "text": "What gets printed? print r\"\\nwoow\"",
+            "text": "What does this print?\n```\nprint(r\"\\nwoow\")\n```",
             "options": {
-              "a": "the text like exactly like this: \\nwoow",
-              "b": "new line then the string: woow",
-              "c": "the text exactly like this: r\"\\nwoow\"",
-              "d": "the letter r and then newline then the text: woow",
-              "e": "the letter r then the text like this: nwoow"
+              "a": "new line then the string: woow",
+              "b": "the letter r and then newline then the text: woow",
+              "c": "the text exactly like this: \\nwoow",
+              "d": "the letter r then the text like this: nwoow",
+              "e": "the text exactly like this: r\"\\nwoow\""
             },
-            "correct": "a",
+            "correct": "c",
+            "explanation": "The `r` makes a raw string: a backslash stays a backslash, so `\\n` is a backslash and an n, not a new line. Raw strings are handy for Windows paths and regular expressions.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? print r\"\\nwoow\"",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "e",
+                "d": "b",
+                "e": "d"
+              }
+            }
           },
           {
-            "text": "What gets printed? x = sum(range(5)) print x",
+            "text": "What does this print?\n```\nx = sum(range(5))\nprint(x)\n```",
             "options": {
-              "a": "10",
-              "b": "5",
-              "c": "An exception is thrown",
-              "d": "15",
-              "e": "4"
+              "a": "4",
+              "b": "15",
+              "c": "5",
+              "d": "10",
+              "e": "An exception is thrown"
             },
-            "correct": "a",
+            "correct": "d",
+            "explanation": "`range(5)` is 0, 1, 2, 3, 4 (it stops before 5), and their sum is 10.",
             "concepts": [
               "loops",
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? x = sum(range(5)) print x",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "e",
+                "d": "b",
+                "e": "a"
+              }
+            }
           },
           {
-            "text": "Which numbers are printed? for i in range(3): print i for i in range(8,10): print i",
+            "text": "Which numbers are printed?\n```\nfor i in range(3):\n    print(i)\nfor i in range(8, 10):\n    print(i)\n```",
             "options": {
-              "a": "1,2,3,4,5,6,7,8,9,10",
-              "b": "0, 1, 2, 3, 8, 9, 10",
+              "a": "0, 1, 2, 8, 9, 10",
+              "b": "1,2,3,4,5,6,7,8,9,10",
               "c": "1, 2, 3, 8, 9, 10",
-              "d": "0, 1, 2, 8, 9, 10",
-              "e": "1, 2, 8, 9"
+              "d": "0, 1, 2, 8, 9",
+              "e": "0, 1, 2, 3, 8, 9, 10"
             },
-            "correct": "e",
+            "correct": "d",
+            "explanation": "`range(3)` counts 0, 1, 2 and `range(8, 10)` counts 8, 9. A range starts at its first number and stops just before its second.",
             "concepts": [
               "loops"
-            ]
+            ],
+            "formerly": {
+              "text": "Which numbers are printed? for i in range(3): print i for i in range(8,10): print i",
+              "letters": {
+                "a": "b",
+                "b": "e",
+                "c": "c",
+                "d": "a",
+                "e": "d"
+              }
+            }
           },
           {
-            "text": "What gets printed? kvps = {\"user\",\"bill\", \"password\",\"hillary\"} print kvps['password']",
+            "text": "What does this print?\n```\nkvps = {\"user\", \"bill\", \"password\", \"hillary\"}\nprint(kvps['password'])\n```",
             "options": {
               "a": "bill",
-              "b": "user",
+              "b": "Nothing: it stops with an error",
               "c": "hillary",
-              "d": "password",
-              "e": "Nothing. Python syntax error"
+              "d": "user",
+              "e": "password"
             },
-            "correct": "e",
+            "correct": "b",
+            "explanation": "With commas instead of colons, the braces make a set of four strings, not a dictionary. A set cannot be looked up by key, so `kvps['password']` raises a TypeError. The dictionary would be `{\"user\": \"bill\", \"password\": \"hillary\"}`.",
             "concepts": [
               "sets-dicts"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? kvps = {\"user\",\"bill\", \"password\",\"hillary\"} print kvps['password']",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "e",
+                "e": "b"
+              }
+            }
           },
           {
-            "text": "What gets printed? name = \"snow storm\" print \"%s\" % name[6:8]",
+            "text": "What does this print?\n```\nname = \"snow storm\"\nprint(\"%s\" % name[6:8])\n```",
             "options": {
               "a": "st",
               "b": "to",
-              "c": "sto",
-              "d": "tor",
-              "e": "Syntax Error"
+              "c": "Syntax Error",
+              "d": "sto",
+              "e": "tor"
             },
             "correct": "b",
+            "explanation": "Counting from 0, position 5 is 's', 6 is 't' and 7 is 'o'. The slice `[6:8]` takes positions 6 and 7 and stops before 8: `to`.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? name = \"snow storm\" print \"%s\" % name[6:8]",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "e",
+                "e": "c"
+              }
+            }
           },
           {
-            "text": "What gets printed by the code snippet below? import math print math.floor(5.5)",
+            "text": "What does this print?\n```\nimport math\nprint(math.floor(5.5))\n```",
             "options": {
-              "a": "5.5",
+              "a": "6",
               "b": "5",
-              "c": "6"
+              "c": "5.5"
             },
             "correct": "b",
+            "explanation": "`math.floor` rounds down to the whole number below. In Python 3 it returns an int, so this prints `5`.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed by the code snippet below? import math print math.floor(5.5)",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a"
+              }
+            }
           },
           {
-            "text": "Which of the following print statements will print all the names in the list on a separate line names = ['Ramesh', 'Rajesh', 'Roger', 'Ivan', 'Nico']",
+            "text": "Which line prints each name on a line of its own?\n```\nnames = ['Ramesh', 'Rajesh', 'Roger', 'Ivan', 'Nico']\n```",
             "options": {
-              "a": "print \"\\n\".join(names)",
-              "b": "print names.append(\"\\n\")",
-              "c": "print names.join(\"%s\\n\", names)",
-              "d": "print names.join(\"\\n\")",
-              "e": "print names.concatenate(\"\\n\")"
+              "a": "`print(\"\\n\".join(names))`",
+              "b": "`print(names.concatenate(\"\\n\"))`",
+              "c": "`print(names.join(\"%s\\n\", names))`",
+              "d": "`print(names.append(\"\\n\"))`",
+              "e": "`print(names.join(\"\\n\"))`"
             },
             "correct": "a",
+            "explanation": "`join` belongs to the string that goes between the items: `\"\\n\".join(names)` puts a new line between the names. Lists have no `join` or `concatenate`, and `append` returns `None`.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "Which of the following print statements will print all the names in the list on a separate line names = ['Ramesh', 'Rajesh', 'Roger', 'Ivan', 'Nico']",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "e",
+                "e": "b"
+              }
+            }
           },
           {
-            "text": "Wat gets printed? list1 = [1, 2, 3, 4] list2 = [5, 6, 7, 8] print len(list1 + list2)",
+            "text": "What does this print?\n```\nlist1 = [1, 2, 3, 4]\nlist2 = [5, 6, 7, 8]\nprint(len(list1 + list2))\n```",
             "options": {
-              "a": "8",
-              "b": "4",
+              "a": "2",
+              "b": "8",
               "c": "5",
-              "d": "2"
-            },
-            "correct": "a",
-            "concepts": [
-              "lists"
-            ]
-          },
-          {
-            "text": "Complete the code to print the following numbers: 1 3 5 7 9 for i in range(1, 10, __): print i",
-            "options": {
-              "a": "3",
-              "b": "1",
-              "c": "2",
-              "d": "0"
-            },
-            "correct": "c",
-            "concepts": [
-              "loops"
-            ]
-          },
-          {
-            "text": "Complete the code to print the following patterns: 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 4 4 4 4 4 5 5 5 5 5 for i in range(1, 6, 1): print ____ * 5",
-            "options": {
-              "a": "i",
-              "b": "i*i*i*i*i",
-              "c": "str(i)",
-              "d": "int(i)"
-            },
-            "correct": "c",
-            "concepts": [
-              "loops"
-            ]
-          },
-          {
-            "text": "Study the code below: for i in x: print i Which of the option below is incorrect?",
-            "options": {
-              "a": "x is an list",
-              "b": "x is a str",
-              "c": "x is an int",
-              "d": "x is a tuple"
-            },
-            "correct": "c",
-            "concepts": [
-              "loops"
-            ]
-          },
-          {
-            "text": "What is the value of x after executing the code shown below? x = 'hello world' x = x.upper() Value of x is ______",
-            "options": {
-              "a": "HELLO'",
-              "b": "Hello World'",
-              "c": "HELLO WORLD'",
-              "d": "None of these"
-            },
-            "correct": "c",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "a_list = range(2, 11, 2) a_list = a_list[1: -1] Look at the options given, which number is not contained in a_list?",
-            "options": {
-              "a": "4",
-              "b": "2",
-              "c": "8",
-              "d": "6"
+              "d": "4"
             },
             "correct": "b",
+            "explanation": "`+` joins two lists into one new list, here of 8 items.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "Wat gets printed? list1 = [1, 2, 3, 4] list2 = [5, 6, 7, 8] print len(list1 + list2)",
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "c",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "Which line of code will add a new element 10 to the end of the list? a_list = [2,4,6,8]",
+            "text": "Fill in the blank so that the code prints 1, 3, 5, 7 and 9, one per line:\n```\nfor i in range(1, 10, __):\n    print(i)\n```",
             "options": {
-              "a": "a_list.insert(10)",
-              "b": "a_list.add(10)",
-              "c": "a_list.append(10)",
-              "d": "a_list += 10"
+              "a": "2",
+              "b": "1",
+              "c": "0",
+              "d": "3"
             },
-            "correct": "c",
+            "correct": "a",
+            "explanation": "The third number in `range` is the step. Starting at 1 with a step of 2 gives 1, 3, 5, 7, 9, stopping before 10.",
+            "concepts": [
+              "loops"
+            ],
+            "formerly": {
+              "text": "Complete the code to print the following numbers: 1 3 5 7 9 for i in range(1, 10, __): print i",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "a",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Fill in the blank so that the code prints this pattern:\n```\n11111\n22222\n33333\n44444\n55555\n```\nThe code:\n```\nfor i in range(1, 6, 1):\n    print(____ * 5)\n```",
+            "options": {
+              "a": "`str(i)`",
+              "b": "`int(i)`",
+              "c": "`i*i*i*i*i`",
+              "d": "`i`"
+            },
+            "correct": "a",
+            "explanation": "Multiplying a string repeats it: `'1' * 5` is `'11111'`. With a number, `1 * 5` is just 5, so `i` has to become a string first.",
+            "concepts": [
+              "loops"
+            ],
+            "formerly": {
+              "text": "Complete the code to print the following patterns: 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 4 4 4 4 4 5 5 5 5 5 for i in range(1, 6, 1): print ____ * 5",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "a",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "Look at this code:\n```\nfor i in x:\n    print(i)\n```\nWhich of these could `x` NOT be?",
+            "options": {
+              "a": "a list",
+              "b": "an int",
+              "c": "a string (str)",
+              "d": "a tuple"
+            },
+            "correct": "b",
+            "explanation": "A `for` loop needs something it can step through: lists, strings (one character at a time) and tuples all work. A single int cannot be stepped through, so it raises a TypeError.",
+            "concepts": [
+              "loops"
+            ],
+            "formerly": {
+              "text": "Study the code below: for i in x: print i Which of the option below is incorrect?",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "What is the value of x after this code runs?\n```\nx = 'hello world'\nx = x.upper()\n```",
+            "options": {
+              "a": "`'HELLO WORLD'`",
+              "b": "`'HELLO'`",
+              "c": "`'Hello World'`",
+              "d": "None of these"
+            },
+            "correct": "a",
+            "explanation": "`upper()` returns a copy of the whole string in capitals, every word of it: `'HELLO WORLD'`. (`title()` would give `'Hello World'`.)",
+            "concepts": [
+              "strings"
+            ],
+            "formerly": {
+              "text": "What is the value of x after executing the code shown below? x = 'hello world' x = x.upper() Value of x is ______",
+              "letters": {
+                "a": "b",
+                "b": "c",
+                "c": "a",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "```\na_list = list(range(2, 11, 2))\na_list = a_list[1:-1]\n```\nWhich of these numbers is NOT in `a_list` now?",
+            "options": {
+              "a": "2",
+              "b": "8",
+              "c": "4",
+              "d": "6"
+            },
+            "correct": "a",
+            "explanation": "`range(2, 11, 2)` gives [2, 4, 6, 8, 10]. The slice `[1:-1]` drops the first and the last item, leaving [4, 6, 8], so 2 is gone.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "a_list = range(2, 11, 2) a_list = a_list[1: -1] Look at the options given, which number is not contained in a_list?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "Which line adds 10 to the end of this list?\n```\na_list = [2, 4, 6, 8]\n```",
+            "options": {
+              "a": "`a_list.append(10)`",
+              "b": "`a_list.insert(10)`",
+              "c": "`a_list.add(10)`",
+              "d": "`a_list += 10`"
+            },
+            "correct": "a",
+            "explanation": "`append` adds one item at the end. `insert` needs a position as well (`insert(4, 10)`), lists have no `add`, and `+= 10` fails because only a list can be added to a list (`+= [10]` works).",
+            "concepts": [
+              "lists"
+            ],
+            "formerly": {
+              "text": "Which line of code will add a new element 10 to the end of the list? a_list = [2,4,6,8]",
+              "letters": {
+                "a": "b",
+                "b": "c",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
             "text": "Which of the following is not a valid function name?",
             "options": {
-              "a": "func_1_tion",
-              "b": "_function1",
-              "c": "1function",
-              "d": "function_1"
-            },
-            "correct": "c",
-            "concepts": [
-              "basics"
-            ]
-          },
-          {
-            "text": "Study the code below. x = 1 y = 3 In Python, x/y returns you 0, which is wrong. Which of the solutions below will fix this.",
-            "options": {
-              "a": "Use x.0 / y.0 instead.",
-              "b": "Use float(x)/y instead.",
-              "c": "Use x // y instead.",
-              "d": "Use float(x/y) instead."
-            },
-            "correct": "b",
-            "concepts": [
-              "numbers"
-            ]
-          },
-          {
-            "text": "my_list = [1,3,5,7,9,11] Which of the following code will produce the same contents for my_list_2 as that stored in my_list?",
-            "options": {
-              "a": "my_list_2 = range(1,13,2)",
-              "b": "my_list2 = range(1,3,5,7,9,11)",
-              "c": "my_list2 = range(1,12,1)",
-              "d": "my_list2 = range(1,11,2)"
+              "a": "`1function`",
+              "b": "`func_1_tion`",
+              "c": "`function_1`",
+              "d": "`_function1`"
             },
             "correct": "a",
+            "explanation": "A name can contain letters, digits and underscores, but cannot start with a digit: `1function` would be read as the number 1 followed by a name.",
+            "concepts": [
+              "basics"
+            ],
+            "formerly": {
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "a",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "```\nx = 1\ny = 3\n```\nWhich expression gives `0` rather than `0.333…`?",
+            "options": {
+              "a": "`x // y`",
+              "b": "`x / y`",
+              "c": "`float(x / y)`",
+              "d": "`float(x) / y`"
+            },
+            "correct": "a",
+            "explanation": "In Python 3, `/` always divides exactly: `1 / 3` is `0.333…`, with or without `float`. `//` is whole-number (floor) division, so `1 // 3` is `0`. (In Python 2, `/` between two ints did what `//` does now.)",
+            "concepts": [
+              "numbers"
+            ],
+            "formerly": {
+              "text": "Study the code below. x = 1 y = 3 In Python, x/y returns you 0, which is wrong. Which of the solutions below will fix this.",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "```\nmy_list = [1, 3, 5, 7, 9, 11]\n```\nWhich line gives `my_list_2` the same numbers as `my_list`?",
+            "options": {
+              "a": "`my_list_2 = list(range(1, 3, 5, 7, 9, 11))`",
+              "b": "`my_list_2 = list(range(1, 12, 1))`",
+              "c": "`my_list_2 = list(range(1, 13, 2))`",
+              "d": "`my_list_2 = list(range(1, 11, 2))`"
+            },
+            "correct": "c",
+            "explanation": "Start at 1, step by 2 and stop before 13: 1, 3, 5, 7, 9, 11. `range(1, 11, 2)` stops before 11, `range` takes at most three numbers, and a step of 1 gives every number.",
             "concepts": [
               "loops",
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "my_list = [1,3,5,7,9,11] Which of the following code will produce the same contents for my_list_2 as that stored in my_list?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "x = \"1\" y = 10 Pick the code which will produce an error when executed.",
+            "text": "```\nx = \"1\"\ny = 10\n```\nWhich line gives an error?",
             "options": {
-              "a": "print str(x) + str(y)",
-              "b": "print int(x) + y",
-              "c": "print int(x) + float(y)",
-              "d": "print x + y"
-            },
-            "correct": "d",
-            "concepts": [
-              "numbers"
-            ]
-          },
-          {
-            "text": "def fun_A(): print 1 def fun_B(): return 1 Which of the following code will output the value 2?",
-            "options": {
-              "a": "print fun_A() + fun_A()",
-              "b": "print fun_B() + fun_B()",
-              "c": "print fun_A() + fun_B()",
-              "d": "print fun_B() + fun_A()"
+              "a": "`print(str(x) + str(y))`",
+              "b": "`print(x + y)`",
+              "c": "`print(int(x) + float(y))`",
+              "d": "`print(int(x) + y)`"
             },
             "correct": "b",
-            "concepts": [
-              "functions"
-            ]
-          },
-          {
-            "text": "The x % y operator is used to check for remainders when x is divided by y. We can use it to check for even or odd numbers. To check for even numbers, what should the condition be like? if _______: print \"x is an even number\"",
-            "options": {
-              "a": "x % 2 == 0",
-              "b": "x % x == 0",
-              "c": "x % 1 == 2",
-              "d": "x % 2 == 1"
-            },
-            "correct": "a",
+            "explanation": "`x` is the text \"1\" and `y` is the number 10, and Python will not add text to a number: TypeError. Convert first: `int(x) + y` is 11 and `str(x) + str(y)` is '110'.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "x = \"1\" y = 10 Pick the code which will produce an error when executed.",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "```\ndef fun_A():\n    print(1)\n\ndef fun_B():\n    return 1\n```\nWhich line prints the value 2?",
+            "options": {
+              "a": "`print(fun_B() + fun_B())`",
+              "b": "`print(fun_B() + fun_A())`",
+              "c": "`print(fun_A() + fun_A())`",
+              "d": "`print(fun_A() + fun_B())`"
+            },
+            "correct": "a",
+            "explanation": "`fun_B` returns 1, so 1 + 1 = 2. `fun_A` prints 1 but returns nothing (`None`), and adding `None` to a number is a TypeError.",
+            "concepts": [
+              "functions"
+            ],
+            "formerly": {
+              "text": "def fun_A(): print 1 def fun_B(): return 1 Which of the following code will output the value 2?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "The `%` operator gives the remainder of a division. Which condition checks that `x` is even?\n```\nif ______:\n    print(\"x is an even number\")\n```",
+            "options": {
+              "a": "`x % 2 == 0`",
+              "b": "`x % x == 0`",
+              "c": "`x % 2 == 1`",
+              "d": "`x % 1 == 2`"
+            },
+            "correct": "a",
+            "explanation": "An even number divides by 2 with nothing left over, so `x % 2 == 0`. `x % 2 == 1` tests for an odd number.",
+            "concepts": [
+              "numbers"
+            ],
+            "formerly": {
+              "text": "The x % y operator is used to check for remainders when x is divided by y. We can use it to check for even or odd numbers. To check for even numbers, what should the condition be like? if _______: print \"x is an even number\"",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
             "text": "Which of the following will NOT produce an error?",
             "options": {
-              "a": "a = \"123\" a[3] = 4",
-              "b": "a = [1,2,3] a.append(4)",
-              "c": "a=[1,2,3] a[3] = 4",
-              "d": "a = [1,2,3] a.append[4]"
+              "a": "`a = [1, 2, 3]; a.append(4)`",
+              "b": "`a = \"123\"; a[3] = 4`",
+              "c": "`a = [1, 2, 3]; a.append[4]`",
+              "d": "`a = [1, 2, 3]; a[3] = 4`"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`append(4)` adds a fourth item. A string cannot be changed, `a[3] = 4` is past the end of a three-item list (IndexError), and `append[4]` uses square brackets, which index the method instead of calling it.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "Which of the following will print the number of 'A' in the word: \"HOW ARE YOU\"? word = \"HOW ARE YOU\"?",
+            "text": "Which line prints how many times 'A' appears in `word`?\n```\nword = \"HOW ARE YOU\"\n```",
             "options": {
-              "a": "print word.count(A)",
-              "b": "print word.count('A')",
-              "c": "print count(word['A'])",
-              "d": "print count('A')"
+              "a": "`print(count('A'))`",
+              "b": "`print(word.count('A'))`",
+              "c": "`print(count(word['A']))`",
+              "d": "`print(word.count(A))`"
             },
             "correct": "b",
+            "explanation": "`count` is a string method: `word.count('A')` gives 1. Without quotes, `A` would be a variable name, and there is no built-in `count` function.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "Which of the following will print the number of 'A' in the word: \"HOW ARE YOU\"? word = \"HOW ARE YOU\"?",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "c",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "Complete the code to print the following patterns: 5 5 5 5 5 4 4 4 4 4 3 3 3 3 3 2 2 2 2 2 1 1 1 1 1 for i in range(5, 0, ____ ): print str(i) * 5",
+            "text": "Fill in the blank so that the code prints this pattern:\n```\n55555\n44444\n33333\n22222\n11111\n```\nThe code:\n```\nfor i in range(5, 0, ____):\n    print(str(i) * 5)\n```",
             "options": {
-              "a": "2",
+              "a": "0",
               "b": "-1",
               "c": "1",
-              "d": "0"
+              "d": "2"
             },
             "correct": "b",
+            "explanation": "A step of -1 counts down: 5, 4, 3, 2, 1, stopping before 0. With a step of 1, a range that starts above its end is empty.",
             "concepts": [
               "loops"
-            ]
+            ],
+            "formerly": {
+              "text": "Complete the code to print the following patterns: 5 5 5 5 5 4 4 4 4 4 3 3 3 3 3 2 2 2 2 2 1 1 1 1 1 for i in range(5, 0, ____ ): print str(i) * 5",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "c",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "Write down the value of x after executing the code shown below: x = 0 for i in range(2, 10, 2): x = x + i print x x is ______.",
+            "text": "What is the value of x after this code runs?\n```\nx = 0\nfor i in range(2, 10, 2):\n    x = x + i\nprint(x)\n```",
             "options": {
-              "a": "22",
-              "b": "21",
-              "c": "28",
-              "d": "20"
+              "a": "21",
+              "b": "22",
+              "c": "20",
+              "d": "28"
             },
-            "correct": "d",
+            "correct": "c",
+            "explanation": "The loop adds 2, 4, 6 and 8 (the range stops before 10): 2 + 4 + 6 + 8 = 20.",
             "concepts": [
               "loops",
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "Write down the value of x after executing the code shown below: x = 0 for i in range(2, 10, 2): x = x + i print x x is ______.",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "Which of these languages has Python NOT borrowed its features from?",
+            "text": "Which of these languages did Python NOT borrow features from?",
             "options": {
-              "a": "CLISP (Common Lisp)",
+              "a": "Java",
               "b": "C++",
-              "c": "Java",
+              "c": "CLISP (Common Lisp)",
               "d": "Fortran"
             },
             "correct": "d",
+            "explanation": "Python borrowed from many languages, among them C++ (classes), Lisp (`lambda`, `map`) and Java (library modules such as `logging` and `unittest`). Fortran is not one of its influences.",
             "concepts": [
               "basics"
-            ]
+            ],
+            "formerly": {
+              "text": "Which of these languages has Python NOT borrowed its features from?",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What the right way to increment the value of i by 1 in Python without i being evaluated twice?",
+            "text": "What is the right way to add 1 to `i` in Python?",
             "options": {
-              "a": "i += 1",
-              "b": "i = 1",
-              "c": "++i",
-              "d": "i++"
+              "a": "`i += 1`",
+              "b": "`i = 1`",
+              "c": "`++i`",
+              "d": "`i++`"
             },
             "correct": "a",
+            "explanation": "`i += 1` adds 1 to `i`. Python has no `++`: `i++` is a syntax error, and `++i` is quietly read as `+(+i)`, which leaves `i` unchanged.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What the right way to increment the value of i by 1 in Python without i being evaluated twice?"
+            }
           },
           {
             "text": "In a mixed-type expression involving ints and floats, Python will convert",
@@ -701,35 +1178,55 @@
               "d": "mixed-type expression are illegal"
             },
             "correct": "b",
+            "explanation": "Python converts to the type that loses nothing: in `3 + 0.5` the 3 becomes 3.0, giving 3.5. Turning floats into ints would throw the fraction away.",
             "concepts": [
               "numbers"
             ]
           },
           {
-            "text": "What should the below code print? print type(1J)",
+            "text": "What does this print?\n```\nprint(type(1J))\n```",
             "options": {
-              "a": "<type 'float'>",
-              "b": "<type 'unicode'>",
-              "c": "<type 'int'>",
-              "d": "<type 'complex'>"
+              "a": "`<class 'unicode'>`",
+              "b": "`<class 'float'>`",
+              "c": "`<class 'int'>`",
+              "d": "`<class 'complex'>`"
             },
             "correct": "d",
+            "explanation": "A number followed by `j` or `J` is imaginary, so `1J` is the complex number 0 + 1j. Python writes the imaginary unit as j, as engineers do.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What should the below code print? print type(1J)",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
           },
           {
             "text": "In Python, which of the following is NOT a legal identifier?",
             "options": {
-              "a": "This_is_spam",
-              "b": "spam4U",
-              "c": "2spam",
-              "d": "spam"
+              "a": "`spam4U`",
+              "b": "`spam`",
+              "c": "`This_is_spam`",
+              "d": "`2spam`"
             },
-            "correct": "c",
+            "correct": "d",
+            "explanation": "A name cannot start with a digit. The others are fine: letters, digits and underscores, starting with a letter or an underscore.",
             "concepts": [
               "basics"
-            ]
+            ],
+            "formerly": {
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
           }
         ]
       }
@@ -744,261 +1241,451 @@
         "difficulty": 3,
         "questions": [
           {
-            "text": "What gets printed? class Account: def __init__(self, id): self.id = id id = 666 acc = Account(123) print acc.id",
+            "text": "What does this print?\n```\nclass Account:\n    def __init__(self, id):\n        self.id = id\n        id = 666\n\nacc = Account(123)\nprint(acc.id)\n```",
             "options": {
-              "a": "SyntaxError, this program will not run",
-              "b": "123",
-              "c": "666",
+              "a": "123",
+              "b": "666",
+              "c": "SyntaxError: this program will not run",
               "d": "None"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`self.id = id` stores 123 on the object first. `id = 666` then changes only the local name `id` inside `__init__`, not `self.id`.",
             "concepts": [
               "modules-oop"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? class Account: def __init__(self, id): self.id = id id = 666 acc = Account(123) print acc.id",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What gets printed? def simpleFunction(): \"This is a cool simple function that returns 1\" return 1 print simpleFunction.__doc__[10:14]",
+            "text": "What does this print?\n```\ndef simpleFunction():\n    \"This is a cool simple function that returns 1\"\n    return 1\n\nprint(simpleFunction.__doc__[10:14])\n```",
             "options": {
               "a": "simple",
-              "b": "funtion",
-              "c": "cool",
+              "b": "simpleFunction",
+              "c": "function",
               "d": "func",
-              "e": "simpleFunction"
+              "e": "cool"
             },
-            "correct": "c",
+            "correct": "e",
+            "explanation": "A string on the first line of a function is its docstring, kept in `__doc__`. Counting from 0, \"This is a \" fills positions 0 to 9, so `[10:14]` is `cool`.",
             "concepts": [
               "functions"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? def simpleFunction(): \"This is a cool simple function that returns 1\" return 1 print simpleFunction.__doc__[10:14]",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "e",
+                "d": "d",
+                "e": "b"
+              }
+            }
           },
           {
-            "text": "Does Python support short-circuiting in boolean expressions?",
+            "text": "Does Python short-circuit boolean expressions (stop working them out once the answer is known)?",
             "options": {
-              "a": "Not support",
-              "b": "Only AND operator",
-              "c": "Only OR operator",
-              "d": "Both"
+              "a": "Yes, for both `and` and `or`",
+              "b": "No",
+              "c": "Only for `or`",
+              "d": "Only for `and`"
             },
-            "correct": "d",
+            "correct": "a",
+            "explanation": "Both stop early: in `False and f()` and in `True or f()`, `f` is never called. That is why `x != 0 and 10 / x > 1` is safe when x is 0.",
             "concepts": [
               "conditions"
-            ]
+            ],
+            "formerly": {
+              "text": "Does Python support short-circuiting in boolean expressions?",
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "c",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "What does the code below do? sys.path.append('/root/mods')",
+            "text": "What does this line do?\n```\nsys.path.append('/root/mods')\n```",
             "options": {
-              "a": "Changes the location that the python executable is run from",
-              "b": "Removes all directories for mods",
+              "a": "Changes the location where sub-processes are searched for after they are launched",
+              "b": "Changes the location that the python executable is run from",
               "c": "Changes the current working directory",
-              "d": "Adds a new directory to search for python modules that are imported",
-              "e": "Changes the location where sub-processes are searched for after they are launched"
+              "d": "Removes all directories for mods",
+              "e": "Adds a new directory to search for python modules that are imported"
             },
-            "correct": "d",
+            "correct": "e",
+            "explanation": "`sys.path` is the list of folders Python searches when you `import` a module. Appending a folder lets you import modules kept there.",
             "concepts": [
               "modules-oop"
-            ]
+            ],
+            "formerly": {
+              "text": "What does the code below do? sys.path.append('/root/mods')",
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "c",
+                "d": "e",
+                "e": "a"
+              }
+            }
           },
           {
-            "text": "What gets printed? names1 = ['Amir', 'Barry', 'Chales', 'Dao'] loc = names1.index(\"Edward\") print loc",
+            "text": "What does this print?\n```\nnames1 = ['Amir', 'Barry', 'Chales', 'Dao']\nloc = names1.index(\"Edward\")\nprint(loc)\n```",
             "options": {
-              "a": "Edward",
+              "a": "0",
               "b": "4",
-              "c": "0",
+              "c": "Edward",
               "d": "An exception is thrown",
               "e": "-1"
             },
             "correct": "d",
+            "explanation": "`index` raises a ValueError when the item is not in the list. It does not return -1 (that is `find`, for strings). Check with `in` first.",
             "concepts": [
               "errors"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? names1 = ['Amir', 'Barry', 'Chales', 'Dao'] loc = names1.index(\"Edward\") print loc",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d",
+                "e": "e"
+              }
+            }
           },
           {
-            "text": "What gets printed? def myfunc(x, y, z, a): print x + y nums = [1, 2, 3, 4] myfunc(*nums)",
+            "text": "What does this print?\n```\ndef myfunc(x, y, z, a):\n    print(x + y)\n\nnums = [1, 2, 3, 4]\nmyfunc(*nums)\n```",
             "options": {
-              "a": "1",
-              "b": "3",
-              "c": "6",
-              "d": "An exception is thrown",
-              "e": "10"
+              "a": "3",
+              "b": "1",
+              "c": "10",
+              "d": "6",
+              "e": "An exception is thrown"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`*nums` unpacks the list into four separate arguments, so x = 1, y = 2, z = 3 and a = 4, and the function prints 1 + 2 = 3.",
             "concepts": [
               "functions",
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? def myfunc(x, y, z, a): print x + y nums = [1, 2, 3, 4] myfunc(*nums)",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "e",
+                "e": "c"
+              }
+            }
           },
           {
-            "text": "How do you create a package so that the following reference will work? p = mytools.myparser.MyParser()",
+            "text": "How do you make a package so that this line works?\n```\np = mytools.myparser.MyParser()\n```",
             "options": {
-              "a": "Create an __init__.py in the home dir",
-              "b": "This can not be done",
-              "c": "Declare the myparser package in mytools.py",
-              "d": "Create a myparser.py directory inside the mytools directory",
-              "e": "Inside the mytools dir create __init__.py"
+              "a": "Create a mytools folder holding `__init__.py` and `myparser.py`",
+              "b": "Create a folder called `myparser.py` inside the mytools folder",
+              "c": "It cannot be done",
+              "d": "Create an `__init__.py` in the home folder",
+              "e": "Declare the myparser package in `mytools.py`"
             },
-            "correct": "e",
+            "correct": "a",
+            "explanation": "A folder becomes a package when it holds an `__init__.py` file. With `mytools/__init__.py` and `mytools/myparser.py` (which defines `MyParser`), `import mytools.myparser` makes the line work.",
             "concepts": [
               "modules-oop"
-            ]
+            ],
+            "formerly": {
+              "text": "How do you create a package so that the following reference will work? p = mytools.myparser.MyParser()",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "e",
+                "d": "b",
+                "e": "a"
+              }
+            }
           },
           {
-            "text": "What gets printed assuming the user enters the following at the prompt? #: foo a = input(\"#: \") print a",
+            "text": "What does this print if the user types `foo` at the prompt?\n```\na = input(\"#: \")\nprint(a)\n```",
             "options": {
               "a": "An exception is thrown",
               "b": "Not a number",
-              "c": "f",
-              "d": "foo"
+              "c": "foo",
+              "d": "f"
             },
-            "correct": "d",
+            "correct": "c",
+            "explanation": "In Python 3, `input` returns what was typed, as a string, so it prints foo. (Python 2's `input` tried to run the text as code, and gave an error here.)",
             "concepts": [
               "errors"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed assuming the user enters the following at the prompt? #: foo a = input(\"#: \") print a",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "What gets printed? counter = 1 def doLotsOfStuff(): global counter for i in (1, 2, 3): counter += 1 doLotsOfStuff() print counter",
+            "text": "What does this print?\n```\ncounter = 1\n\ndef doLotsOfStuff():\n    global counter\n    for i in (1, 2, 3):\n        counter += 1\n\ndoLotsOfStuff()\nprint(counter)\n```",
             "options": {
-              "a": "3",
-              "b": "4",
-              "c": "1",
-              "d": "7",
+              "a": "7",
+              "b": "1",
+              "c": "4",
+              "d": "3",
               "e": "none of the above"
             },
-            "correct": "b",
+            "correct": "c",
+            "explanation": "`global counter` lets the function change the `counter` outside it. The loop runs three times, so 1 becomes 4.",
             "concepts": [
               "functions",
               "loops"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? counter = 1 def doLotsOfStuff(): global counter for i in (1, 2, 3): counter += 1 doLotsOfStuff() print counter",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "b",
+                "d": "a",
+                "e": "e"
+              }
+            }
           },
           {
-            "text": "What gets printed? one = chr(104) two = chr(105) print \"%s%s\" % (one, two)",
+            "text": "What does this print?\n```\none = chr(104)\ntwo = chr(105)\nprint(\"%s%s\" % (one, two))\n```",
             "options": {
               "a": "104105",
-              "b": "h",
-              "c": "104",
-              "d": "hi"
-            },
-            "correct": "d",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "def funA(a, b): return a * b def funB(c, d): return a + b x = funA(funB(3,4), 5) What is the value of x after executing the code shown above?",
-            "options": {
-              "a": "32",
-              "b": "60",
-              "c": "12",
-              "d": "35"
-            },
-            "correct": "d",
-            "concepts": [
-              "functions"
-            ]
-          },
-          {
-            "text": "What is wrong with the function below? def square(x): x = x**2 return x print \"The value of x has been squared\" squared_value = square(10) print sqared_value",
-            "options": {
-              "a": "We should not be modifying x which is the argument passed into the function.",
-              "b": "**2 is not a valid syntax.",
-              "c": "We should put the return x at the last line of code in the function square because any code within the function after return will not get executed.",
-              "d": "We should use print x instead of return x"
-            },
-            "correct": "c",
-            "concepts": [
-              "functions"
-            ]
-          },
-          {
-            "text": "What is the value of x after executing the code shown below? def funA(x): return str(x) def funB(y): return str(2 * y) x = funA(1) + funB(2)",
-            "options": {
-              "a": "12",
-              "b": "21",
-              "c": "14",
-              "d": "Error"
-            },
-            "correct": "c",
-            "concepts": [
-              "functions"
-            ]
-          },
-          {
-            "text": "Study the code given below, and choose the most appropriate answer: a = [1, 4, 20, 2, 5] x = a[0] for i in a: if i > x: x = i print x",
-            "options": {
-              "a": "The value of x is the largest number in the list.",
-              "b": "The value of x is the sum of all the number in the list.",
-              "c": "The value of x is the smallest number in the list.",
-              "d": "The value of x is the average of all the number in the list."
-            },
-            "correct": "a",
-            "concepts": [
-              "loops"
-            ]
-          },
-          {
-            "text": "What gets printed? names1 = ['Amir', 'Barry', 'Charles', 'Dao'] if 'amir' in names1: print 1 else: print 2",
-            "options": {
-              "a": "An exception is thrown",
-              "b": "2",
-              "c": "Amir",
-              "d": "1"
+              "b": "hi",
+              "c": "h",
+              "d": "104"
             },
             "correct": "b",
+            "explanation": "`chr` turns a character code into its character: 104 is 'h' and 105 is 'i'. `ord` goes the other way.",
             "concepts": [
-              "conditions"
-            ]
+              "strings"
+            ],
+            "formerly": {
+              "text": "What gets printed? one = chr(104) two = chr(105) print \"%s%s\" % (one, two)",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "d",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "What gets printed? names1 = ['Amir', 'Barry', 'Chales', 'Dao'] names2 = [name.lower() for name in names1] print names2[2][0]",
+            "text": "```\ndef funA(a, b):\n    return a * b\n\ndef funB(c, d):\n    return c + d\n\nx = funA(funB(3, 4), 5)\n```\nWhat is the value of x?",
             "options": {
-              "a": "c",
-              "b": "An exception is thrown",
-              "c": "C",
-              "d": "i"
+              "a": "60",
+              "b": "35",
+              "c": "32",
+              "d": "12"
+            },
+            "correct": "b",
+            "explanation": "The inner call runs first: `funB(3, 4)` is 7. Then `funA(7, 5)` is 7 × 5 = 35.",
+            "concepts": [
+              "functions"
+            ],
+            "formerly": {
+              "text": "def funA(a, b): return a * b def funB(c, d): return a + b x = funA(funB(3,4), 5) What is the value of x after executing the code shown above?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "What is wrong with this function?\n```\ndef square(x):\n    x = x ** 2\n    return x\n    print(\"The value of x has been squared\")\n\nsquared_value = square(10)\nprint(squared_value)\n```",
+            "options": {
+              "a": "`**2` is not valid Python",
+              "b": "It should not change `x`, the argument passed in",
+              "c": "The `print` after `return x` never runs: `return` ends the function",
+              "d": "It should use `print(x)` instead of `return x`"
+            },
+            "correct": "c",
+            "explanation": "`return` ends the function straight away, so the line after it never runs. Changing `x` inside the function is fine: it is the function's own name for the value.",
+            "concepts": [
+              "functions"
+            ],
+            "formerly": {
+              "text": "What is wrong with the function below? def square(x): x = x**2 return x print \"The value of x has been squared\" squared_value = square(10) print sqared_value",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "What is the value of x after this code runs?\n```\ndef funA(x):\n    return str(x)\n\ndef funB(y):\n    return str(2 * y)\n\nx = funA(1) + funB(2)\n```",
+            "options": {
+              "a": "`'14'`",
+              "b": "`'12'`",
+              "c": "An error",
+              "d": "`'21'`"
             },
             "correct": "a",
+            "explanation": "`funA(1)` is the string '1' and `funB(2)` is the string '4'. Adding two strings joins them: '14', not the number 5.",
+            "concepts": [
+              "functions"
+            ],
+            "formerly": {
+              "text": "What is the value of x after executing the code shown below? def funA(x): return str(x) def funB(y): return str(2 * y) x = funA(1) + funB(2)",
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "a",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Which describes this code best?\n```\na = [1, 4, 20, 2, 5]\nx = a[0]\nfor i in a:\n    if i > x:\n        x = i\nprint(x)\n```",
+            "options": {
+              "a": "The value of x is the largest number in the list.",
+              "b": "The value of x is the average of all the numbers in the list.",
+              "c": "The value of x is the sum of all the numbers in the list.",
+              "d": "The value of x is the smallest number in the list."
+            },
+            "correct": "a",
+            "explanation": "`x` starts as the first item, and whenever a bigger number turns up it takes its place. At the end it holds 20, the largest: the same job as `max(a)`.",
+            "concepts": [
+              "loops"
+            ],
+            "formerly": {
+              "text": "Study the code given below, and choose the most appropriate answer: a = [1, 4, 20, 2, 5] x = a[0] for i in a: if i > x: x = i print x",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "d",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "What does this print?\n```\nnames1 = ['Amir', 'Barry', 'Charles', 'Dao']\nif 'amir' in names1:\n    print(1)\nelse:\n    print(2)\n```",
+            "options": {
+              "a": "1",
+              "b": "2",
+              "c": "Amir",
+              "d": "An exception is thrown"
+            },
+            "correct": "b",
+            "explanation": "Comparing strings is case-sensitive: 'amir' is not 'Amir', so `in` finds no match and the `else` branch prints 2.",
+            "concepts": [
+              "conditions"
+            ],
+            "formerly": {
+              "text": "What gets printed? names1 = ['Amir', 'Barry', 'Charles', 'Dao'] if 'amir' in names1: print 1 else: print 2",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "c",
+                "d": "a"
+              }
+            }
+          },
+          {
+            "text": "What does this print?\n```\nnames1 = ['Amir', 'Barry', 'Chales', 'Dao']\nnames2 = [name.lower() for name in names1]\nprint(names2[2][0])\n```",
+            "options": {
+              "a": "An exception is thrown",
+              "b": "C",
+              "c": "c",
+              "d": "i"
+            },
+            "correct": "c",
+            "explanation": "The list comprehension makes lower-case copies. `names2[2]` is 'chales' and `[0]` is its first letter, 'c'.",
             "concepts": [
               "lists",
               "loops"
-            ]
+            ],
+            "formerly": {
+              "text": "What gets printed? names1 = ['Amir', 'Barry', 'Chales', 'Dao'] names2 = [name.lower() for name in names1] print names2[2][0]",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "To what values a and b are bound to after the following assignment is executed? a, b = 'xy'",
+            "text": "After this line runs, what are a and b?\n```\na, b = 'xy'\n```",
             "options": {
               "a": "a is bound to the value 'xy' and b is not bound at all.",
               "b": "ValueError: more than 1 value to unpack",
               "c": "Both a and b are bound to 'xy'.",
-              "d": "x' and 'y' respectively."
+              "d": "'x' and 'y' respectively"
             },
             "correct": "d",
+            "explanation": "A string is a sequence of characters, so it unpacks like a list: two characters into two names. A string of any other length would raise a ValueError here.",
             "concepts": [
               "lists",
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "To what values a and b are bound to after the following assignment is executed? a, b = 'xy'"
+            }
           },
           {
-            "text": "Under what circumstances assert statements are not executed?",
+            "text": "When are `assert` statements not run?",
             "options": {
               "a": "During unit testing.",
-              "b": "When you execute the command: __debug__ = False",
+              "b": "Assertions are always executed.",
               "c": "When optimization is requested using the command line option -O",
-              "d": "Assertions are always executed."
+              "d": "When you run the line `__debug__ = False`"
             },
             "correct": "c",
+            "explanation": "Running Python with `-O` (optimise) strips out asserts and sets `__debug__` to False; you cannot assign to `__debug__` yourself. So never rely on `assert` to check user input.",
             "concepts": [
               "errors"
-            ]
+            ],
+            "formerly": {
+              "text": "Under what circumstances assert statements are not executed?",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "In Python, actual parameters are passed to functions",
+            "text": "How does Python pass arguments to a function?",
             "options": {
-              "a": "by magic",
-              "b": "by value",
-              "c": "at random",
-              "d": "by reference"
+              "a": "The function gets the very object the caller passed (pass by object reference)",
+              "b": "Only numbers and strings can be passed",
+              "c": "It makes a full copy of each value",
+              "d": "Assigning to a parameter also changes the caller's variable"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "The parameter names the same object the caller passed; nothing is copied. So changing a list inside the function (`lst.append(1)`) shows outside, but giving the parameter a new value (`lst = []`) only changes the function's own name.",
             "concepts": [
               "functions"
-            ]
+            ],
+            "formerly": {
+              "text": "In Python, actual parameters are passed to functions",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           }
         ]
       }
@@ -1015,202 +1702,345 @@
           {
             "text": "Which of the following creates 100 equally spaced points between -pi/2 and pi/2?",
             "options": {
-              "a": "linspace(-pi/2, 100, pi/2)",
-              "b": "linspace(-pi/2, pi/2, 100)",
-              "c": "linespace(-pi/2, pi/2, 100)",
-              "d": "linespace(pi/2, 100, -pi/2)"
+              "a": "`linspace(-pi/2, pi/2, 100)`",
+              "b": "`linespace(pi/2, 100, -pi/2)`",
+              "c": "`linespace(-pi/2, pi/2, 100)`",
+              "d": "`linspace(-pi/2, 100, pi/2)`"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`linspace(start, stop, num)`: the two ends come first, then how many points. The name is `linspace` (linear space).",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "How do you set the title as x^2-5x+6 in LaTeX style formatting?",
+            "text": "How do you set the title to x^2-5x+6 in LaTeX style?",
             "options": {
-              "a": "title(“$x^2-5x+6$”)",
-              "b": "title(“x**2-5*x+6”)",
-              "c": "title(“#x^2-5x+6#”)",
-              "d": "title(“x^2-5x+6”)"
+              "a": "`title('x**2-5*x+6')`",
+              "b": "`title('x^2-5x+6')`",
+              "c": "`title('$x^2-5x+6$')`",
+              "d": "`title('#x^2-5x+6#')`"
             },
-            "correct": "a",
+            "correct": "c",
+            "explanation": "Text between dollar signs is drawn as LaTeX maths, so `$x^2$` shows a real superscript.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "How do you set the title as x^2-5x+6 in LaTeX style formatting?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "What happens when the following code is executed:: xlabel(\"First label\") xlabel(\"Second label\")",
+            "text": "What happens when this code runs?\n```\nxlabel(\"First label\")\nxlabel(\"Second label\")\n```",
             "options": {
-              "a": "The label of x-axis is set to “Second label”",
-              "b": "The label of x-axis is set to “First label”",
-              "c": "The label of x-axis is “First label” and the label of y-axis is “Second label”",
-              "d": "The label of x-axis is set to “First label Second label”"
+              "a": "The x-axis label is 'First label'",
+              "b": "The x-axis label is 'First label Second label'",
+              "c": "The x-axis label is 'First label' and the y-axis label is 'Second label'",
+              "d": "The x-axis label is 'Second label'"
             },
-            "correct": "a",
+            "correct": "d",
+            "explanation": "Each `xlabel` call replaces the x-axis label, so the last one wins. The y-axis label is set with `ylabel`.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "What happens when the following code is executed:: xlabel(\"First label\") xlabel(\"Second label\")",
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "Which marker is used to get circles...?",
+            "text": "Which marker draws circles?",
             "options": {
-              "a": "\"-\"",
-              "b": "\"0\"",
-              "c": "\"--\"",
-              "d": "\"^\""
+              "a": "`\"--\"`",
+              "b": "`\"^\"`",
+              "c": "`\"o\"`",
+              "d": "`\"-\"`"
             },
-            "correct": "b",
+            "correct": "c",
+            "explanation": "In `plot(x, y, 'o')` the letter o draws circles. `'-'` is a solid line, `'--'` a dashed one and `'^'` draws triangles.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "Which marker is used to get circles...?",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "a",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "Indentation is not mandatory in Python?",
+            "text": "True or false? Indentation is optional in Python.",
             "options": {
               "a": "FALSE",
               "b": "TRUE"
             },
             "correct": "a",
+            "explanation": "Indentation is part of Python's grammar: it marks which lines belong to an `if`, a loop or a function. Leaving it out gives an IndentationError.",
             "concepts": [
               "basics"
-            ]
+            ],
+            "formerly": {
+              "text": "Indentation is not mandatory in Python?"
+            }
           },
           {
-            "text": "Given a file ``data.txt`` with three columns of data separated by spaces, read it into one complex sequence.?",
+            "text": "The file `data.txt` has three columns of numbers separated by spaces. Which line reads it into an array?",
             "options": {
-              "a": "x = load(\"data.txt\")",
-              "b": "x = loadscript(‘data.txt’)",
-              "c": "x = loadtxt(\"data.txt\")",
-              "d": "x = loadtext(\"data.txt\")"
+              "a": "`x = loadscript(\"data.txt\")`",
+              "b": "`x = loadtext(\"data.txt\")`",
+              "c": "`x = load(\"data.txt\")`",
+              "d": "`x = loadtxt(\"data.txt\")`"
             },
-            "correct": "c",
+            "correct": "d",
+            "explanation": "`loadtxt` reads a text file of numbers into an array, one row per line, splitting the columns on spaces. The name is `loadtxt`, not `loadtext`.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "Given a file ``data.txt`` with three columns of data separated by spaces, read it into one complex sequence.?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "d",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "To use the loadtxt command, each row should have the same number of values?",
+            "text": "True or false? For `loadtxt` to work, every row must have the same number of values.",
+            "options": {
+              "a": "TRUE",
+              "b": "FALSE"
+            },
+            "correct": "a",
+            "explanation": "`loadtxt` builds a rectangular array, so a row with a missing or extra value stops it with a ValueError. (`genfromtxt` can fill gaps.)",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "To use the loadtxt command, each row should have the same number of values?",
+              "letters": {
+                "a": "b",
+                "b": "a"
+              }
+            }
+          },
+          {
+            "text": "True or false? `x = array([1, 2, 3], [5, 6, 7])` is a valid statement.",
+            "options": {
+              "a": "TRUE",
+              "b": "FALSE"
+            },
+            "correct": "b",
+            "explanation": "`array` takes one sequence; its second argument is read as the data type, so this raises a TypeError. For a 2-D array, put the rows in one list: `array([[1, 2, 3], [5, 6, 7]])`.",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "``x = array([1, 2, 3], [5, 6, 7])`` is a valid statement?"
+            }
+          },
+          {
+            "text": "Given `A = array([12, 15, 18, 21])`, how do you get the element `18`?",
+            "options": {
+              "a": "`A[2]`",
+              "b": "`A[3]`",
+              "c": "`A[18]`",
+              "d": "`A[0]`"
+            },
+            "correct": "a",
+            "explanation": "Positions count from 0: 12 is at 0, 15 at 1 and 18 at 2.",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "Given the array, ``A = array([12, 15, 18, 21])``, how do we access the element ``18``?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "What does `ones_like([12, 13, 14, 15])` return?",
+            "options": {
+              "a": "`array[12, 13, 14, 15]`",
+              "b": "`array([1.0, 1.0, 1.0, 1.0])`",
+              "c": "`array([12, 13, 14, 15])`",
+              "d": "`array([1, 1, 1, 1])`"
+            },
+            "correct": "d",
+            "explanation": "`ones_like` makes an array of ones with the same shape and type as its input. The input holds whole numbers, so the ones are whole numbers too.",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "Predict the output for ones_like([12, 13, 14, 15]) ?",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "c",
+                "d": "a"
+              }
+            }
+          },
+          {
+            "text": "True or false? The function `lstsq` returns the least-squares solution to an equation.",
             "options": {
               "a": "FALSE",
               "b": "TRUE"
             },
             "correct": "b",
+            "explanation": "`lstsq(A, b)` finds the x that makes `A x` as close as possible to `b`. It is how you fit a straight line to measured data.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "The function ``lstsq`` returns the least-squares solution to an equation?",
+              "letters": {
+                "a": "b",
+                "b": "a"
+              }
+            }
           },
           {
-            "text": "``x = array([1, 2, 3], [5, 6, 7])`` is a valid statement?",
+            "text": "The array `A` holds the coefficients of a system of linear equations and `B` holds its constants. How do you solve the system?",
             "options": {
-              "a": "TRUE",
-              "b": "FALSE"
+              "a": "`solve(AB)`",
+              "b": "`solve(A.B)`",
+              "c": "`solve(A*B)`",
+              "d": "`solve(A, B)`"
             },
-            "correct": "b",
+            "correct": "d",
+            "explanation": "`solve(A, B)` returns the x that satisfies `A x = B`. It takes the two arrays as separate arguments.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "Given two arrays A and B where ``A`` which contains co-efficients of a system of equations and ``B`` which contains it’s constants. How will you solve the given system of equations?",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "Given the array, ``A = array([12, 15, 18, 21])``, how do we access the element ``18``?",
+            "text": "Which function can find the roots of any function you write?",
             "options": {
-              "a": "A[3]",
-              "b": "A[2]",
-              "c": "A[18]",
-              "d": "A[0]"
-            },
-            "correct": "b",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "Predict the output for ones_like([12, 13, 14, 15]) ?",
-            "options": {
-              "a": "array([1, 1, 1, 1])",
-              "b": "array([1.0, 1.0, 1.0, 1.0])",
-              "c": "array([12, 13, 14, 15])",
-              "d": "array[12, 13, 14, 15]"
-            },
-            "correct": "a",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "The function ``lstsq`` returns the least-squares solution to an equation?",
-            "options": {
-              "a": "TRUE",
-              "b": "FALSE"
+              "a": "`fsolve()`",
+              "b": "`arb()`",
+              "c": "`roots()`",
+              "d": "`func()`"
             },
             "correct": "a",
+            "explanation": "`fsolve(f, guess)` (from `scipy.optimize`) searches for an x where f(x) = 0, starting from your guess. `roots` only works for polynomials, given their coefficients.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "Which method can be used to find out the roots of any arbitrary function?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "Given two arrays A and B where ``A`` which contains co-efficients of a system of equations and ``B`` which contains it’s constants. How will you solve the given system of equations?",
+            "text": "What is the index of the first element of a list?",
             "options": {
-              "a": "solve(AB)",
-              "b": "solve(A.B)",
-              "c": "solve(A,B)",
-              "d": "solve(A*B)"
-            },
-            "correct": "c",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "Which method can be used to find out the roots of any arbitrary function?",
-            "options": {
-              "a": "arb()",
-              "b": "fsolve()",
-              "c": "roots()",
-              "d": "func()"
-            },
-            "correct": "b",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "What is the value assigned as index to the first element in a list?",
-            "options": {
-              "a": "1",
+              "a": "0",
               "b": "-1",
-              "c": "0",
+              "c": "1",
               "d": "None of them"
             },
-            "correct": "c",
+            "correct": "a",
+            "explanation": "Python counts positions from 0, so the first item is `a[0]`. `a[-1]` is the last.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the value assigned as index to the first element in a list?",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What is the correct way of creating an array?",
+            "text": "Which is the right way to create an array?",
             "options": {
-              "a": "a = array( 1, 2, 3, 4 )",
-              "b": "a = array[ 1, 2, 3, 4 ]",
-              "c": "a = array([ 1, 2, 3, 4 ])",
-              "d": "a = array[( 1, 2, 3, 4)]"
-            },
-            "correct": "c",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "How do you save a figure in png format with the name sine-curve?",
-            "options": {
-              "a": "savefigure(‘sine-curve.png’)",
-              "b": "savefig(‘sine-curve.png’)",
-              "c": "save(‘sine-curve.png’)",
-              "d": "savefig(‘sine-curve’, ‘png’)"
+              "a": "`a = array( 1, 2, 3, 4 )`",
+              "b": "`a = array([ 1, 2, 3, 4 ])`",
+              "c": "`a = array[ 1, 2, 3, 4 ]`",
+              "d": "`a = array[( 1, 2, 3, 4)]`"
             },
             "correct": "b",
+            "explanation": "`array` is a function, called with round brackets, and it takes one sequence of values: usually a list, in square brackets inside the round ones.",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "What is the correct way of creating an array?",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "How do you save a figure in PNG format with the name sine-curve?",
+            "options": {
+              "a": "`savefig('sine-curve.png')`",
+              "b": "`savefigure('sine-curve.png')`",
+              "c": "`savefig('sine-curve', 'png')`",
+              "d": "`save('sine-curve.png')`"
+            },
+            "correct": "a",
+            "explanation": "`savefig` works out the format from the extension, so `'sine-curve.png'` saves a PNG. To give the format separately, use the keyword: `format='png'`.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "How do you save a figure in png format with the name sine-curve?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
             "text": "How large can an integer in Python be?",
@@ -1221,77 +2051,128 @@
               "d": "None of the above"
             },
             "correct": "c",
+            "explanation": "A Python `int` grows to fit the number, limited only by memory: `2**1000` is fine. Fixed sizes like 2^32 belong to other languages.",
             "concepts": [
               "numbers"
             ]
           },
           {
-            "text": "How do you obtain the real and imaginary parts of a complex number ‘’p’’ as separate?",
+            "text": "How do you get the real and imaginary parts of a complex number `p`?",
             "options": {
-              "a": "p.real(0),p.imag(0)",
-              "b": "p.real , p.imag",
-              "c": "real(p) , imag(p)",
-              "d": "p.real( ) , p.imag( )"
-            },
-            "correct": "b",
-            "concepts": [
-              "numbers"
-            ]
-          },
-          {
-            "text": "Given strings s and t, ``s = \"Hello\"`` and ``t = \"World\"`` and an integer r, ``r = 2``. What is the output of s * r + s * t?",
-            "options": {
-              "a": "Hello Hello World World",
-              "b": "HelloHello WorldWorld",
-              "c": "HelloHelloWorldWorld",
-              "d": "HelloWorldHelloWorld"
-            },
-            "correct": "c",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "Given the string ``s = \"Hello\"``, we wish to change it to ``hello``. what is the result of s[0] = 'h' ?",
-            "options": {
-              "a": "s remains unchanged",
-              "b": "Error--'str' object does not support item assignment.",
-              "c": "s changes to ‘hello’",
-              "d": "Depends on the version of Python being used."
-            },
-            "correct": "b",
-            "concepts": [
-              "strings"
-            ]
-          },
-          {
-            "text": "The following function is used to integrate a system of ODEs.",
-            "options": {
-              "a": "odepack",
-              "b": "quad",
-              "c": "odeint",
-              "d": "None of the Above"
-            },
-            "correct": "c",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "Which of the following imports the odeint function.?",
-            "options": {
-              "a": "import odeint from integration",
-              "b": "we can import from scipy import odeint",
-              "c": "import odeint from scipy.integrate",
-              "d": "from scipy.integrate import odeint"
+              "a": "`p.real(0), p.imag(0)`",
+              "b": "`p.real(), p.imag()`",
+              "c": "`p.re, p.im`",
+              "d": "`p.real, p.imag`"
             },
             "correct": "d",
+            "explanation": "`real` and `imag` are attributes, not methods, so there are no brackets: for p = 3 + 4j, `p.real` is 3.0 and `p.imag` is 4.0.",
             "concepts": [
-              "numpy"
-            ]
+              "numbers"
+            ],
+            "formerly": {
+              "text": "How do you obtain the real and imaginary parts of a complex number ‘’p’’ as separate?",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "Given the list primes, ``primes = [2, 3, 5, 7, 11]``, Which of the following code will produce the reverse of the list ``primes``: (A) primes.reverse() (B) primes[::-1] ?",
+            "text": "Given `s = \"Hello\"`, `t = \"World\"` and `r = 2`, what is `s * r + t * r`?",
+            "options": {
+              "a": "Hello Hello World World",
+              "b": "HelloHelloWorldWorld",
+              "c": "HelloWorldHelloWorld",
+              "d": "HelloHello WorldWorld"
+            },
+            "correct": "b",
+            "explanation": "`*` repeats a string: `s * 2` is 'HelloHello' and `t * 2` is 'WorldWorld'. `+` joins them with nothing in between.",
+            "concepts": [
+              "strings"
+            ],
+            "formerly": {
+              "text": "Given strings s and t, ``s = \"Hello\"`` and ``t = \"World\"`` and an integer r, ``r = 2``. What is the output of s * r + s * t?",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "b",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Given `s = \"Hello\"`, we want `\"hello\"`. What happens with `s[0] = 'h'`?",
+            "options": {
+              "a": "An error: 'str' object does not support item assignment",
+              "b": "s stays as it was",
+              "c": "It depends on the version of Python",
+              "d": "s changes to 'hello'"
+            },
+            "correct": "a",
+            "explanation": "Strings cannot be changed in place, in any version of Python 3. Make a new string instead: `s = 'h' + s[1:]`, or `s.lower()`.",
+            "concepts": [
+              "strings"
+            ],
+            "formerly": {
+              "text": "Given the string ``s = \"Hello\"``, we wish to change it to ``hello``. what is the result of s[0] = 'h' ?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Which function integrates a system of ordinary differential equations (ODEs)?",
+            "options": {
+              "a": "`quad`",
+              "b": "`odeint`",
+              "c": "`odepack`",
+              "d": "None of the above"
+            },
+            "correct": "b",
+            "explanation": "`odeint` (from `scipy.integrate`) integrates a system of ODEs. `quad` integrates a single function of one variable.",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "The following function is used to integrate a system of ODEs.",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "Which line imports the `odeint` function?",
+            "options": {
+              "a": "`import odeint from integration`",
+              "b": "`import odeint from scipy.integrate`",
+              "c": "`from scipy.integrate import odeint`",
+              "d": "`from scipy import odeint`"
+            },
+            "correct": "c",
+            "explanation": "The form is `from package.module import name`, and `odeint` lives in `scipy.integrate`. `import x from y` is JavaScript's order, not Python's.",
+            "concepts": [
+              "numpy"
+            ],
+            "formerly": {
+              "text": "Which of the following imports the odeint function.?",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "b",
+                "d": "c"
+              }
+            }
+          },
+          {
+            "text": "Given `primes = [2, 3, 5, 7, 11]`, which of these reverse the list?\n(A) `primes.reverse()`\n(B) `primes[::-1]`",
             "options": {
               "a": "Only (B) is correct",
               "b": "Only (A) is correct",
@@ -1299,526 +2180,872 @@
               "d": "None of them"
             },
             "correct": "c",
+            "explanation": "Both do, in different ways: `primes.reverse()` reverses the list itself and returns `None`, while `primes[::-1]` leaves `primes` alone and gives a new, reversed list.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "Given the list primes, ``primes = [2, 3, 5, 7, 11]``, Which of the following code will produce the reverse of the list ``primes``: (A) primes.reverse() (B) primes[::-1] ?"
+            }
           },
           {
-            "text": "What is the output of the below code snippet? x=0for y in range(21): x+=y print x",
+            "text": "What does this print?\n```\nx = 0\nfor y in range(21):\n    x += y\nprint(x)\n```",
             "options": {
-              "a": "Sum of numbers up to 21(including)",
-              "b": "Sum of numbers up to 20(including)",
-              "c": "Error",
-              "d": "None of the Above"
+              "a": "An error",
+              "b": "The sum of the numbers up to 21 (including 21)",
+              "c": "The sum of the numbers up to 20 (including 20)",
+              "d": "None of the above"
             },
-            "correct": "b",
+            "correct": "c",
+            "explanation": "`range(21)` is 0 to 20: it stops before 21. So x ends as 0 + 1 + … + 20, which is 210.",
             "concepts": [
               "loops",
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of the below code snippet? x=0for y in range(21): x+=y print x",
+              "letters": {
+                "a": "b",
+                "b": "c",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "If ``a = [1, 1, 2, 3, 3, 5, 5, 8]``What is set(a)?",
+            "text": "If `a = [1, 1, 2, 3, 3, 5, 5, 8]`, what is `set(a)`?",
             "options": {
-              "a": "set([1, 2, 3, 3, 5, 5])",
-              "b": "set([1, 1, 2, 3, 3, 5, 5, 8])",
-              "c": "set([1, 2, 3, 5, 8])",
-              "d": "Error"
+              "a": "`{1, 1, 2, 3, 3, 5, 5, 8}`",
+              "b": "`{1, 2, 3, 5, 8}`",
+              "c": "`{1, 2, 3, 3, 5, 5}`",
+              "d": "An error"
             },
-            "correct": "c",
+            "correct": "b",
+            "explanation": "A set keeps each value once, so the repeats go: {1, 2, 3, 5, 8}.",
             "concepts": [
               "sets-dicts"
-            ]
+            ],
+            "formerly": {
+              "text": "If ``a = [1, 1, 2, 3, 3, 5, 5, 8]``What is set(a)?",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "Given the list primes, ``primes = [2, 3, 5, 7, 11, 13, 17, 19, 23,29]``, How do you obtain the primes 2 and 13?",
+            "text": "Given `primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]`, how do you get just 2 and 13?",
             "options": {
-              "a": "primes[::5]",
-              "b": "primes[::13]",
-              "c": "primes[::4]",
-              "d": "primes[::6]"
+              "a": "`primes[::5]`",
+              "b": "`primes[::13]`",
+              "c": "`primes[::6]`",
+              "d": "`primes[::4]`"
             },
             "correct": "a",
+            "explanation": "`[::5]` takes every fifth item from the start: positions 0 and 5, which hold 2 and 13.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "Given the list primes, ``primes = [2, 3, 5, 7, 11, 13, 17, 19, 23,29]``, How do you obtain the primes 2 and 13?",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "Given ``odd = set([1, 3, 5, 7, 9])`` ``squares = set([1, 4, 9, 16])``. What is the value of ``odd ^ squares``?",
+            "text": "Given `odd = {1, 3, 5, 7, 9}` and `squares = {1, 4, 9, 16}`, what is `odd ^ squares`?",
             "options": {
-              "a": "set([3, 5, 7])",
-              "b": "set([3, 4, 5, 7, 16])",
-              "c": "set([1, 3, 4, 5, 7, 9, 16])"
+              "a": "`{3, 4, 5, 7, 16}`",
+              "b": "`{1, 9}`",
+              "c": "`{1, 3, 4, 5, 7, 9, 16}`",
+              "d": "`{3, 5, 7}`"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`^` is the symmetric difference: the values in one set or the other but not in both. 1 and 9 are in both, so they go.",
             "concepts": [
               "sets-dicts"
-            ]
+            ],
+            "formerly": {
+              "text": "Given ``odd = set([1, 3, 5, 7, 9])`` ``squares = set([1, 4, 9, 16])``. What is the value of ``odd ^ squares``?",
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "c"
+              }
+            }
           },
           {
-            "text": "If ``a = [1, 1, 2, 3, 3, 6,6,4]``. What is set(a)",
+            "text": "If `a = [1, 1, 2, 3, 3, 6, 6, 4]`, what is `set(a)`?",
             "options": {
-              "a": "set([1, 2, 3, 3, 6,6])",
-              "b": "set([1, 2, 3, 6, 4])",
-              "c": "set([1, 1, 2, 3, 3, 6,6,4])",
-              "d": "Error"
+              "a": "`{1, 1, 2, 3, 3, 6, 6, 4}`",
+              "b": "`{1, 2, 3, 3, 6, 6}`",
+              "c": "`{1, 2, 3, 4, 6}`",
+              "d": "An error"
             },
-            "correct": "b",
+            "correct": "c",
+            "explanation": "Each value is kept once: 1, 2, 3, 4 and 6. A set has no order, so `{1, 2, 3, 6, 4}` is the same set.",
             "concepts": [
               "sets-dicts"
-            ]
+            ],
+            "formerly": {
+              "text": "If ``a = [1, 1, 2, 3, 3, 6,6,4]``. What is set(a)",
+              "letters": {
+                "a": "b",
+                "b": "c",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What will the following function do? def what(x) return x*x ?",
+            "text": "What happens with this function?\n```\ndef what(x)\n    return x * x\n```",
             "options": {
-              "a": "Returns x",
-              "b": "Error",
-              "c": "Function doesn't have docstring",
-              "d": "Returns the square of x"
+              "a": "Nothing: the function has no docstring",
+              "b": "An error",
+              "c": "It returns the square of x",
+              "d": "It returns x"
             },
             "correct": "b",
+            "explanation": "The `def` line is missing its colon, so Python stops with a SyntaxError before running anything. With `def what(x):` it would return the square of x.",
             "concepts": [
               "functions"
-            ]
+            ],
+            "formerly": {
+              "text": "What will the following function do? def what(x) return x*x ?",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "a",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "When calling a function, the arguments?",
+            "text": "When you call a function, in what order can its arguments go?",
             "options": {
-              "a": "only keyword arguments can be in any order, but should be called at the beginning.",
-              "b": "can be in any order",
-              "c": "should always be in the order in which they are defined.",
-              "d": "only keyword arguments can be in any order, but should be called at the end."
+              "a": "Always in the order the function defines them",
+              "b": "Only keyword arguments can be in any order, and they must come last",
+              "c": "In any order",
+              "d": "Only keyword arguments can be in any order, and they must come first"
+            },
+            "correct": "b",
+            "explanation": "Positional arguments come first, in the function's order. Keyword arguments (`name=value`) come after them, in any order: `f(1, c=3, b=2)` works, but `f(c=3, 1)` is a SyntaxError.",
+            "concepts": [
+              "functions"
+            ],
+            "formerly": {
+              "text": "When calling a function, the arguments?",
+              "letters": {
+                "a": "d",
+                "b": "c",
+                "c": "a",
+                "d": "b"
+              }
+            }
+          },
+          {
+            "text": "In IPython, which of these shows the help for the `len` function?",
+            "options": {
+              "a": "`?len`",
+              "b": "`help(len)`",
+              "c": "`len?`",
+              "d": "All of the above"
             },
             "correct": "d",
-            "concepts": [
-              "functions"
-            ]
-          },
-          {
-            "text": "What should be the command if we want to get help about \"apply\" function.",
-            "options": {
-              "a": "?apply",
-              "b": "apply?",
-              "c": "help(apply)",
-              "d": "??apply"
-            },
-            "correct": "b",
+            "explanation": "All three work: IPython accepts `?` before or after a name, and `help()` works in any Python.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "What should be the command if we want to get help about \"apply\" function.",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
             "text": "Which of the following is false?",
             "options": {
-              "a": "Ipython has tab-completion feature",
-              "b": "We type ctrl+d to quit the ipython interpreter",
-              "c": "The output of round(3.11321,1) is 3.2",
-              "d": "We type ctrl+c to interrupt when we make an error"
+              "a": "`round(3.11321, 1)` gives 3.2",
+              "b": "Ctrl+D quits the IPython interpreter",
+              "c": "Ctrl+C stops a command that is running",
+              "d": "IPython has tab completion"
             },
-            "correct": "c",
+            "correct": "a",
+            "explanation": "`round(3.11321, 1)` is 3.1: the next digit is 1, so it rounds down. The other three are true.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "a",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "Whih command is used to clear the plot?",
+            "text": "Which command clears the plot?",
             "options": {
-              "a": "clear()",
-              "b": "closefig()",
-              "c": "clf()",
-              "d": "clr()"
+              "a": "`clf()`",
+              "b": "`clear()`",
+              "c": "`closefig()`",
+              "d": "`clr()`"
             },
-            "correct": "c",
+            "correct": "a",
+            "explanation": "`clf()` (clear figure) empties the current figure so you can draw afresh; `close()` closes its window.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "Whih command is used to clear the plot?",
+              "letters": {
+                "a": "b",
+                "b": "c",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "You should keep open the plot while saving the it.",
+            "text": "True or false? The plot must still be open when you call `savefig`.",
             "options": {
-              "a": "FALSE",
-              "b": "TRUE"
+              "a": "TRUE",
+              "b": "FALSE"
+            },
+            "correct": "a",
+            "explanation": "`savefig` saves the current figure. Once its window is closed the figure is gone, and saving then gives an empty picture.",
+            "concepts": [
+              "plotting"
+            ],
+            "formerly": {
+              "text": "You should keep open the plot while saving the it.",
+              "letters": {
+                "a": "b",
+                "b": "a"
+              }
+            }
+          },
+          {
+            "text": "Two plots are drawn on the same axes, and this line adds a legend to tell them apart:\n```\nlegend([log(x), log(y)])\n```\nWhat is right about it?",
+            "options": {
+              "a": "It is wrong: remove the square brackets and put log(x) and log(y) in single quotes",
+              "b": "It is correct",
+              "c": "It is wrong: log(x) and log(y) should be in quotes; the rest is fine",
+              "d": "It is wrong: there should be no square brackets"
+            },
+            "correct": "c",
+            "explanation": "Legend entries are labels, so they must be strings in a list: `legend(['log(x)', 'log(y)'])`. Without quotes, Python would work out log(x) and use the numbers.",
+            "concepts": [
+              "plotting"
+            ],
+            "formerly": {
+              "text": "Suppose I made 2 plots overlaid on one another. I am using legend command to distinguish between the two. I used legend([log(x) , log(y)]) to add legend to plot.",
+              "letters": {
+                "a": "c",
+                "b": "d",
+                "c": "b",
+                "d": "a"
+              }
+            }
+          },
+          {
+            "text": "True or false? The `%` commands, such as `%hist`, work in every Python interpreter.",
+            "options": {
+              "a": "TRUE",
+              "b": "FALSE"
             },
             "correct": "b",
-            "concepts": [
-              "plotting"
-            ]
-          },
-          {
-            "text": "Suppose I made 2 plots overlaid on one another. I am using legend command to distinguish between the two. I used legend([log(x) , log(y)]) to add legend to plot.",
-            "options": {
-              "a": "The command is wrong, log(x) and log(y) should be in inverted commas, rest is fine",
-              "b": "The command is wrong, there should not be any square bracket []",
-              "c": "The command is correct",
-              "d": "The command is wrong, there should not be any square bracket and log(x) and log(y) should be single inverted commas"
-            },
-            "correct": "a",
-            "concepts": [
-              "plotting"
-            ]
-          },
-          {
-            "text": "The % in %hist exist in all python interpreters.",
-            "options": {
-              "a": "FALSE",
-              "b": "TRUE"
-            },
-            "correct": "a",
+            "explanation": "`%hist`, `%save` and the other `%` commands are IPython's \"magic\" commands. The plain `python` interpreter reports a SyntaxError.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "The % in %hist exist in all python interpreters.",
+              "letters": {
+                "a": "b",
+                "b": "a"
+              }
+            }
           },
           {
-            "text": "Suppose from different commands we type, we just want to save the first 5 and then 8th and 13th command. What we should do?",
+            "text": "You want to save only commands 1 to 5, 8 and 13 of your IPython session. What do you type?",
             "options": {
-              "a": "Type the command %save /home/fossee/new_plot_script.py 1:5 8 13",
-              "b": "Type the command %save /home/fossee/new_plot_script.py 1:5, 8, 13",
-              "c": "Type the command %save /home/fossee/new_plot_script.py 1-5, 8, 13",
-              "d": "Type the command %save /home/fossee/new_plot_script.py 1-5 8 13"
+              "a": "`%save /home/fossee/new_plot_script.py 1:5, 8, 13`",
+              "b": "`%save /home/fossee/new_plot_script.py 1-5, 8, 13`",
+              "c": "`%save /home/fossee/new_plot_script.py 1-5 8 13`",
+              "d": "`%save /home/fossee/new_plot_script.py 1:5 8 13`"
             },
-            "correct": "d",
+            "correct": "c",
+            "explanation": "`%save` takes a file name, then the command numbers separated by spaces. `1-5` means 1 to 5 including 5; `1:5` works like a slice and stops at 4.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "Suppose from different commands we type, we just want to save the first 5 and then 8th and 13th command. What we should do?",
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "b",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "%hist command is used to",
+            "text": "What is the `%hist` command for?",
             "options": {
-              "a": "To retrieve the variables used till now",
-              "b": "To make histograms",
-              "c": "To retrieve the commands which we used till now",
+              "a": "Seeing the commands typed so far",
+              "b": "Drawing histograms",
+              "c": "Seeing the variables used so far",
               "d": "None of them"
             },
-            "correct": "c",
+            "correct": "a",
+            "explanation": "`%hist` lists the commands typed so far in the session, numbered, ready to pass to `%save`. `%who` lists the variables.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "%hist command is used to",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "I made a .txt file containing squares of first 10 elements. Which of the following statements are correct ?",
+            "text": "A text file `squares.txt` holds the squares of the first 10 whole numbers. Which statement is correct?",
             "options": {
-              "a": "It can be loaded by command squares = load.txt('/home/fossee/squares.txt') and printed by print'squares'. This prints a list of floating objects.",
-              "b": "It can be loaded by command squares = load.text('/home/fossee/squares.txt') and printed by print(squares). This prints a list of floating objects.",
-              "c": "It can be loaded by command squares = loadtext('/home/fossee/squares.txt') and printed by print squares. This prints a list of integers.",
-              "d": "It can be loaded by command squares = loadtxt('/home/fossee/squares.txt') and printed by print squares. This prints a list of floating objects."
+              "a": "Load it with `squares = loadtxt('squares.txt')`; `print(squares)` shows floats",
+              "b": "Load it with `squares = load.text('squares.txt')`; `print(squares)` shows floats",
+              "c": "Load it with `squares = loadtext('squares.txt')`; `print(squares)` shows integers",
+              "d": "Load it with `squares = load.txt('squares.txt')`; `print('squares')` shows floats"
             },
-            "correct": "d",
+            "correct": "a",
+            "explanation": "`loadtxt` reads numbers into an array and stores them as floats unless told otherwise, so 1 prints as `1.`. The name is one word, `loadtxt`.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "I made a .txt file containing squares of first 10 elements. Which of the following statements are correct ?",
+              "letters": {
+                "a": "d",
+                "b": "b",
+                "c": "c",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "I have a list sample_data = [1,2,3,4,5,6,7,8,9,10], and I want [1,4,9,16,25,36,49,64,81,100] from it. What should be the possible solution?",
+            "text": "The list `sample_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` should become `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]`. What works?",
             "options": {
-              "a": "sample_data.squared",
-              "b": "square(sample_data)",
-              "c": "sqaure(sample_data)",
-              "d": "sq(sample_data)"
+              "a": "`sqaure(sample_data)`",
+              "b": "`square(sample_data)`",
+              "c": "`sample_data.squared`",
+              "d": "`sq(sample_data)`"
             },
             "correct": "b",
+            "explanation": "NumPy's `square` squares every element at once and returns an array. Lists have no `squared`, and `sqaure` and `sq` are not functions.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "I have a list sample_data = [1,2,3,4,5,6,7,8,9,10], and I want [1,4,9,16,25,36,49,64,81,100] from it. What should be the possible solution?",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "I have a list sample_data = [1,2,3,4,5,6,7,8,9,10], and I want [1,4,9,16,25,36,49,64,81,100] from it. What should be the possible solution?",
+            "text": "Which command draws a bar chart on its side (bars across, values along the x-axis)?",
             "options": {
-              "a": "sample_data.squared",
-              "b": "square(sample_data)",
-              "c": "sqaure(sample_data)",
-              "d": "sq(sample_data)"
+              "a": "`bar(coord_flip = True)`",
+              "b": "`barh()`",
+              "c": "`bary()`",
+              "d": "`bar(flip = True)`"
             },
             "correct": "b",
-            "concepts": [
-              "numpy"
-            ]
-          },
-          {
-            "text": "What should be the syntax if we want to flip coordinates of bar plot (variables on y and values in x )?",
-            "options": {
-              "a": "bary()",
-              "b": "barh()",
-              "c": "bar(coord_flip = True)",
-              "d": "bar(flip = True)"
-            },
-            "correct": "b",
+            "explanation": "`barh` is the horizontal version of `bar`: h for horizontal.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "What should be the syntax if we want to flip coordinates of bar plot (variables on y and values in x )?",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "Which of the following syntax is wrong?",
+            "text": "Which of these lines is not valid Python?",
             "options": {
-              "a": "scatter(x,y,c = “b”, mark = “^”, alpha = 0.5)",
-              "b": "bar([1,3,5,7,9],[2,4,6,8,10], label = “Sample 1”, color = ‘b’)",
-              "c": "loglog(x, y, basex = e, basey = e)",
-              "d": "pie(obs, explode = explode_sample, labels = variables, colors = colors, autopct = 1.1f)"
+              "a": "`bar([1, 3, 5, 7, 9], [2, 4, 6, 8, 10], label='Sample 1', color='b')`",
+              "b": "`scatter(x, y, c='b', marker='^', alpha=0.5)`",
+              "c": "`pie(obs, explode=explode_sample, labels=variables, colors=colors, autopct=1.1f)`",
+              "d": "`loglog(x, y, base=e)`"
             },
-            "correct": "d",
+            "correct": "c",
+            "explanation": "`1.1f` is neither a number nor a name, so Python cannot read the line at all. The format for `autopct` has to be a string: `autopct='%1.1f%%'`.",
             "concepts": [
               "plotting"
-            ]
+            ],
+            "formerly": {
+              "text": "Which of the following syntax is wrong?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "I write 4/3 on first line, 4-3*5 on second line and 3+(4-6)*5 on third line, and now what will be the output when I click evaluate in sage notebook?",
+            "text": "In a Sage notebook cell you type `4/3` on the first line, `4-3*5` on the second and `3+(4-6)*5` on the third, then evaluate the cell. What is shown?",
             "options": {
-              "a": "1.3333",
-              "b": "1 -11 -7",
-              "c": "-7",
-              "d": "1.333 -11 -7"
+              "a": "1.333 -11 -7",
+              "b": "-7",
+              "c": "1.3333",
+              "d": "1 -11 -7"
             },
-            "correct": "c",
+            "correct": "b",
+            "explanation": "A cell shows only the value of its last line: 3 + (4 - 6) × 5 = 3 - 10 = -7. Print the other lines to see them.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "I write 4/3 on first line, 4-3*5 on second line and 3+(4-6)*5 on third line, and now what will be the output when I click evaluate in sage notebook?",
+              "letters": {
+                "a": "c",
+                "b": "d",
+                "c": "b",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "Consider 4 statements. Which of the following is false regarding sage ? 1. It is an open source software.2. we can evaluate a cell using Ctrl+Enter3. To make a HTML editable cell, on the blue line click Shift and Enter.4. sage has auto completion option of commands.",
+            "text": "Which of these statements about Sage are false?\n1. It is open-source software.\n2. You evaluate a cell with Ctrl+Enter.\n3. To make an editable HTML cell, you press Shift+Enter on the blue line.\n4. Sage can complete commands for you.",
             "options": {
-              "a": "line number 1 and 3",
-              "b": "line number 1, 2 and 3",
-              "c": "line number 2,3",
-              "d": "line number 1 and 2"
+              "a": "1 and 2",
+              "b": "1 and 3",
+              "c": "1, 2 and 3",
+              "d": "2 and 3"
             },
-            "correct": "c",
+            "correct": "d",
+            "explanation": "Sage is open source and completes commands with Tab, so 1 and 4 are true. A cell is evaluated with Shift+Enter, and an HTML cell is made with Shift+click on the blue line, so 2 and 3 are false.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "Consider 4 statements. Which of the following is false regarding sage ? 1. It is an open source software.2. we can evaluate a cell using Ctrl+Enter3. To make a HTML editable cell, on the blue line click Shift and Enter.4. sage has auto completion option of commands.",
+              "letters": {
+                "a": "b",
+                "b": "c",
+                "c": "d",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "Consider the following statements. Which of the following are correct ?1. diff(f(x),x,3), first differentiates f(x) and then computes the differentiated function at 3.2. simply_trig(f) simplifies the trigonometric part of f(x)3. f_integral() computes the integral of f(x)4. f.substitute(theta = 45) computes the value of f(theta) at theta = 45",
+            "text": "Which of these statements about Sage are correct?\n1. `diff(f(x), x, 3)` differentiates f(x) and then works out the result at 3.\n2. `simply_trig(f)` simplifies the trigonometric part of f(x).\n3. `f_integral()` computes the integral of f(x).\n4. `f.substitute(theta=45)` works out f(theta) at theta = 45.",
             "options": {
               "a": "1 and 4",
-              "b": "4",
-              "c": "1",
-              "d": "1, 2 and 4"
+              "b": "1, 2 and 4",
+              "c": "Only 1",
+              "d": "Only 4"
             },
-            "correct": "b",
+            "correct": "d",
+            "explanation": "Only 4 is right. `diff(f(x), x, 3)` gives the third derivative, the simplifying function is `simplify_trig`, and integrating is `integral(f, x)`.",
             "concepts": [
               "tools"
-            ]
+            ],
+            "formerly": {
+              "text": "Consider the following statements. Which of the following are correct ?1. diff(f(x),x,3), first differentiates f(x) and then computes the differentiated function at 3.2. simply_trig(f) simplifies the trigonometric part of f(x)3. f_integral() computes the integral of f(x)4. f.substitute(theta = 45) computes the value of f(theta) at theta = 45",
+              "letters": {
+                "a": "a",
+                "b": "d",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "What will be the output of the below code?list1 = [1, 2, 3]list1.append([4, 5, 6])print(len(list1))",
+            "text": "What does this print?\n```\nlist1 = [1, 2, 3]\nlist1.append([4, 5, 6])\nprint(len(list1))\n```",
             "options": {
-              "a": "6",
-              "b": "3",
-              "c": "4",
-              "d": "5"
+              "a": "3",
+              "b": "6",
+              "c": "5",
+              "d": "4"
             },
-            "correct": "c",
+            "correct": "d",
+            "explanation": "`append` adds its argument as one item, even a list, giving [1, 2, 3, [4, 5, 6]]: 4 items. `extend` would add 4, 5 and 6 separately.",
             "concepts": [
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "What will be the output of the below code?list1 = [1, 2, 3]list1.append([4, 5, 6])print(len(list1))",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "What will be the output for the below code?list1 = [“abc”, “bcd”, “def”]print(list1[-1][-1])",
+            "text": "What does this print?\n```\nlist1 = ['abc', 'bcd', 'def']\nprint(list1[-1][-1])\n```",
             "options": {
               "a": "a",
               "b": "d",
-              "c": "def",
-              "d": "f"
-            },
-            "correct": "d",
-            "concepts": [
-              "lists"
-            ]
-          },
-          {
-            "text": "What will be the output of following?x = ‘abcd’for i in range(len(x)): print(x[i])",
-            "options": {
-              "a": "error",
-              "b": "a",
-              "c": "a b c d",
-              "d": "None of them"
+              "c": "f",
+              "d": "def"
             },
             "correct": "c",
+            "explanation": "`-1` means the last one: `list1[-1]` is 'def', and its last character is 'f'.",
             "concepts": [
-              "loops",
-              "strings"
-            ]
+              "lists"
+            ],
+            "formerly": {
+              "text": "What will be the output for the below code?list1 = [“abc”, “bcd”, “def”]print(list1[-1][-1])",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "What is the output of following?x = 12345for i in x : print(i)",
+            "text": "What does this print?\n```\nx = 'abcd'\nfor i in range(len(x)):\n    print(x[i])\n```",
             "options": {
-              "a": "123",
-              "b": "error",
-              "c": "1 2 2003",
+              "a": "a",
+              "b": "a, b, c and d, each on its own line",
+              "c": "An error",
               "d": "None of them"
             },
             "correct": "b",
+            "explanation": "`range(len(x))` is 0, 1, 2, 3, and `x[i]` picks each character in turn. `for ch in x:` does the same more simply.",
+            "concepts": [
+              "loops",
+              "strings"
+            ],
+            "formerly": {
+              "text": "What will be the output of following?x = ‘abcd’for i in range(len(x)): print(x[i])",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
+          },
+          {
+            "text": "What does this print?\n```\nx = 12345\nfor i in x:\n    print(i)\n```",
+            "options": {
+              "a": "An error",
+              "b": "123",
+              "c": "1, 2, 3, 4 and 5, each on its own line",
+              "d": "None of them"
+            },
+            "correct": "a",
+            "explanation": "An int is one number, not a sequence, so a `for` loop cannot step through it: TypeError: 'int' object is not iterable. `for i in str(x):` would print the digits.",
             "concepts": [
               "loops",
               "errors"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of following?x = 12345for i in x : print(i)",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What arithmetic operators cannot be used with strings ?",
+            "text": "Which arithmetic operator cannot be used with strings?",
             "options": {
-              "a": "-",
-              "b": "+",
-              "c": "*",
+              "a": "`+`",
+              "b": "`-`",
+              "c": "`*`",
               "d": "All of them"
             },
-            "correct": "a",
+            "correct": "b",
+            "explanation": "`+` joins strings and `*` repeats them (`'ab' * 2`), but you cannot take one string away from another: `'abc' - 'c'` is a TypeError.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "What arithmetic operators cannot be used with strings ?",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What is the output of following?print(“abcabcab”.split(‘c’))",
+            "text": "What does this print?\n```\nprint('abcabcab'.split('c'))\n```",
             "options": {
-              "a": "(‘ab’, ‘ab’, ‘ab’, ”)",
-              "b": "[‘ab’, ‘ab’, ‘ab’, ”]",
-              "c": "(‘ab’, ‘ab’, ‘ab’)",
-              "d": "[‘ab’, ‘ab’, ‘ab’]"
+              "a": "`['ab', 'ab', 'ab', '']`",
+              "b": "`['ab', 'ab', 'ab']`",
+              "c": "`('ab', 'ab', 'ab')`",
+              "d": "`('ab', 'ab', 'ab', '')`"
             },
-            "correct": "d",
+            "correct": "b",
+            "explanation": "`split` cuts the string at every 'c' and returns a list of the pieces. The string does not end with 'c', so there is no empty piece at the end.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of following?print(“abcabcab”.split(‘c’))",
+              "letters": {
+                "a": "d",
+                "b": "a",
+                "c": "c",
+                "d": "b"
+              }
+            }
           },
           {
-            "text": "What is the output of following?print(“abcabcab”.split(‘c’, 0))",
+            "text": "What does this print?\n```\nprint('abcabcab'.split('c', 0))\n```",
             "options": {
-              "a": "[‘abcabcab’]",
-              "b": "‘abcabcab’",
-              "c": "Error",
+              "a": "`['abcabcab']`",
+              "b": "`'abcabcab'`",
+              "c": "An error",
               "d": "None of them"
             },
             "correct": "a",
+            "explanation": "The second argument is the most splits to make. With 0 nothing is split, but `split` still returns a list: ['abcabcab'].",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of following?print(“abcabcab”.split(‘c’, 0))"
+            }
           },
           {
-            "text": "What is the output of following? list = [1,2,3,4,5,6,7,8,9,10]l = sum(list[::2])print(l)",
+            "text": "What does this print?\n```\nnums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\ntotal = sum(nums[::2])\nprint(total)\n```",
             "options": {
               "a": "55",
               "b": "30",
-              "c": "25",
-              "d": "2"
+              "c": "2",
+              "d": "25"
             },
-            "correct": "c",
+            "correct": "d",
+            "explanation": "`[::2]` takes every second item from the start: 1, 3, 5, 7, 9, which add up to 25.",
             "concepts": [
-              "lists",
               "lists"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of following? list = [1,2,3,4,5,6,7,8,9,10]l = sum(list[::2])print(l)",
+              "letters": {
+                "a": "a",
+                "b": "b",
+                "c": "d",
+                "d": "c"
+              }
+            }
           },
           {
-            "text": "What is the output of following?list = [1,2,3,4,5,6,7,8,9,10]l = mean(list[1::2])print(l)",
+            "text": "What does this print?\n```\nnums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nm = mean(nums[1::2])\nprint(m)\n```",
             "options": {
-              "a": "6",
-              "b": "5"
+              "a": "5.5",
+              "b": "6.0",
+              "c": "30",
+              "d": "5.0"
             },
-            "correct": "a",
+            "correct": "b",
+            "explanation": "`[1::2]` starts at position 1 and takes every second item: 2, 4, 6, 8, 10. Their mean is 30 / 5 = 6, and `mean` gives a float: 6.0.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of following?list = [1,2,3,4,5,6,7,8,9,10]l = mean(list[1::2])print(l)",
+              "letters": {
+                "a": "b",
+                "b": "d"
+              }
+            }
           },
           {
-            "text": "What is the output of the following?a = array([1,2,3,'string'])print(a)",
+            "text": "What does this print?\n```\na = array([1, 2, 3, 'string'])\nprint(a)\n```",
             "options": {
-              "a": "1 2 3 string",
-              "b": "Error",
-              "c": "1 2 3 “string”",
+              "a": "`[1 2 3 string]`",
+              "b": "`['1' '2' '3' 'string']`",
+              "c": "An error",
               "d": "None of them"
             },
             "correct": "b",
+            "explanation": "An array holds one type. NumPy turns the numbers into strings to match 'string', so every item is text and nothing goes wrong.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of the following?a = array([1,2,3,'string'])print(a)",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What is the output of the following?a1 = array([[1,2,3,4],[5,6,7,8],[9,10,11,12]])print(a1[:,1])",
+            "text": "What does this print?\n```\na1 = array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])\nprint(a1[:, 1])\n```",
             "options": {
-              "a": "[5,6,7,8]",
-              "b": "[2,6,10]",
-              "c": "Error",
+              "a": "`[2 6 10]`",
+              "b": "An error",
+              "c": "`[5 6 7 8]`",
               "d": "None of them"
             },
-            "correct": "b",
+            "correct": "a",
+            "explanation": "`[:, 1]` means every row, column 1 (the second column): 2, 6 and 10. `a1[1]` would be the second row, [5 6 7 8].",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of the following?a1 = array([[1,2,3,4],[5,6,7,8],[9,10,11,12]])print(a1[:,1])",
+              "letters": {
+                "a": "c",
+                "b": "a",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What is the function to get both eigen values and eigen vectors of a matrix?",
+            "text": "Which function gives both the eigenvalues and the eigenvectors of a matrix?",
             "options": {
-              "a": "eig()",
-              "b": "eigval()",
-              "c": "eig[]",
-              "d": "eigval[]"
+              "a": "`eig()`",
+              "b": "`eig[]`",
+              "c": "`eigval()`",
+              "d": "`eigval[]`"
             },
             "correct": "a",
+            "explanation": "`eig(A)` returns two things: the eigenvalues, and a matrix whose columns are the eigenvectors. `eigvals` gives the values alone.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the function to get both eigen values and eigen vectors of a matrix?",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What does ones_like() function do?",
+            "text": "What does `ones_like()` do?",
             "options": {
               "a": "Return an array of ones with the same type as a given array",
-              "b": "Return an array of ones with the same shape and type as a given array",
-              "c": "Return an array of ones with the same shape as a given array",
+              "b": "Return an array of ones with the same shape as a given array",
+              "c": "Return an array of ones with the same shape and type as a given array",
               "d": "None of them"
             },
-            "correct": "b",
+            "correct": "c",
+            "explanation": "`ones_like(a)` returns an array of ones with the same shape and the same type as `a`. `ones(shape)` is the one that takes a shape.",
             "concepts": [
               "numpy"
-            ]
+            ],
+            "formerly": {
+              "text": "What does ones_like() function do?",
+              "letters": {
+                "a": "a",
+                "b": "c",
+                "c": "b",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "What is the output of the expression, 7*1**7 ?",
+            "text": "What is the value of `7*1**7`?",
             "options": {
-              "a": "1",
-              "b": "343",
+              "a": "7",
+              "b": "1",
               "c": "49",
-              "d": "7"
+              "d": "343"
             },
-            "correct": "d",
+            "correct": "a",
+            "explanation": "`**` is worked out before `*`, so this is 7 × (1 to the power 7) = 7 × 1 = 7.",
             "concepts": [
               "numbers"
-            ]
+            ],
+            "formerly": {
+              "text": "What is the output of the expression, 7*1**7 ?",
+              "letters": {
+                "a": "b",
+                "b": "d",
+                "c": "c",
+                "d": "a"
+              }
+            }
           },
           {
-            "text": "What is the output of the expression, 7*1**7 ?",
+            "text": "`b` has not been given a value. What error does this line give?\n```\na = b\n```",
             "options": {
-              "a": "1",
-              "b": "343",
-              "c": "49",
-              "d": "7"
-            },
-            "correct": "d",
-            "concepts": [
-              "numbers"
-            ]
-          },
-          {
-            "text": "What error occurs when you execute?a = b",
-            "options": {
-              "a": "ValueError",
-              "b": "TypeError",
+              "a": "TypeError",
+              "b": "ValueError",
               "c": "NameError",
               "d": "SyntaxError"
             },
             "correct": "c",
+            "explanation": "Python cannot find anything called `b`, so it raises a NameError. Give `b` a value first.",
             "concepts": [
               "errors"
-            ]
+            ],
+            "formerly": {
+              "text": "What error occurs when you execute?a = b",
+              "letters": {
+                "a": "b",
+                "b": "a",
+                "c": "c",
+                "d": "d"
+              }
+            }
           },
           {
-            "text": "Which of the following functions does exactly the opposite of split() function ?",
+            "text": "Which of these does the opposite of `split()`?",
             "options": {
-              "a": "concat()",
-              "b": "merge()",
-              "c": "join()",
+              "a": "`join()`",
+              "b": "`merge()`",
+              "c": "`concat()`",
               "d": "None of them"
             },
-            "correct": "c",
+            "correct": "a",
+            "explanation": "`split` breaks a string into a list, and `join` puts a list of strings back together: `' '.join(['a', 'b'])` is 'a b'.",
             "concepts": [
               "strings"
-            ]
+            ],
+            "formerly": {
+              "text": "Which of the following functions does exactly the opposite of split() function ?",
+              "letters": {
+                "a": "c",
+                "b": "b",
+                "c": "a",
+                "d": "d"
+              }
+            }
           }
         ]
       }

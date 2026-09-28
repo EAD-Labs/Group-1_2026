@@ -227,8 +227,9 @@ logged.
 - School sign-in and roster APIs from the client's Django project, to replace
   the direct reads in `src/models/School.js` (proposal shared 18 September).
 - The mapping from the school's roles to ours, and how teachers link to batches.
-- Explanations for the client's 136 questions; the importer warns about each
-  one missing.
+- The client to review the corrected questions (`content/python-mcqs.json`):
+  explanations were written by the development team, and the questions moved
+  to Python 3 (see `content/README.md`).
 
 The login and generation throttles are in memory, which is correct for one
 process at pilot scale. A second instance needs them moved into the database
