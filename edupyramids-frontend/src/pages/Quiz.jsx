@@ -3,6 +3,7 @@ import {
   useParams, useNavigate, useSearchParams, Link,
 } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
+import RichText, { Inline } from '../components/RichText';
 import { client } from '../api/client';
 import { auth } from '../utils/auth';
 import { MasteryMoves } from './Practice';
@@ -196,7 +197,7 @@ export default function Quiz() {
 
 
         <fieldset className="quiz-q">
-          <legend className="quiz-text">{question.text}</legend>
+          <legend className="quiz-text"><RichText text={question.text} /></legend>
 
           <div className="option-grid">
           {LETTERS.map((letter) => {
@@ -225,7 +226,7 @@ export default function Quiz() {
                 <span className="option-letter" aria-hidden="true">
                   {letter.toUpperCase()}
                 </span>
-                <span className="option-text">{label}</span>
+                <span className="option-text"><Inline text={label} /></span>
                 {state === ' option--right' && <span className="option-tag">Correct</span>}
                 {state === ' option--wrong' && <span className="option-tag">Your answer</span>}
               </label>
@@ -238,7 +239,7 @@ export default function Quiz() {
           <p className={`verdict ${verdict.correct ? 'verdict--ok' : 'verdict--no'}`} role="status">
             <strong>{verdict.correct ? 'Correct' : 'Not correct'}</strong>
             {verdict.explanation
-              ? ` — ${verdict.explanation}`
+              ? <> — <Inline text={verdict.explanation} /></>
               : !verdict.correct && ' — the right answer is highlighted above.'}
           </p>
         )}
@@ -346,21 +347,21 @@ function Result({ quiz, result }) {
                 <span className="fb-mark">{f.correct ? 'Correct' : 'Not correct'}</span>
                 <span className="muted small">Question {i + 1} · {f.topic}</span>
               </p>
-              <p className="fb-q">{q?.text}</p>
+              <p className="fb-q"><RichText text={q?.text} /></p>
               {!f.correct && (
                 // Named by their text, not by their letter. The options are not
                 // labelled a/b/c/d on screen, so "the answer is b" would mean
                 // nothing to the student reading this.
                 <p className="fb-a">
                   {f.answered
-                    ? <>You chose <strong>{optionText(q, f.given)}</strong>. </>
+                    ? <>You chose <strong><Inline text={optionText(q, f.given)} /></strong>. </>
                     : <>You left this blank. </>}
-                  The answer is <strong>{optionText(q, f.correctAnswer)}</strong>.
+                  The answer is <strong><Inline text={optionText(q, f.correctAnswer)} /></strong>.
                 </p>
               )}
               {/* The explanation is the point of the screen: a score alone does
                   not tell a student what to do next. */}
-              {f.explanation && <p className="fb-why">{f.explanation}</p>}
+              {f.explanation && <p className="fb-why"><Inline text={f.explanation} /></p>}
             </li>
           );
         })}

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import DashboardShell from '../components/DashboardShell';
+import RichText, { Inline } from '../components/RichText';
 import { client } from '../api/client';
 
 /*
@@ -109,11 +110,11 @@ export default function ManageQuestions() {
                     onSaved={(message) => saved(message)} />
                 ) : (
                   <div className="manage-view">
-                    <p className="manage-text">{q.text}</p>
+                    <p className="manage-text"><RichText text={q.text} /></p>
                     <ul className="manage-options">
                       {LETTERS.filter((l) => q.options[l]).map((l) => (
                         <li key={l} className={l === q.correct ? 'manage-option--right' : undefined}>
-                          <strong>{l.toUpperCase()}</strong> {q.options[l]} {l === q.correct && <span className="sr-only">(correct)</span>}
+                          <strong>{l.toUpperCase()}</strong> <Inline text={q.options[l]} /> {l === q.correct && <span className="sr-only">(correct)</span>}
                         </li>
                       ))}
                     </ul>
@@ -183,7 +184,8 @@ function Editor({ quizId, id, start, concepts, onCancel, onSaved }) {
     <form className="manage-form" onSubmit={save}>
       <label className="field">
         <span>Question</span>
-        <textarea rows={3} value={q.text} onChange={(e) => set('text', e.target.value)} required />
+        <span className="muted small">Put code between two lines of three backticks (```) to keep its lines, or `like this` inside a sentence.</span>
+        <textarea rows={5} spellCheck={false} value={q.text} onChange={(e) => set('text', e.target.value)} required />
       </label>
 
       <fieldset className="manage-options-edit">

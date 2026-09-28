@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { client } from '../api/client';
 import MasteryHeatmap from './MasteryHeatmap';
+import { plain } from '../utils/richText';
 import { classReportCsv } from '../utils/classCsv';
 
 /*
@@ -130,7 +131,7 @@ export default function ClassReport({ classId, className }) {
           <ol className="reteach">
             {reteach.map((q) => (
               <li key={q.id}>
-                <span className="reteach-q">{q.text}</span>
+                <span className="reteach-q">{plain(q.text)}</span>
                 <span className="muted small">
                   {q.correct} of {q.seen} correct · {q.topic}
                 </span>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
+import RichText, { Inline } from '../components/RichText';
 import Pyra from '../components/Pyra';
 import { client } from '../api/client';
 
@@ -78,9 +79,9 @@ export default function Checkpoint() {
           {result.feedback.map((f) => (
             <li key={f.questionId} className={`fb ${f.correct ? 'fb--ok' : 'fb--no'}`}>
               <p className="fb-head"><span className="fb-mark">{f.correct ? 'Correct' : f.given ? 'Not correct' : 'Not answered'}</span><span className="muted small">{f.topic}</span></p>
-              <p className="fb-q">{f.text}</p>
+              <p className="fb-q"><RichText text={f.text} /></p>
               {!f.correct && <p className="fb-a">The answer is <strong>{f.correctAnswer.toUpperCase()}</strong>.</p>}
-              {f.explanation && <p className="fb-why">{f.explanation}</p>}
+              {f.explanation && <p className="fb-why"><Inline text={f.explanation} /></p>}
             </li>
           ))}
         </ol>
@@ -123,7 +124,7 @@ export default function Checkpoint() {
         </ol>
 
         <fieldset className="quiz-q">
-          <legend className="quiz-text">{q.text}</legend>
+          <legend className="quiz-text"><RichText text={q.text} /></legend>
           <div className="option-grid">
             {LETTERS.map((letter) => {
               const label = q[`option${letter.toUpperCase()}`];
@@ -134,7 +135,7 @@ export default function Checkpoint() {
                   <input type="radio" name={`q${q.id}`} value={letter} checked={checked}
                     onChange={() => setAnswers((a) => ({ ...a, [q.id]: letter }))} />
                   <span className="option-letter" aria-hidden="true">{letter.toUpperCase()}</span>
-                  <span className="option-text">{label}</span>
+                  <span className="option-text"><Inline text={label} /></span>
                 </label>
               );
             })}

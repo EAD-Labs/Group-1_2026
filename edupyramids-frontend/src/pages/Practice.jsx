@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
+import RichText, { Inline } from '../components/RichText';
 import { client } from '../api/client';
 import { useApi } from '../utils/useApi';
 
@@ -226,7 +227,7 @@ function Session({
         </p>
 
         <fieldset className="quiz-q">
-          <legend className="quiz-text">{question.text}</legend>
+          <legend className="quiz-text"><RichText text={question.text} /></legend>
           <div className="option-grid">
             {LETTERS.map((letter) => {
               const label = question[`option${letter.toUpperCase()}`];
@@ -241,7 +242,7 @@ function Session({
                   <input type="radio" name="practice" value={letter} checked={chosen === letter}
                     disabled={Boolean(verdict) || busy} onChange={() => answer(letter)} />
                   <span className="option-letter" aria-hidden="true">{letter.toUpperCase()}</span>
-                  <span className="option-text">{label}</span>
+                  <span className="option-text"><Inline text={label} /></span>
                   {state === ' option--right' && <span className="option-tag">Correct</span>}
                   {state === ' option--wrong' && <span className="option-tag">Your answer</span>}
                 </label>
@@ -254,7 +255,7 @@ function Session({
           <>
             <p className={`verdict ${verdict.correct ? 'verdict--ok' : 'verdict--no'}`} role="status">
               <strong>{verdict.correct ? 'Correct' : 'Not correct'}</strong>
-              {verdict.explanation ? ` — ${verdict.explanation}` : ' — the right answer is highlighted above.'}
+              {verdict.explanation ? <> — <Inline text={verdict.explanation} /></> : ' — the right answer is highlighted above.'}
             </p>
             {verdict.revisit && (
               <p className="revisit-video">

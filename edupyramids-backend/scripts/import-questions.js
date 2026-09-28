@@ -90,6 +90,19 @@ function validate(raw) {
           );
         }
 
+        if (question.formerly !== undefined) {
+          const f = question.formerly;
+          const moves = f && f.letters ? Object.entries(f.letters) : [];
+          if (!f || typeof f !== 'object' || Array.isArray(f)
+            || (f.text !== undefined && (typeof f.text !== 'string' || !f.text.trim()))
+            || (f.letters !== undefined && (typeof f.letters !== 'object' || Array.isArray(f.letters)))) {
+            errors.push(`${at3}: "formerly" must be { "text": old wording, "letters": { old letter: new letter } }`);
+          } else if (moves.some(([from, to]) => !LETTERS.includes(from) || !present.includes(to))
+            || new Set(moves.map(([, to]) => to)).size !== moves.length) {
+            errors.push(`${at3}: "formerly.letters" must send each old letter to a different option this question has`);
+          }
+        }
+
         if (question.concepts !== undefined && (!Array.isArray(question.concepts)
           || !question.concepts.every((c) => typeof c === 'string' && c.trim()))) {
           errors.push(`${at3}: "concepts" must be a list of concept slugs`);
@@ -128,96 +141,138 @@ async function tagQuestion(client, questionId, slugs = []) {
   }
 }
 
-/**
- * Tag the questions of a quiz that is already loaded. Questions are matched by
- * their text, in order, so two questions with the same text each get a turn.
- */
-async function syncConcepts(client, quizId, fileQuestions) {
-  const stored = (await client.query(
-    // A question the coordinator has edited is theirs now; the file does not overwrite it.
-    'SELECT id, text FROM questions WHERE quiz_id = $1 AND edited_at IS NULL ORDER BY id', [quizId],
-  )).rows;
-  const used = new Set();
-  for (const q of fileQuestions) {
-    if (!q.concepts || !q.concepts.length) continue;
-    const match = stored.find((row) => !used.has(row.id) && row.text === q.text.trim());
-    if (!match) continue;
-    used.add(match.id);
-    await tagQuestion(client, match.id, q.concepts);
-  }
-}
-
 /*
- * Bring the option order of questions already loaded into line with the file,
- * after scripts/shuffle-options.js has re-ordered it. A question is changed
- * only if it holds exactly the same options, and every stored answer to it is
- * re-lettered in the same step (attempts and recorded checks), so past
- * results still mean what they meant. Nothing to do once the order matches.
+ * Bring the questions of a quiz that is already loaded into line with the
+ * file, without losing what students have done with them.
+ *
+ * Each question in the file is matched to a stored one by its text, or, when
+ * its wording was corrected, by its old text ("formerly.text"). Questions are
+ * matched in order, so two with the same text each get a turn. A question the
+ * coordinator has edited is theirs now, and the file never overwrites it.
+ *
+ * - Options only moved (scripts/shuffle-options.js): the question is
+ *   re-ordered and every stored answer to it re-lettered in the same step
+ *   (attempts and recorded checks), so past results still mean what they meant.
+ * - Anything else changed (wording, an option, the answer, the explanation):
+ *   the question is updated where it is, so its id, its answers and its place
+ *   in the mastery log stay. When options were reworded and moved together,
+ *   "formerly.letters" says where each old letter's option went, and stored
+ *   answers are re-lettered by it; without it, a letter keeps its place.
+ * - A stored copy of a question the file lists fewer times (a duplicate the
+ *   file has dropped) is removed; its mastery evidence moves to the copy kept.
+ *
+ * Concept tags named in the file are added. Returns what changed.
  */
-async function syncOptionOrder(client, quizId, fileQuestions) {
+async function syncQuestions(client, quizId, fileQuestions) {
   const stored = (await client.query(
     `SELECT id, text, option_a AS a, option_b AS b, option_c AS c, option_d AS d, option_e AS e,
-            correct_answer AS correct
+            correct_answer AS correct, explanation
        FROM questions WHERE quiz_id = $1 AND edited_at IS NULL ORDER BY id`,
     [quizId],
   )).rows;
   const used = new Set();
-  let changed = 0;
+  const counts = { reordered: 0, revised: 0, merged: 0 };
+  const take = (texts) => {
+    const row = stored.find((r) => !used.has(r.id) && texts.includes(r.text));
+    if (row) used.add(row.id);
+    return row;
+  };
 
-  for (const q of fileQuestions) {
-    const row = stored.find((r) => !used.has(r.id) && r.text === q.text.trim());
+  // Current wording first, so a question whose old text is now another
+  // question's text is not taken by mistake.
+  const pairs = fileQuestions.map((q) => [q, take([q.text.trim()])]);
+  for (const pair of pairs) {
+    if (!pair[1] && pair[0].formerly?.text) pair[1] = take([pair[0].formerly.text.trim()]);
+  }
+
+  for (const [q, row] of pairs) {
     if (!row) continue;
-    used.add(row.id);
-
     const was = Object.fromEntries(LETTERS.filter((l) => row[l] !== null).map((l) => [l, row[l]]));
     const now = Object.fromEntries(LETTERS.filter((l) => typeof q.options[l] === 'string').map((l) => [l, q.options[l]]));
-    if (JSON.stringify(was) === JSON.stringify(now)) continue;
+    const sameOptions = JSON.stringify(was) === JSON.stringify(now);
+    const text = q.text.trim();
+    const explanation = q.explanation ?? null;
 
-    // The same options, only moved (or a duplicate dropped): every old letter
-    // maps, by its text, to the new letter of that text.
-    const nowTexts = new Set(Object.values(now));
-    if (nowTexts.size !== Object.keys(now).length
-      || new Set(Object.values(was)).size !== nowTexts.size
-      || Object.values(was).some((t) => !nowTexts.has(t))) continue;
-    const letterOf = Object.fromEntries(Object.entries(now).map(([l, t]) => [t, l]));
-    const map = Object.fromEntries(Object.entries(was).map(([l, t]) => [l, letterOf[t]]));
-    if (map[row.correct] !== q.correct) continue;
-
-    await client.query(
-      `UPDATE questions SET option_a = $2, option_b = $3, option_c = $4, option_d = $5, option_e = $6,
-                            correct_answer = $7
-        WHERE id = $1`,
-      [row.id, now.a, now.b, now.c ?? null, now.d ?? null, now.e ?? null, q.correct],
-    );
-
-    const key = String(row.id);
-    const attempts = (await client.query(
-      'SELECT id, answers FROM attempts WHERE quiz_id = $1 AND answers ? $2', [quizId, key],
-    )).rows;
-    for (const a of attempts) {
-      const given = a.answers[key];
-      if (map[given]) {
-        await client.query('UPDATE attempts SET answers = jsonb_set(answers, $2, $3) WHERE id = $1',
-          [a.id, [key], JSON.stringify(map[given])]);
-      }
+    if (!sameOptions && row.text === text && isReorder(was, now, row.correct, q.correct)) {
+      await reletter(client, quizId, row.id, letterMap(was, now));
+      await client.query(
+        `UPDATE questions SET option_a = $2, option_b = $3, option_c = $4, option_d = $5, option_e = $6,
+                              correct_answer = $7
+          WHERE id = $1`,
+        [row.id, now.a, now.b, now.c ?? null, now.d ?? null, now.e ?? null, q.correct],
+      );
+      counts.reordered += 1;
+    } else if (!sameOptions || row.text !== text || row.correct !== q.correct
+      || (row.explanation ?? null) !== explanation) {
+      // The moves apply only while the stored options are the old ones: once
+      // they match the file, the answers already carry the new letters.
+      if (!sameOptions && q.formerly?.letters) await reletter(client, quizId, row.id, q.formerly.letters);
+      await client.query(
+        `UPDATE questions SET text = $2, option_a = $3, option_b = $4, option_c = $5, option_d = $6,
+                              option_e = $7, correct_answer = $8, explanation = $9
+          WHERE id = $1`,
+        [row.id, text, now.a, now.b, now.c ?? null, now.d ?? null, now.e ?? null, q.correct, explanation],
+      );
+      counts.revised += 1;
     }
-    const checks = (await client.query(
-      'SELECT id, value FROM answer_checks WHERE quiz_id = $1 AND item = $2', [quizId, key],
-    )).rows;
-    for (const c of checks) {
-      if (map[c.value]) {
-        await client.query('UPDATE answer_checks SET value = $2 WHERE id = $1', [c.id, JSON.stringify(map[c.value])]);
-      }
-    }
-    changed += 1;
+    await tagQuestion(client, row.id, q.concepts);
   }
-  return changed;
+
+  // Stored copies the file no longer has: only those that repeat a question
+  // it still has are removed, so nothing else can be lost by an import.
+  for (const extra of stored.filter((r) => !used.has(r.id))) {
+    const twin = pairs.find(([q, row]) => row
+      && [q.text, q.formerly?.text].some((t) => t && t.trim() === extra.text));
+    if (!twin) continue;
+    await client.query('UPDATE responses SET question_id = $2 WHERE question_id = $1', [extra.id, twin[1].id]);
+    await client.query('DELETE FROM questions WHERE id = $1', [extra.id]);
+    counts.merged += 1;
+  }
+  return counts;
+}
+
+/** The same options, only moved (or a duplicate dropped), with the answer moved with them. */
+function isReorder(was, now, wasCorrect, nowCorrect) {
+  const nowTexts = new Set(Object.values(now));
+  if (nowTexts.size !== Object.keys(now).length
+    || new Set(Object.values(was)).size !== nowTexts.size
+    || Object.values(was).some((t) => !nowTexts.has(t))) return false;
+  return letterMap(was, now)[wasCorrect] === nowCorrect;
+}
+
+/** Every old letter maps, by its text, to the new letter of that text. */
+function letterMap(was, now) {
+  const letterOf = Object.fromEntries(Object.entries(now).map(([l, t]) => [t, l]));
+  return Object.fromEntries(Object.entries(was).map(([l, t]) => [l, letterOf[t]]));
+}
+
+/** Move every stored answer to one question to its new letter: attempts and recorded checks. */
+async function reletter(client, quizId, questionId, map) {
+  const key = String(questionId);
+  const attempts = (await client.query(
+    'SELECT id, answers FROM attempts WHERE quiz_id = $1 AND answers ? $2', [quizId, key],
+  )).rows;
+  for (const a of attempts) {
+    const given = a.answers[key];
+    if (map[given]) {
+      await client.query('UPDATE attempts SET answers = jsonb_set(answers, $2, $3) WHERE id = $1',
+        [a.id, [key], JSON.stringify(map[given])]);
+    }
+  }
+  const checks = (await client.query(
+    'SELECT id, value FROM answer_checks WHERE quiz_id = $1 AND item = $2', [quizId, key],
+  )).rows;
+  for (const c of checks) {
+    if (map[c.value]) {
+      await client.query('UPDATE answer_checks SET value = $2 WHERE id = $1', [c.id, JSON.stringify(map[c.value])]);
+    }
+  }
 }
 
 async function load(topics, { replace }) {
   const client = await pool.connect();
-  let counts = {
-    topics: 0, quizzes: 0, questions: 0, reordered: 0,
+  const counts = {
+    topics: 0, quizzes: 0, questions: 0, reordered: 0, revised: 0, merged: 0,
   };
 
   try {
@@ -243,11 +298,12 @@ async function load(topics, { replace }) {
         if (existing.rows.length) {
           quizId = existing.rows[0].id;
           if (!replace) {
-            // Already loaded, so the questions are left alone, but their concept
-            // tags are brought up to date: tags added to the file later still
-            // reach a database that loaded the questions before tags existed.
-            await syncConcepts(client, quizId, quiz.questions);
-            counts.reordered += await syncOptionOrder(client, quizId, quiz.questions);
+            // Already loaded: corrections in the file are carried over to the
+            // questions students have answered, rather than replacing them.
+            const synced = await syncQuestions(client, quizId, quiz.questions);
+            counts.reordered += synced.reordered;
+            counts.revised += synced.revised;
+            counts.merged += synced.merged;
             continue;
           }
           await client.query('DELETE FROM questions WHERE quiz_id = $1', [quizId]);
@@ -342,7 +398,9 @@ async function main() {
   const counts = await load(topics, { replace });
   console.log(`\nLoaded ${path.basename(full)}: ${counts.topics} topic(s), ` +
     `${counts.quizzes} quiz(zes), ${counts.questions} question(s).`
-    + (counts.reordered ? ` Re-ordered the options of ${counts.reordered} question(s) already loaded.` : ''));
+    + (counts.reordered ? ` Re-ordered the options of ${counts.reordered} question(s) already loaded.` : '')
+    + (counts.revised ? ` Updated ${counts.revised} question(s) already loaded.` : '')
+    + (counts.merged ? ` Removed ${counts.merged} duplicate question(s).` : ''));
   if (warnings.length && !quiet) console.log(`${warnings.length} warning(s) above.`);
   await pool.end();
 }
@@ -355,4 +413,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { validate, load, syncOptionOrder };
+module.exports = { validate, load, syncQuestions };

@@ -2322,3 +2322,30 @@ a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 .people-row-tools { justify-content: flex-end; }
 
 .heatmap-wrap:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+
+/* ---- question text with code (components/RichText.jsx) ---- */
+.q-prose { display: block; }
+.q-prose + .q-code, .q-code + .q-prose, .q-code + .q-code { margin-top: 0.6rem; }
+/* A code block keeps its lines and indentation. Long lines wrap rather than
+   scroll: a scroll area inside a question cannot be reached by keyboard. */
+.q-code {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 4;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-dark);
+}
+.quiz-text .q-code { font-size: 18px; background: rgb(0 0 0 / 28%); color: #fff; }
+.quiz-text .q-code-inline, .verdict .q-code-inline { background: rgb(255 255 255 / 16%); color: #fff; }
+.manage-text .q-code { font-weight: 500; }
+@media (max-width: 640px) {
+  .quiz-text .q-code { font-size: 15px; padding: 0.5rem 0.6rem; }
+}
