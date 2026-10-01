@@ -35,6 +35,7 @@ app.use('/api/path', require('./routes/path'));
 app.use('/api/me', require('./routes/me'));
 app.use('/api/manage', require('./routes/manage'));
 app.use('/api/people', require('./routes/people'));
+app.use('/api/videos', require('./routes/videos'));
 
 /*
  * Proof for Android that the APK and this site belong together, so the app

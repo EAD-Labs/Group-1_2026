@@ -2356,3 +2356,17 @@ a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 a.sidebar-name { color: inherit; text-decoration: none; }
 a.sidebar-name:hover, a.sidebar-name:focus-visible { text-decoration: underline; }
 a.avatar { text-decoration: none; }
+
+/* ---- Spoken Tutorial videos, played in place (components/VideoPlayer.jsx) ---- */
+.video-dialog {
+  border: 0; padding: 0; background: transparent;
+  width: min(960px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+}
+.video-dialog::backdrop { background: rgb(15 18 40 / 72%); }
+.video-panel { background: var(--surface); border-radius: var(--radius); padding: 1rem; display: grid; gap: 0.75rem; }
+.video-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.video-title { font-size: 18px; margin: 0; color: var(--text-heading); }
+.video-frame { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; }
+.video-credit { margin: 0; }
+button.concept-pick-video { font-family: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.link-button { font: inherit; background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; cursor: pointer; }

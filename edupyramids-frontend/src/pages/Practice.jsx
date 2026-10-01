@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
+import { WatchButton } from '../components/VideoPlayer';
 import RichText, { Inline } from '../components/RichText';
 import { client } from '../api/client';
 import { useApi } from '../utils/useApi';
@@ -103,12 +104,7 @@ function PracticeHub() {
                 {c.p}% sure{c.waitingOn.length > 0 && ` · builds on ${c.waitingOn.join(' and ')}`}
               </span>
               <span className="concept-pick-actions">
-                {c.videos[0] && (
-                  <a className="concept-pick-video" href={c.videos[0].url} target="_blank" rel="noreferrer"
-                    title={`${c.videos[0].title} (${c.videos[0].duration}), Spoken Tutorial`}>
-                    📺 Watch
-                  </a>
-                )}
+                <WatchButton className="concept-pick-video" video={c.videos[0]}>📺 Watch</WatchButton>
                 <Link className="btn btn--sm" to={`/practice?focus=${c.slug}&n=5&kind=focus`}>Practise</Link>
               </span>
             </span>
@@ -260,7 +256,7 @@ function Session({
             {verdict.revisit && (
               <p className="revisit-video">
                 <span aria-hidden="true">📺</span> Rewatch the lesson:{' '}
-                <a href={verdict.revisit.url} target="_blank" rel="noreferrer">{verdict.revisit.title}</a>
+                <WatchButton className="link-button" video={verdict.revisit} />
                 {' '}<span className="muted-on-dark">({verdict.revisit.duration}, Spoken Tutorial)</span>
               </p>
             )}

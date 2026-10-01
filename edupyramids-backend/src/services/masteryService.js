@@ -1,5 +1,6 @@
 const { pool, query } = require('../config/database');
 const VIDEOS = require('../../content/spoken-tutorial-videos.json');
+const { playable } = require('./videoService');
 
 /*
  * Adaptive learning.
@@ -55,7 +56,7 @@ function videosFor(slug, limit = 2) {
   return VIDEOS.filter((v) => v.slug === intro || v.concepts.includes(slug))
     .sort((a, b) => (b.slug === intro) - (a.slug === intro) || a.order - b.order)
     .slice(0, limit)
-    .map(({ title, url, duration }) => ({ title, url, duration }));
+    .map(playable);   // with the files, so the page can play it in place
 }
 
 /** P(guess): one in the number of options, kept within sensible bounds. */
