@@ -23,6 +23,15 @@ const User = {
       .then((rows) => rows.map((r) => r.id));
   },
 
+  /** Whether a teacher has this student in one of their classes. */
+  async teaches(teacherId, studentId) {
+    return Boolean(await queryOne(
+      `SELECT 1 FROM class_students cs JOIN classes c ON c.id = cs.class_id
+        WHERE c.teacher_id = $1 AND cs.student_id = $2 LIMIT 1`,
+      [teacherId, studentId],
+    ));
+  },
+
   /** The classes a student is in. */
   classIdsForStudent(studentId) {
     return query('SELECT class_id AS id FROM class_students WHERE student_id = $1',

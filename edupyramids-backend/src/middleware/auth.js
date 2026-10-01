@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 /**
  * Verify the bearer token and hang the claims on req.user.
@@ -39,14 +40,20 @@ function requireRole(...roles) {
 }
 
 /**
- * A student may read only their own record; staff may read any student's.
- * Reads the id from req.params[param].
+ * A student may read only their own record, a teacher only a student in one of
+ * their classes (HLD test C5, one level down), a coordinator anyone's. Reads
+ * the id from req.params[param].
  */
 function requireSelfOrStaff(param = 'studentId') {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (!req.user) return res.status(401).json({ error: 'Not signed in' });
-    if (req.user.role !== 'student') return next();
-    if (String(req.user.userId) === String(req.params[param])) return next();
+    const { role, userId } = req.user;
+    if (role === 'coordinator' || String(userId) === String(req.params[param])) return next();
+    try {
+      if (role === 'teacher' && await User.teaches(userId, Number(req.params[param]))) return next();
+    } catch (err) {
+      return next(err);
+    }
     return res.status(403).json({ error: 'Not allowed' });
   };
 }

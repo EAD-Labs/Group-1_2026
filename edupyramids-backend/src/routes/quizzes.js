@@ -67,6 +67,10 @@ router.post('/:id/check', async (req, res, next) => {
     if (!UUID.test(String(clientAttemptId))) {
       return res.status(400).json({ error: 'clientAttemptId must be a UUID' });
     }
+    // Recorded as the answer that counts, so it has to be one.
+    if (!['a', 'b', 'c', 'd', 'e'].includes(answer)) {
+      return res.status(400).json({ error: 'answer must be a letter from a to e' });
+    }
     const verdict = await checkAnswer(Number(req.params.id), Number(questionId), answer);
     if (!verdict) return res.status(404).json({ error: 'No such question' });
     await recordCheck({

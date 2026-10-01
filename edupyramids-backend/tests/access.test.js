@@ -52,6 +52,17 @@ describe('who may read what', () => {
     expect(res.status).toBe(403);
   });
 
+  test('C5  a teacher can read the progress of their own students only', async () => {
+    const mine = (await queryOne("SELECT id FROM users WHERE email = 'student1@school.com'")).id;
+    expect((await request(app).get(`/api/progress/${mine}`).set(as('teacher'))).status).toBe(200);
+
+    const theirs = await request(app).get(`/api/progress/${student3}`).set(as('teacher'));
+    expect(theirs.status).toBe(403);
+    expect(JSON.stringify(theirs.body)).not.toMatch(/Rahul/);
+
+    expect((await request(app).get(`/api/progress/${student3}`).set(as('coordinator'))).status).toBe(200);
+  });
+
   test('a student can read their own progress', async () => {
     const me = (await queryOne("SELECT id FROM users WHERE email = 'student1@school.com'")).id;
     const res = await request(app).get(`/api/progress/${me}`).set(as('student1@school.com'));

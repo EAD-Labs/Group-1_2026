@@ -11,8 +11,9 @@ router.use(authMiddleware);
 /**
  * 10. GET /api/progress/:studentId
  *
- * A student may read only their own progress; teachers and coordinators may
- * read any student's. Enforced on the server, not by hiding a link.
+ * A student may read only their own progress, a teacher only their own
+ * students', a coordinator anyone's. Enforced on the server, not by hiding a
+ * link.
  */
 router.get('/:studentId', requireSelfOrStaff('studentId'), async (req, res, next) => {
   try {
