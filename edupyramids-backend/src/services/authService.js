@@ -217,9 +217,53 @@ async function login({ email, password, role, ip }) {
   return { ok: true, user: User.toPublic(user), token: signToken(user) };
 }
 
+const MIN_PASSWORD = 8;
+const MAX_PASSWORD = 72;   // bcrypt reads no further than 72 bytes
+
+/**
+ * Change your own password. The current one is asked for again, so a
+ * computer left signed in cannot be used to take the account over, and wrong
+ * guesses count towards the same lock-out as signing in. Every other session
+ * ends; the one making the change gets a fresh token.
+ *
+ * @returns {{ ok: true, token } | { ok: false, status: number, error: string }}
+ */
+async function changePassword({ userId, current, next, ip }) {
+  if (typeof current !== 'string' || typeof next !== 'string' || !current || !next) {
+    return { ok: false, status: 400, error: 'Enter your current password and a new one' };
+  }
+  const user = await User.findByIdWithHash(userId);
+  if (!user) return { ok: false, status: 401, error: 'Not signed in' };
+  if (user.passwordHash === '!') {
+    return { ok: false, status: 400, error: 'You sign in with your school account; change your password on the school site' };
+  }
+  if (isLockedOut(user.email, ip)) {
+    return { ok: false, status: 429, error: 'Too many attempts. Wait a few minutes and try again.' };
+  }
+  if (!(await bcrypt.compare(current, user.passwordHash))) {
+    recordFailure(user.email, ip);
+    return { ok: false, status: 400, error: 'Your current password is not right' };
+  }
+  if (next.length < MIN_PASSWORD) {
+    return { ok: false, status: 400, error: `The new password needs at least ${MIN_PASSWORD} characters` };
+  }
+  if (Buffer.byteLength(next) > MAX_PASSWORD) {
+    return { ok: false, status: 400, error: `The new password can be at most ${MAX_PASSWORD} characters` };
+  }
+  if (next === current) {
+    return { ok: false, status: 400, error: 'The new password is the same as the current one' };
+  }
+  clearFailures(user.email, ip);
+  await User.setPassword(userId, await bcrypt.hash(next, 10));
+  // A token issued in the same second as the change is still newer than it.
+  return { ok: true, token: signToken(user) };
+}
+
 /** Clear the failed-login counters. Only for tests. */
 function resetThrottle() {
   failures.clear();
 }
 
-module.exports = { login, signToken, GENERIC_FAILURE, resetThrottle };
+module.exports = {
+  login, signToken, changePassword, GENERIC_FAILURE, resetThrottle,
+};

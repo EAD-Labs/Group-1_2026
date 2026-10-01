@@ -90,7 +90,7 @@ All under `/api`. Everything except `POST /auth/login` and `GET /health` needs
 
 | Area | Routes | Who |
 | --- | --- | --- |
-| Sign-in | `POST /auth/login`, `POST /auth/logout`, `GET /auth/me` | anyone / signed in |
+| Sign-in | `POST /auth/login`, `POST /auth/logout`, `GET /auth/me`, `POST /auth/password` (change your own; ends older sessions) | anyone / signed in |
 | Quizzes | `GET /quizzes`, `GET /quizzes/:id`, `POST /quizzes/:id/check`, `POST /quizzes/:id/attempts` | signed in |
 | Games | `GET /games`, `GET /games/:id`, `POST /games/:id/check`, `POST /games/:id/results` | signed in |
 | Practice | `GET /practice/mastery`, `GET /practice/next`, `POST /practice/answer` | students |

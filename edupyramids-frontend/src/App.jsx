@@ -14,6 +14,7 @@ import ManageQuestions from './pages/ManageQuestions';
 import ManagePeople from './pages/ManagePeople';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CoordinatorDash from './pages/CoordinatorDash';
+import Account from './pages/Account';
 import { auth } from './utils/auth';
 
 /** Send someone who lands on "/" wherever they belong. */
@@ -129,6 +130,15 @@ export default function App() {
             )}
           />
 
+          {/* Every role: change your own password. */}
+          <Route
+            path="/account"
+            element={(
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            )}
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

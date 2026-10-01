@@ -30,6 +30,13 @@ export const auth = {
     return data.user;
   },
 
+  /** A fresh token for the same person, as after changing their password. */
+  setToken(token) {
+    localStorage.setItem(TOKEN_KEY, token);
+    const expiry = expiryFromToken(token);
+    if (expiry) localStorage.setItem(EXPIRY_KEY, String(expiry));
+  },
+
   async logout({ notifyServer = true } = {}) {
     // Best effort: the session is over on this device either way.
     if (notifyServer) {

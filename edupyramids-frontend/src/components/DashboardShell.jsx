@@ -71,7 +71,7 @@ export default function DashboardShell({ title, children, wide, back, note, acti
         <div className="sidebar-user">
           <span className="avatar" aria-hidden="true">{initials}</span>
           <span className="sidebar-who">
-            <span className="sidebar-name">{user?.name}</span>
+            <Link className="sidebar-name" to="/account" title="Your account and password">{user?.name}</Link>
             <span className="role-chip">{user?.role}</span>
           </span>
           <button className="btn btn--ghost btn--sm" type="button" onClick={signOut}>Log out</button>
@@ -83,7 +83,7 @@ export default function DashboardShell({ title, children, wide, back, note, acti
           <img src="/edupyramids-logo.png" alt="EduPyramids" width="440" height="336" />
         </Link>
         <span className="mobilebar-right">
-          <span className="avatar" title={user?.name} aria-hidden="true">{initials}</span>
+          <Link className="avatar" to="/account" title="Your account and password" aria-label="Your account and password">{initials}</Link>
           <button className="btn btn--ghost btn--sm" type="button" onClick={signOut}>Log out</button>
         </span>
       </header>

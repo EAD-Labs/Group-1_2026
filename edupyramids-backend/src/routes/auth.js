@@ -36,6 +36,24 @@ router.post('/logout', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'Signed out' });
 });
 
+/**
+ * POST /api/auth/password — change your own password, any role.
+ * Body: { currentPassword, newPassword }. Answers with a fresh token, because
+ * every token issued before the change stops working.
+ */
+router.post('/password', authMiddleware, async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+    const result = await authService.changePassword({
+      userId: req.user.userId, current: currentPassword, next: newPassword, ip: req.ip,
+    });
+    if (!result.ok) return res.status(result.status).json({ error: result.error });
+    return res.json({ success: true, token: result.token });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** 3. GET /api/auth/me — who the current token belongs to. */
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {

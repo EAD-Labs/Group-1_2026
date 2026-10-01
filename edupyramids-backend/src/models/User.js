@@ -23,6 +23,18 @@ const User = {
       .then((rows) => rows.map((r) => r.id));
   },
 
+  findByIdWithHash(id) {
+    return queryOne(
+      `SELECT id, email, name, role, password_hash AS "passwordHash" FROM users WHERE id = $1`,
+      [id],
+    );
+  },
+
+  /** A new password; sessions on the old one end (middleware/auth.js). */
+  setPassword(id, hash) {
+    return query('UPDATE users SET password_hash = $2, password_changed_at = now() WHERE id = $1', [id, hash]);
+  },
+
   /** What a sign-in token is checked against on every request. */
   sessionCheck(id) {
     return queryOne('SELECT password_changed_at AS "passwordChangedAt" FROM users WHERE id = $1', [id]);

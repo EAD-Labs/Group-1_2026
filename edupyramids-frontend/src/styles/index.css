@@ -2349,3 +2349,10 @@ a.mode:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 @media (max-width: 640px) {
   .quiz-text .q-code { font-size: 15px; padding: 0.5rem 0.6rem; }
 }
+
+/* ---- account (pages/Account.jsx) ---- */
+.account-card { max-width: 520px; }
+.account-card .field input { border-color: var(--border); }
+a.sidebar-name { color: inherit; text-decoration: none; }
+a.sidebar-name:hover, a.sidebar-name:focus-visible { text-decoration: underline; }
+a.avatar { text-decoration: none; }
