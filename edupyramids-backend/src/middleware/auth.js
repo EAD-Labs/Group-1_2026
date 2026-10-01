@@ -4,10 +4,15 @@ const User = require('../models/User');
 /**
  * Verify the bearer token and hang the claims on req.user.
  *
+ * A valid signature is not enough on its own: the account must still exist,
+ * and the token must be newer than its password. A coordinator's reset, or a
+ * person changing their own password, so ends every older session; without
+ * this a token would go on working for days after the password it came from.
+ *
  * Every failure returns a bare 401 with the same wording. Saying "expired" or
  * "malformed" tells whoever is probing which half of the token to work on.
  */
-function authMiddleware(req, res, next) {
+async function authMiddleware(req, res, next) {
   const header = req.headers.authorization || '';
   const [scheme, token] = header.split(' ');
 
@@ -15,12 +20,23 @@ function authMiddleware(req, res, next) {
     return res.status(401).json({ error: 'Not signed in' });
   }
 
+  let claims;
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
-    return next();
+    claims = jwt.verify(token, process.env.JWT_SECRET);
   } catch {
     return res.status(401).json({ error: 'Not signed in' });
   }
+  try {
+    const account = await User.sessionCheck(claims.userId);
+    const changed = account?.passwordChangedAt;
+    if (!account || (changed && Math.floor(new Date(changed).getTime() / 1000) > claims.iat)) {
+      return res.status(401).json({ error: 'Not signed in' });
+    }
+  } catch (err) {
+    return next(err);
+  }
+  req.user = claims;
+  return next();
 }
 
 /**

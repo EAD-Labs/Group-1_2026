@@ -111,8 +111,15 @@ describe('a class from nothing', () => {
     expect(report.students).toBe(3);
   });
 
-  test('a new starting password replaces the old one', async () => {
+  test('a new starting password replaces the old one, and signs out the old sessions', async () => {
+    const before = await login(`vikram@${DOMAIN}`, students[1].password, 'student');
+    const old = { Authorization: `Bearer ${before.body.token}` };
+    expect((await request(app).get('/api/auth/me').set(old)).status).toBe(200);
+
+    // Tokens carry whole seconds; make sure the reset lands in a later one.
+    await new Promise((r) => { setTimeout(r, 1100); });
     const res = await request(app).post(`/api/people/users/${students[1].id}/password`).set(coordinator);
+    expect((await request(app).get('/api/auth/me').set(old)).status).toBe(401);
     expect(res.status).toBe(200);
     expect((await login(`vikram@${DOMAIN}`, students[1].password, 'student')).status).toBe(401);
     expect((await login(`vikram@${DOMAIN}`, res.body.data.password, 'student')).status).toBe(200);

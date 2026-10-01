@@ -180,7 +180,9 @@ async function resetPassword(userId) {
   if (!user) throw new PeopleError('No such person', 404);
   if (user.role === 'coordinator') throw new PeopleError('A coordinator changes their own password', 403);
   const password = newPassword();
-  await query('UPDATE users SET password_hash = $2 WHERE id = $1', [userId, await hashFor(password)]);
+  // Signs out every session on the old password (middleware/auth.js).
+  await query('UPDATE users SET password_hash = $2, password_changed_at = now() WHERE id = $1',
+    [userId, await hashFor(password)]);
   return { id: user.id, name: user.name, email: user.email, password };
 }
 

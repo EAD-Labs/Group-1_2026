@@ -23,6 +23,11 @@ const User = {
       .then((rows) => rows.map((r) => r.id));
   },
 
+  /** What a sign-in token is checked against on every request. */
+  sessionCheck(id) {
+    return queryOne('SELECT password_changed_at AS "passwordChangedAt" FROM users WHERE id = $1', [id]);
+  },
+
   /** Whether a teacher has this student in one of their classes. */
   async teaches(teacherId, studentId) {
     return Boolean(await queryOne(
