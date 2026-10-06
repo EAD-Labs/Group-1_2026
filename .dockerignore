@@ -1,0 +1,10 @@
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+!.env.docker.example
+.git
+**/school_db*.sql
+**/school_pg*.sql
+**/*.dump
+**/coverage

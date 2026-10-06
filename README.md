@@ -166,6 +166,31 @@ For an APK to hand out:
 The APK is only a shell around the site, so it updates with every deploy and
 works offline exactly as the site does.
 
+## Running with Docker
+
+One image holds the API and the built interface; Docker Compose runs it with
+PostgreSQL 16. On any server with Docker:
+
+```bash
+git clone https://github.com/EAD-Labs/Group-1_2026 && cd Group-1_2026
+cp .env.docker.example .env      # set DB_PASSWORD and JWT_SECRET (long random values)
+docker compose up -d --build
+```
+
+The app is then on port 5000 (`APP_PORT` changes it); put nginx or another
+reverse proxy with HTTPS in front of it. Every start applies the database
+updates and loads the questions and games, as on Render. The database lives in
+the `pgdata` volume, so it survives restarts and rebuilds.
+
+- **Sign-in with school accounts:** set `SCHOOL_AUTH_URL` and
+  `SCHOOL_AUTH_API_KEY` in `.env` (see `docs/school-login-api.md`) and run
+  `docker compose up -d`; no rebuild is needed.
+- **Demo data:** `SEED_DEMO_DATA=true` adds test accounts and four synthetic
+  classes. Leave it unset on a real server.
+- **Updating:** `git pull && docker compose up -d --build`.
+- **Backups:** `docker compose exec db pg_dump -U edupyramids edupyramids > backup.sql`,
+  run nightly and kept off the server.
+
 ## Deploying on Render
 
 The service was created from the public repository URL, so Render does not
