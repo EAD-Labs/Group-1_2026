@@ -16,6 +16,7 @@ const ROLE_MAP = {
   invigilator: 'teacher',
   teacher: 'teacher',
   main_school_coord: 'coordinator',
+  coordinator: 'coordinator',
   national_coord: 'coordinator',
   org_partner: 'coordinator',
 };
@@ -111,14 +112,15 @@ function clearFailures(email, ip) {
  *   401   { status: 'error', message: 'Invalid credentials' }
  *   403   { status: 'error', message: 'Account is disabled' }
  *
- * Note what is *not* in the response: a role. Their site knows who someone is,
- * not what they are here, so the role is read separately from the school
- * database using spoken_user_id.
+ * The client is adding the user's role to this response (meeting of 29
+ * September), so it is read from whichever shape arrives: `user.role` or
+ * `user.roles`, or the same at the top level. Without one, the role comes
+ * from the school database copy, if there is one, or the existing account.
  *
  * Returns null when no URL is configured, or when their service cannot be
  * reached; the caller then falls back to the local users table.
  *
- * @returns {Promise<null | false | { spokenUserId, username, email, name }>}
+ * @returns {Promise<null | false | { spokenUserId, username, email, name, roles }>}
  */
 async function verifyWithSchool(email, password) {
   const url = process.env.SCHOOL_AUTH_URL;
@@ -141,11 +143,14 @@ async function verifyWithSchool(email, password) {
 
     if (data.status !== 'success' || !data.user) return false;
     const u = data.user;
+    const roles = [u.role, u.roles, data.role, data.roles].flat()
+      .filter((r) => typeof r === 'string' && r.trim()).map((r) => r.trim().toLowerCase());
     return {
       spokenUserId: u.spoken_user_id,
       username: u.username,
       email: u.email,
       name: [u.first_name, u.last_name].filter(Boolean).join(' ').trim(),
+      roles,
     };
   } catch (err) {
     const status = err.response && err.response.status;
@@ -187,34 +192,45 @@ async function login({ email, password, role, ip }) {
   }
 
   const user = await User.findByEmailWithHash(email);
+  const roleFits = (r) => Boolean(r) && (!role || r === role);
+  const success = (u) => {
+    clearFailures(email, ip);
+    return { ok: true, user: User.toPublic(u), token: signToken(u) };
+  };
 
-  // Hash a throwaway string when the account does not exist, so a missing
-  // account and a wrong password take about the same time to answer.
+  // 1. An account made in this app (the People page, test accounts) has its
+  // own password. Hash a throwaway string when there is no account, so a
+  // missing account and a wrong password take about the same time to answer.
   const hash = user ? user.passwordHash : '$2a$10$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinva';
-  const passwordOk = await bcrypt.compare(password, hash);
+  if (await bcrypt.compare(password, hash) && roleFits(user.role)) return success(user);
 
-  // `remote` is null (do not know), false (definitely wrong), or the person's
-  // details from Spoken Tutorial.
-  const remote = user ? await verifyWithSchool(email, password) : null;
-  const credentialsOk = remote === null ? passwordOk : Boolean(remote);
-
-  // The role tab must match, but a mismatch is reported exactly like a wrong
-  // password. See the note at the top of this file.
-  const roleOk = !role || (user && user.role === role);
-
-  if (!user || !credentialsOk || !roleOk) {
-    // No local account, or it did not match: try the school's own credentials.
-    const fromSchool = await schoolLogin(email, password, role);
-    if (fromSchool) {
-      clearFailures(email, ip);
-      return { ok: true, user: fromSchool, token: signToken(fromSchool) };
+  // 2. The school's login API: null (not set up, or unreachable), false
+  // (definitely wrong), or who the person is. A first sign-in makes their
+  // account here; the role comes from the API, else the school database
+  // copy, else the account they already have.
+  const remote = await verifyWithSchool(email, password);
+  if (remote) {
+    const fromCopy = await School.findForLogin(email).catch(() => null);
+    const mapped = ourRole(remote.roles) || ourRole(fromCopy?.roles) || user?.role;
+    if (roleFits(mapped)) {
+      return success(await User.upsertFromSchool({
+        email: remote.email || email,
+        name: remote.name || remote.username || email,
+        role: mapped,
+        spokenUserId: remote.spokenUserId,
+      }));
     }
-    recordFailure(email, ip);
-    return { ok: false, status: 401, error: GENERIC_FAILURE };
   }
 
-  clearFailures(email, ip);
-  return { ok: true, user: User.toPublic(user), token: signToken(user) };
+  // 3. Their API not set up or not answering: the school database copy.
+  if (remote === null) {
+    const fromSchool = await schoolLogin(email, password, role);
+    if (fromSchool) return success(fromSchool);
+  }
+
+  // Every failure looks the same. See the note at the top of this file.
+  recordFailure(email, ip);
+  return { ok: false, status: 401, error: GENERIC_FAILURE };
 }
 
 const MIN_PASSWORD = 8;
