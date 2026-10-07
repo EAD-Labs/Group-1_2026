@@ -27,13 +27,3 @@ export function useApi(paths) {
 
   return state;
 }
-
-/** Topic icons. A topic the client adds later falls back to a book. */
-const TOPIC_ICONS = {
-  'Bronze Level': '🥉',
-  'Silver Level': '🥈',
-  'Gold Level': '🥇',
-  'Post-test': '🎓',
-  'Spoken Tutorial videos': '🎬',
-};
-export const topicIcon = (name) => TOPIC_ICONS[name] || '📘';

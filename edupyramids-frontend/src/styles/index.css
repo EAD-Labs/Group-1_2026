@@ -322,17 +322,6 @@ code {
 
 .btn--sm { width: auto; padding: 0.45rem 0.95rem; font-size: 14px; }
 
-.btn--onbrand {
-  width: auto;
-  background: #fff;
-  color: var(--brand);
-  font-weight: 700;
-  padding: 0.6rem 1.3rem;
-  white-space: nowrap;
-}
-
-.btn--onbrand:hover:not(:disabled) { background: var(--brand-tint); }
-
 .spinner {
   width: 1em; height: 1em;
   border: 2px solid rgb(255 255 255 / 45%);
@@ -444,46 +433,6 @@ code {
 
 .topic { padding: var(--gap); }
 
-/* ---- the hero: pick up where you left off, on the site's gradient ---- */
-.hero {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--gradient);
-  color: #fff;
-  padding: var(--gap-xl);
-  margin-bottom: var(--gap-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  right: -70px;
-  top: -90px;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: rgb(255 255 255 / 10%);
-  pointer-events: none;
-}
-
-.hero-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap);
-  flex-wrap: wrap;
-}
-
-.hero-eyebrow { font-family: var(--font-ui); font-size: 13px; font-weight: 500; opacity: 0.9; margin-bottom: 0.2rem; }
-.hero-title { font-size: 26px; font-weight: 600; line-height: 1.25; }
-.hero-sub { font-size: 14px; opacity: 0.9; margin-top: 0.15rem; }
-
-.hero .bar { background: rgb(255 255 255 / 25%); margin-top: 0.9rem; margin-bottom: 0; }
-.hero .bar span { background: #fff; }
-
 /* ---- topic tiles; the stripe is the level's medal colour ---- */
 .tiles {
   list-style: none;
@@ -535,9 +484,6 @@ a.tile:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
 
 .tile-bar { height: 8px; border-radius: 999px; background: var(--brand-tint); overflow: hidden; }
 .tile-bar span { display: block; height: 100%; background: var(--tile); border-radius: 999px; }
-
-.tile--locked { background: var(--surface-2); border-style: dashed; box-shadow: none; }
-.tile--locked .tile-icon { filter: grayscale(1); opacity: 0.55; }
 
 /* ---- how you compare ---- */
 
@@ -1573,52 +1519,14 @@ tr.is-open > td { border-bottom-color: transparent; }
    ================================================================ */
 
 /* ---- home ---- */
-.home-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--gap);
-  margin-bottom: var(--gap);
-}
-
-@media (min-width: 760px) {
-  .home-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .home-hero { grid-column: 1 / -1; }
-}
-
-.home-grid .hero { margin: 0; }
-
-.home-card {
-  position: relative;
-  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.1rem 0.85rem; align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: var(--gap) 2.6rem var(--gap) var(--gap);
-  text-decoration: none; color: inherit;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.home-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-.home-card:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
-.home-card-icon { grid-row: span 2; font-size: 26px; width: 2.8rem; height: 2.8rem; display: grid; place-items: center; border-radius: var(--radius); background: var(--brand-tint); }
-.home-card-title { font-weight: 600; color: var(--text-heading); }
-.home-card-sub { font-size: 14px; color: var(--text-light); }
-.home-card-go { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--accent); }
-.home-practice { border-left: 5px solid var(--accent); }
 
 .focus { list-style: none; display: grid; gap: 0.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--gap); }
 .focus li { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 3rem; align-items: center; gap: 0.75rem; }
-.focus-name { font-weight: 600; font-size: 14px; }
-.focus-p { text-align: right; font-weight: 700; font-size: 14px; color: var(--text-heading); }
 
 @media (max-width: 520px) {
   .focus li { grid-template-columns: 1fr 3rem; }
   .focus .concept-bar { grid-column: 1 / -1; grid-row: 2; }
 }
-
-.see-all { font-family: var(--font-ui); font-weight: 600; font-size: 14px; color: var(--brand); text-decoration: none; }
-.see-all:hover { text-decoration: underline; }
 
 /* game tiles carry their kind above the name */
 .tile-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
@@ -1641,25 +1549,6 @@ tr.is-open > td { border-bottom-color: transparent; }
 
 .level::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 5px; background: var(--tile, var(--brand)); }
 
-.level-head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) minmax(8rem, 14rem);
-  align-items: center;
-  gap: 0.9rem;
-  padding: var(--gap-lg) var(--gap-lg) var(--gap);
-}
-
-.level-icon { font-size: 30px; width: 3.2rem; height: 3.2rem; display: grid; place-items: center; border-radius: var(--radius); background: color-mix(in srgb, var(--tile, var(--brand)) 16%, #fff); }
-.level-title h2 { font-size: 20px; margin: 0; }
-.level-progress { display: grid; gap: 0.3rem; justify-items: end; }
-.level-progress .tile-bar { width: 100%; }
-.level-progress .tile-bar span { background: var(--tile, var(--accent)); }
-
-@media (max-width: 600px) {
-  .level-head { grid-template-columns: auto minmax(0, 1fr); }
-  .level-progress { grid-column: 1 / -1; justify-items: start; }
-}
-
 .activities {
   list-style: none;
   display: grid;
@@ -1667,24 +1556,6 @@ tr.is-open > td { border-bottom-color: transparent; }
   gap: 0.6rem;
   padding: 0 var(--gap-lg) var(--gap-lg);
 }
-
-.activity {
-  display: flex; align-items: center; gap: 0.7rem;
-  height: 100%;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.8rem;
-  text-decoration: none; color: inherit;
-  transition: border-color 0.12s ease, background 0.12s ease;
-}
-
-.activity:hover { border-color: var(--tile, var(--brand)); background: #fff; }
-.activity:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
-.activity-icon { font-size: 20px; }
-.activity-text { display: grid; min-width: 0; }
-.activity-name { font-weight: 600; font-size: 14px; color: var(--text-heading); }
-.activity-kind { font-size: 12px; color: var(--text-light); }
 
 /* ---- play filters ---- */
 .filters { display: grid; gap: 0.5rem; margin-bottom: var(--gap-lg); }
@@ -2054,7 +1925,6 @@ tr.is-open > td { border-bottom-color: transparent; }
 .goal-choice span { font-size: 13px; color: var(--text-light); }
 .goal-choice--on { border-color: var(--accent); background: var(--accent-tint); }
 .goal-choice:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
-
 
 /* ---------------------------------------------------------------- class goal */
 .class-goal {
