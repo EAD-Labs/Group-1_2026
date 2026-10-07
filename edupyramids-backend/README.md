@@ -46,6 +46,20 @@ A cluster you own, needing no root, works fine:
   -o "-p 5432 -k /tmp/edupg-sock -c listen_addresses=127.0.0.1" start
 ```
 
+## Signing in with school accounts
+
+Agreed with the client on 29 September: EduPyramids accounts sign in through a
+small login API on the school site, described in
+[`../docs/school-login-api.md`](../docs/school-login-api.md). Set
+`SCHOOL_AUTH_URL` (and `SCHOOL_AUTH_API_KEY`) and restart. On someone's first
+sign-in the app makes their account here, with the role from the API's
+`roles` (`student` → student; `invigilator`, `teacher` → teacher;
+`main_school_coord`, `national_coord`, `org_partner` → coordinator). Accounts
+made in this app (People, test accounts) keep their own password and never
+need the API. A wrong password or disabled account (401, 403) is refused like
+any other failure; when the API cannot be reached, the school database copy
+below is used if there is one. `tests/schoolApiLogin.test.js` covers it.
+
 ## Using the school data locally
 
 The client's decision (22 September) is to use their school data locally for
@@ -85,7 +99,7 @@ on the Python course.
 
 ## The endpoints
 
-All under `/api`. Everything except `POST /auth/login` and `GET /health` needs
+All under `/api`. Everything except `POST /auth/login`, `GET /health` and the video captions needs
 `Authorization: Bearer <token>`.
 
 | Area | Routes | Who |
@@ -98,6 +112,8 @@ All under `/api`. Everything except `POST /auth/login` and `GET /health` needs
 | Classes | `GET /classes` | scoped by role |
 | Analytics | `GET /analytics/classes/:id`, `GET /analytics/classes/:id/mastery`, `GET /analytics/students/:id` | a teacher's own class, or a coordinator |
 | School database | `GET /school/stats`, `GET /school/students?q=` | coordinators |
+| Lesson videos | `GET /videos/:slug/captions.vtt` (WebVTT captions; no token, since a `<track>` cannot send one) | anyone |
+| Content management | `/manage/…` (questions and quizzes), `/people/…` (classes, teachers, students, password resets) | coordinators |
 | Question generator | `GET /content/videos`, `POST /content/videos/:slug/generate`, `POST /content/generate`, `GET/PATCH /content/drafts…`, `POST /content/drafts/:id/approve`, `…/reject` | teachers, coordinators |
 
 `GET /api/health` answers without a token, for the deploy's health check.
@@ -224,9 +240,11 @@ logged.
 
 ## Still outstanding
 
-- School sign-in and roster APIs from the client's Django project, to replace
-  the direct reads in `src/models/School.js` (proposal shared 18 September).
-- The mapping from the school's roles to ours, and how teachers link to batches.
+- The school site's login API (`docs/school-login-api.md`), from the client's
+  tech team; the app is ready for it.
+- Hosting on the EduPyramids server with Docker, and testing one topic with
+  their coordinator and teachers.
+- How teachers link to batches in the school data, for class rosters.
 - The client to review the corrected questions (`content/python-mcqs.json`):
   explanations were written by the development team, and the questions moved
   to Python 3 (see `content/README.md`).

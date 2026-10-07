@@ -13,9 +13,10 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 
 | For | What they get |
 |---|---|
-| Students | A pyramid to build (Home): one route through the course, level by level, each level a tier and each quiz or game a brick, with a keystone challenge that opens the tier above. On it: quizzes on the client's 134 questions (in Python 3, each with an explanation) and 25 games of 9 kinds, from warm-ups (matching, sorting, memory) to fill the blank, Parsons puzzles, predict the output, Trace Runner, bug hunt and Bug Catcher. Stars, hints, XP, a daily goal and a school-day streak; cracked bricks to repair when a concept starts to fade; adaptive practice; and a class goal shared with classmates |
+| Students | A pyramid to build (Home): one route through the course, level by level, each level a tier and each quiz or game a brick, with a keystone challenge that opens the tier above. On it: quizzes on the client's 134 questions (in Python 3, each with an explanation) and 25 games of 9 kinds, from warm-ups (matching, sorting, memory) to fill the blank, Parsons puzzles, predict the output, Trace Runner, bug hunt and Bug Catcher. Stars, hints, XP, a daily goal and a school-day streak; cracked bricks to repair when a concept starts to fade; adaptive practice, with the Spoken Tutorial lesson for a weak concept playing right in the app (captions included); and a class goal shared with classmates |
 | Teachers | Their class: the weekly class goal and who has not practised yet, averages by topic, students who need help, the questions the class got wrong, and a students-by-concept mastery heatmap |
-| Coordinators | Every class; People (make classes and teachers, add students by pasting a list, with starting passwords to hand out, reset passwords); the question editor (edit, add and delete questions, answers, explanations and concepts, live for students at once); the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve; and the school database (when connected) |
+| Everyone | An account page to change their own password; changing it signs out every other session |
+| Coordinators | Every class; People (make classes and teachers, add students by pasting a list, with starting passwords to hand out, reset passwords); the question editor (edit, add and delete questions, answers, explanations and concepts, live for students at once); the question generator, which drafts questions from Spoken Tutorial videos with Gemini for a person to approve; and sign-in with existing EduPyramids school accounts, through the school site's login API |
 
 ## Layout
 
@@ -23,9 +24,11 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 |---|---|
 | `edupyramids-backend/` | Node/Express API, PostgreSQL migrations, content files and importers, tests |
 | `edupyramids-frontend/` | React + Vite interface for all three roles |
+| `Dockerfile`, `docker-compose.yml` | The app and its database in Docker, for hosting on EduPyramids' own server |
 | `render.yaml` | Render Blueprint for the hosted pilot |
 | `.github/workflows/ci.yml` | Tests and a build on every push and pull request |
 | `docs/acceptance-tests.md` | Every acceptance test in the HLD, its status and where it is checked |
+| `docs/school-login-api.md` | The small login API the school site adds, so school accounts can sign in |
 
 ## Running it
 
@@ -125,8 +128,9 @@ none.
   Tracing) from quiz, practice and keystone answers and from finished games,
   which count as stronger evidence because they leave less to guessing. The
   Practice tab offers a smart mix, repairs for fading concepts, a "fix my
-  mistakes" round and any single concept; a wrong answer links to the Spoken
-  Tutorial video that teaches it. A concept that starts to fade shows on the
+  mistakes" round and any single concept; a wrong answer offers the Spoken
+  Tutorial video that teaches it, played inside the app from spoken-tutorial.org
+  with English captions and credit to Spoken Tutorial (CC BY-SA 4.0). A concept that starts to fade shows on the
   pyramid as a cracked brick, repaired by a five-question review.
 
 All of it is worked out from what students actually did, in India time
@@ -198,9 +202,10 @@ redeploy on its own: after pushing to `main`, open the **edupyramids** service
 and choose **Manual Deploy → Deploy latest commit**. Wait for the green tick on
 the commit in GitHub first; a red cross means the tests failed.
 
-On every start the service applies the migrations and loads any new questions
-and games; content already loaded is left alone, except that each game's
-concept tags are refreshed. Migrations run on every start, so each must be safe
+On every start the service applies the migrations and loads the questions and
+games. Corrections in the content files are carried over to questions already
+loaded, keeping their answers and history (see `edupyramids-backend/content/README.md`);
+questions the coordinator edited in the app are never overwritten. Migrations run on every start, so each must be safe
 to repeat; `tests/migrations.test.js` runs them all a second time to check. `SEED_DEMO_DATA=true` also
 creates the test accounts. Set it to `false` before real students use the app.
 Question generation needs `GEMINI_API_KEY` set in the service's environment.
@@ -226,10 +231,14 @@ Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated
 questions, offline use and the pyramid. The client approved trying these; the
 HLD needs updating to match.
 
-School data: the client chose (22 September) to use their school database
-locally, with no changes to their APIs for now. The hosted pilot has demo
-accounts only.
+Hosting and sign-in: agreed with the client on 29 September. The app will run
+on EduPyramids' own server with Docker (see "Running with Docker"), and
+students, teachers and coordinators will sign in with their existing school
+accounts through a small login API on the school site (`docs/school-login-api.md`).
+The app is ready for both; until the API is live it uses its own accounts. The
+Render pilot has demo accounts only.
 
-Next: a classroom pilot for the course report (a pre-test, a week or two of
-use, the post-test), with one feature compared across two halves of a class.
-The app already records every answer and every change in mastery.
+Next: hosting on the EduPyramids server, testing one topic with their
+coordinator and teachers, and a classroom pilot for the course report (a
+pre-test, a week or two of use, the post-test). The app already records every
+answer and every change in mastery.
