@@ -110,11 +110,14 @@ test('a quiz answered from the pack gets full marks, dated when it was done', as
 
 describe('trusting the device clock only so far', () => {
   const now = Date.parse('2026-09-22T12:00:00Z');
-  test('a time in the past month is kept', () => {
+  test('a time in the past three days is kept', () => {
     expect(attemptTime('2026-09-20T09:00:00Z', now)).toEqual(new Date('2026-09-20T09:00:00Z'));
+    expect(attemptTime('2026-09-19T12:30:00Z', now)).toEqual(new Date('2026-09-19T12:30:00Z'));
   });
-  test('the future, very old dates and rubbish are ignored', () => {
+  test('the future, older dates and rubbish are ignored', () => {
     expect(attemptTime('2026-09-23T12:00:00Z', now)).toBeNull();
+    expect(attemptTime('2026-09-19T11:30:00Z', now)).toBeNull();
+    expect(attemptTime('2026-09-01T12:00:00Z', now)).toBeNull();
     expect(attemptTime('2026-07-01T12:00:00Z', now)).toBeNull();
     expect(attemptTime('yesterday', now)).toBeNull();
     expect(attemptTime(undefined, now)).toBeNull();
