@@ -119,8 +119,9 @@ EDUPYRAMIDS_API_KEY = os.environ["EDUPYRAMIDS_API_KEY"]
   nginx), apply it to this path too.
 - **Nothing is stored.** The app keeps no copy of the password or the school
   data; it creates its own account (name, email, role) on first sign-in.
-- **Test accounts.** Please share one approved student, one invigilator and one
-  school coordinator for testing, before the app goes live.
+- **Testing.** Before the app goes live, sign in once each as an approved
+  student, an invigilator and a school coordinator, and check a disabled
+  account is refused (Step 3 of the deployment guide).
 
 ## On the EduPyramids side
 
