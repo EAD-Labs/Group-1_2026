@@ -181,11 +181,17 @@ cp .env.docker.example .env      # set DB_PASSWORD and JWT_SECRET (long random v
 docker compose up -d --build
 ```
 
-The app is then on port 5000 (`APP_PORT` changes it); put nginx or another
-reverse proxy with HTTPS in front of it. Every start applies the database
+The app is then on port 5000 of the server itself (`APP_PORT` changes it),
+reachable only from that machine; put nginx or another reverse proxy with
+HTTPS in front of it. Every start applies the database
 updates and loads the questions and games, as on Render. The database lives in
 the `pgdata` volume, so it survives restarts and rebuilds.
 
+- **The first account:** a new server has none. Make the first coordinator
+  with `docker compose exec app node scripts/create-user.js coordinator
+  name@school.org "Full Name"`, which prints a starting password; they make
+  teachers and students on the People page. `--reset <email>` gives a
+  forgotten coordinator a new password.
 - **Sign-in with school accounts:** set `SCHOOL_AUTH_URL` and
   `SCHOOL_AUTH_API_KEY` in `.env` (see `docs/school-login-api.md`) and run
   `docker compose up -d`; no rebuild is needed.
