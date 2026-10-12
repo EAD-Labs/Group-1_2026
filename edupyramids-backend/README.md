@@ -49,8 +49,8 @@ A cluster you own, needing no root, works fine:
 ## Signing in with school accounts
 
 Agreed with the client on 29 September: EduPyramids accounts sign in through a
-small login API on the school site, described in
-[`../docs/school-login-api.md`](../docs/school-login-api.md). Set
+small login API on the school site; its specification went to the client's
+tech team with the deployment guide. Set
 `SCHOOL_AUTH_URL` (and `SCHOOL_AUTH_API_KEY`) and restart. On someone's first
 sign-in the app makes their account here, with the role from the API's
 `roles` (`student` → student; `invigilator`, `teacher` → teacher;
@@ -240,7 +240,7 @@ logged.
 
 ## Still outstanding
 
-- The school site's login API (`docs/school-login-api.md`), from the client's
+- The school site's login API, from the client's
   tech team; the app is ready for it.
 - Hosting on the EduPyramids server with Docker, and testing one topic with
   their coordinator and teachers.

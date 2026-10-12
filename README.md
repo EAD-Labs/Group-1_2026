@@ -28,7 +28,6 @@ Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 | `render.yaml` | Render Blueprint for the hosted pilot |
 | `.github/workflows/ci.yml` | Tests and a build on every push and pull request |
 | `docs/acceptance-tests.md` | Every acceptance test in the HLD, its status and where it is checked |
-| `docs/school-login-api.md` | The small login API the school site adds, so school accounts can sign in |
 
 ## Running it
 
@@ -193,7 +192,7 @@ the `pgdata` volume, so it survives restarts and rebuilds.
   teachers and students on the People page. `--reset <email>` gives a
   forgotten coordinator a new password.
 - **Sign-in with school accounts:** set `SCHOOL_AUTH_URL` and
-  `SCHOOL_AUTH_API_KEY` in `.env` (see `docs/school-login-api.md`) and run
+  `SCHOOL_AUTH_API_KEY` in `.env` and run
   `docker compose up -d`; no rebuild is needed.
 - **Demo data:** `SEED_DEMO_DATA=true` adds test accounts and four synthetic
   classes. Leave it unset on a real server.
@@ -240,7 +239,7 @@ HLD needs updating to match.
 Hosting and sign-in: agreed with the client on 29 September. The app will run
 on EduPyramids' own server with Docker (see "Running with Docker"), and
 students, teachers and coordinators will sign in with their existing school
-accounts through a small login API on the school site (`docs/school-login-api.md`).
+accounts through a small login API on the school site.
 The app is ready for both; until the API is live it uses its own accounts. The
 Render pilot has demo accounts only.
 
