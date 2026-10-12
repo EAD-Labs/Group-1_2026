@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const logger = require('./middleware/logger');
+const securityHeaders = require('./middleware/securityHeaders');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -10,7 +11,9 @@ const app = express();
 // Behind a proxy req.ip is the proxy without this, and the login throttle keys
 // on the caller's address.
 app.set('trust proxy', 1);
+app.disable('x-powered-by');
 
+app.use(securityHeaders);
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
 app.use(express.json({ limit: '256kb' }));
 app.use(express.urlencoded({ extended: true }));

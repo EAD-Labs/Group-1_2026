@@ -62,6 +62,26 @@ const GENERIC_FAILURE = 'Invalid email or password';
 // or a cache, and that is called out in the README.
 const failures = new Map();
 
+// Most failures are never followed by another try, so their entries would
+// stay forever. Expired ones are swept out at most once a minute, and the
+// map is capped, so a flood of made-up addresses cannot grow it without end:
+// past the cap, the oldest entries go first.
+const MAX_TRACKED = 10_000;
+let lastSweep = 0;
+
+function pruneFailures(now = Date.now()) {
+  if (now - lastSweep >= 60_000) {
+    lastSweep = now;
+    for (const [key, entry] of failures) {
+      if (now - entry.firstAt > windowMs()) failures.delete(key);
+    }
+  }
+  for (const key of failures.keys()) {
+    if (failures.size <= MAX_TRACKED) break;
+    failures.delete(key);
+  }
+}
+
 function throttleKey(email, ip) {
   return `${String(email).toLowerCase()}|${ip}`;
 }
@@ -88,10 +108,13 @@ function recordFailure(email, ip) {
   const key = throttleKey(email, ip);
   const entry = failures.get(key);
   if (!entry || Date.now() - entry.firstAt > windowMs()) {
+    // Re-added at the end, so the oldest entries stay first in the map.
+    failures.delete(key);
     failures.set(key, { count: 1, firstAt: Date.now() });
   } else {
     entry.count += 1;
   }
+  pruneFailures();
 }
 
 function clearFailures(email, ip) {
@@ -278,8 +301,15 @@ async function changePassword({ userId, current, next, ip }) {
 /** Clear the failed-login counters. Only for tests. */
 function resetThrottle() {
   failures.clear();
+  lastSweep = 0;
+}
+
+/** How many sign-in failures are being remembered (for tests). */
+function trackedFailures() {
+  return failures.size;
 }
 
 module.exports = {
-  login, signToken, changePassword, GENERIC_FAILURE, resetThrottle,
+  login, signToken, changePassword, GENERIC_FAILURE, resetThrottle, trackedFailures,
+  recordFailure, pruneFailures, MAX_TRACKED,
 };
