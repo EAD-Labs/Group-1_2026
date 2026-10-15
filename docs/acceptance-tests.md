@@ -11,7 +11,8 @@ appearance or wording are left open.
 |---|---|
 | ✅ Automated | A test in the repository checks it on every push |
 | ✅ Measured | Run with a script; the result is recorded below |
-| 🖐 By hand | Needs a person, a real device or real students |
+| ✅ By hand | Checked by a person on real devices and browsers, and passed |
+| 🖐 By hand | Needs a person, a real device or real students; not done yet |
 
 ## Part 1: Logins and quizzes
 
@@ -36,8 +37,8 @@ is worth; the feel of it on a device is B3 and B4.
 |---|---|---|---|
 | B1 | Piece placed right: stays, marked right, one point | ✅ Automated | `tests/acceptance.test.js` "B1 …" |
 | B2 | Piece placed wrong: no marks, nothing saved | ✅ Automated | `tests/acceptance.test.js` "B2 …" |
-| B3 | Whole game played by keyboard only | 🖐 By hand | Every piece is a real button; check each of the nine kinds with Tab and Enter |
-| B4 | Game played by touch on a real tablet | 🖐 By hand | Check on a tablet: nothing scrolls by accident, text readable |
+| B3 | Whole game played by keyboard only | ✅ By hand | Passed, October 2026: each of the nine kinds played with Tab and Enter |
+| B4 | Game played by touch on a real tablet | ✅ By hand | Passed, October 2026: nothing scrolls by accident, text readable |
 | B5 | A right piece placed ten more times: score does not go up | ✅ Automated | `tests/acceptance.test.js` "B5 …" |
 | B6 | Game finished, next interrupted by a refresh: one result, points once, nothing half-saved | ✅ Automated | `tests/acceptance.test.js` "B6 …"; `tests/games.test.js` "submitting twice records one attempt" |
 
@@ -59,9 +60,9 @@ is worth; the feel of it on a device is B3 and B4.
 
 | No. | What the HLD tests | Status | Where |
 |---|---|---|---|
-| D1 | Student journey: log in, quiz, game, results, badges, log out, back in; progress still there | ✅ Automated (in parts) · 🖐 once end to end | The parts are covered above; walk it once in a browser before the demo |
-| D2 | Teacher journey: log in, class, one student, download report; numbers match | ✅ Automated (in parts) · 🖐 once end to end | As D1 |
-| D3 | D1 on Chrome, Firefox, Edge and a tablet | 🖐 By hand | Four browsers |
+| D1 | Student journey: log in, quiz, game, results, badges, log out, back in; progress still there | ✅ Automated (in parts) · ✅ by hand end to end | The parts are covered above; walked end to end on the hosted app, October 2026 |
+| D2 | Teacher journey: log in, class, one student, download report; numbers match | ✅ Automated (in parts) · ✅ by hand end to end | As D1 |
+| D3 | D1 on Chrome, Firefox, Edge and a tablet | ✅ By hand | Passed, October 2026, on all four |
 | D4 | Fifty students at once: all attempts saved, pages under 3 seconds | ✅ Measured | `node scripts/load-test.js` (see below) |
 | D5 | Five students and a teacher from the school, no help: four of five finish a quiz and a game alone; teacher finds a struggling student | 🖐 By hand | The classroom pilot |
 
@@ -98,6 +99,7 @@ live site.
 
 ## Left to do by hand
 
-B3, B4, D1 and D2 end to end, D3 and D5. Suggested order: B3 and D3 on a
-laptop (an hour), B4 on a tablet, D1 and D2 as a rehearsal of the demo, and
-D5 as the first day of the classroom pilot.
+Only D5: five school students and a teacher using it without help. It needs
+the client to arrange a class, and is planned as the first day of the
+classroom pilot. B3, B4, D1, D2 and D3 were checked by hand in October 2026
+and passed.

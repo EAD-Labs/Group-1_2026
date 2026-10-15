@@ -231,7 +231,7 @@ takes about a minute), and the free database expires after 30 days.
 | Week 7: points, levels and badges | Done: XP, stars, levels (the pyramid's tiers, which only go up), topic badges by the HLD rule, a build streak and a class goal |
 | Weeks 8–9: dashboards, content management | Done: class report, class goal, concept heatmap, question generator, and the coordinator's question editor (edits are live for students and never overwritten by an import) |
 | Section 4: roles, "manage users" | Done: the coordinator makes classes and teachers and adds students with starting passwords |
-| Section 14: acceptance tests | Of the HLD's 27 tests, 20 automated and passing, D4 (fifty students at once) measured and passing, D1–D2 automated in parts; B3, B4, D3 and D5 are checks by hand. See `docs/acceptance-tests.md` |
+| Section 14: acceptance tests | Of the HLD's 27 tests, 20 automated and passing, D4 (fifty students at once) measured and passing, and B3, B4, D1, D2 and D3 checked by hand and passing. Only D5, with real students, is left: see `docs/acceptance-tests.md` |
 
 Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated
 questions, offline use and the pyramid. The client approved trying these; the
