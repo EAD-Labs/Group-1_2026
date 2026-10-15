@@ -7,7 +7,8 @@ Spoken Tutorial / IIT Bombay.
 **Team:** Karan Bansal (24B3003) · Aditya Koli (24B3024) ·
 Keshav Kumar (24B0354) · Mayank Kansal (24B3019)
 
-**Live pilot:** https://edupyramids.onrender.com (test accounts below)
+**Hosted by EduPyramids:** https://python.edupyramids.org (school accounts)  
+**Demo:** https://edupyramids.onrender.com (test accounts below)
 
 ## What it does
 
@@ -236,14 +237,14 @@ Beyond the approved HLD (v2.0, Section 13.2): adaptive practice, generated
 questions, offline use and the pyramid. The client approved trying these; the
 HLD needs updating to match.
 
-Hosting and sign-in: agreed with the client on 29 September. The app will run
-on EduPyramids' own server with Docker (see "Running with Docker"), and
-students, teachers and coordinators will sign in with their existing school
-accounts through a small login API on the school site.
-The app is ready for both; until the API is live it uses its own accounts. The
-Render pilot has demo accounts only.
+Hosting and sign-in: agreed with the client on 29 September. Since 15 October
+2026 the app runs on EduPyramids' own server with Docker, at
+https://python.edupyramids.org (see "Running with Docker"). Students, teachers
+and coordinators will sign in with their existing school accounts through a
+small login API on the school site; until it is live the app uses its own
+accounts. The Render site is a demo with test accounts only.
 
-Next: hosting on the EduPyramids server, testing one topic with their
-coordinator and teachers, and a classroom pilot for the course report (a
-pre-test, a week or two of use, the post-test). The app already records every
+Next: the school login API, testing one topic with their coordinator and
+teachers, and a classroom pilot for the course report (a pre-test, a week or
+two of use, the post-test). The app already records every
 answer and every change in mastery.

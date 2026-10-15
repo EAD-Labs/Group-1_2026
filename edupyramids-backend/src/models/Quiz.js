@@ -1,9 +1,8 @@
 const { query, queryOne } = require('../config/database');
 
 /*
- * Reads work today and return real rows; the quizzes table is simply empty
- * until the client's MCQ file is loaded in Week 4. That is why these endpoints
- * return [] rather than invented sample questions.
+ * Real rows only: before any content is loaded the quizzes table is empty, and
+ * these return [] rather than invented sample questions.
  */
 const Quiz = {
   findAll({ topicId } = {}) {

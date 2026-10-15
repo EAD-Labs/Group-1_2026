@@ -12,9 +12,9 @@ router.use(authMiddleware);
 /**
  * 4. GET /api/quizzes
  *
- * A real query against a real table. The table is empty until the client's MCQ
- * file is loaded in Week 4, so this answers with an empty list rather than
- * sample questions nobody wrote.
+ * A real query against a real table. Before any content is loaded the table is
+ * empty, so this answers with an empty list rather than sample questions
+ * nobody wrote.
  */
 router.get('/', async (req, res, next) => {
   try {

@@ -122,23 +122,22 @@ function clearFailures(email, ip) {
 }
 
 /**
- * Ask Spoken Tutorial whether these credentials are good.
+ * Ask the school site's login API whether these credentials are good.
  *
- * Written against their own endpoint rather than a guess. From
- * spoken-website/api/views.py, `verify_spoken_social_user`:
+ * The small API the client's tech team adds to school.edupyramids.org (its
+ * specification went to them with the deployment guide):
  *
- *   POST  /api/spoken-social/verify-user/
+ *   POST  /api/edupyramids/verify-user/      Authorization: Bearer <shared key>
  *   body  { "email": "...", "password": "..." }
  *
  *   200   { status: 'success',
- *           user: { spoken_user_id, username, email, first_name, last_name } }
+ *           user: { spoken_user_id, username, email, first_name, last_name, roles } }
  *   401   { status: 'error', message: 'Invalid credentials' }
  *   403   { status: 'error', message: 'Account is disabled' }
  *
- * The client is adding the user's role to this response (meeting of 29
- * September), so it is read from whichever shape arrives: `user.role` or
- * `user.roles`, or the same at the top level. Without one, the role comes
- * from the school database copy, if there is one, or the existing account.
+ * The role is read from whichever shape arrives: `user.roles` or `user.role`,
+ * or the same at the top level. Without one, the role comes from the school
+ * database copy, if there is one, or the existing account.
  *
  * Returns null when no URL is configured, or when their service cannot be
  * reached; the caller then falls back to the local users table.

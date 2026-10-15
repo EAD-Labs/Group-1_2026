@@ -10,7 +10,7 @@ const { login, resetThrottle } = require('../src/services/authService');
  * sign-in makes their account here. Accounts made in this app keep working.
  */
 
-const API = 'https://school.example/api/spoken-social/verify-user/';
+const API = 'https://school.example/api/edupyramids/verify-user/';
 const ok = (user) => Promise.resolve({ data: { status: 'success', user } });
 const refused = (status) => Object.assign(new Error('no'), { response: { status } });
 const EMAILS = ['api.student@school.example', 'api.teacher@school.example', 'api.norole@school.example', 'local.only@school.example'];

@@ -1,12 +1,12 @@
 # EduPyramids — backend
 
 API and database for the EduPyramids Gamified Learning Companion: sign-in for
-three roles, the quiz module, seven kinds of game, adaptive practice driven by
-Bayesian Knowledge Tracing, class analytics, and question generation from
+three roles, the quiz module, nine kinds of game, XP, levels and badges,
+adaptive practice driven by Bayesian Knowledge Tracing, class analytics, the
+coordinator's question editor and People page, and question generation from
 Spoken Tutorial videos.
 
-Node.js + Express + PostgreSQL. Still to come: the Week 7 points, levels and
-badges rules, and coordinator content editing.
+Node.js + Express + PostgreSQL.
 
 ## Running it
 
@@ -159,8 +159,8 @@ createdb edupyramids_test     # once
 npm test
 ```
 
-111 tests over sign-in, access control, quizzes, every game kind, the mastery
-model, question generation (with Gemini faked) and the migrations. They run
+Over 250 tests over sign-in, access control, quizzes, every game kind, the
+mastery model, question generation (with Gemini faked) and the migrations. They run
 against `edupyramids_test`, which is dropped and rebuilt on every run, so
 development data is never touched and no test can pass on a leftover row. The
 same suite runs on GitHub for every push (`.github/workflows/ci.yml`).
@@ -240,10 +240,10 @@ logged.
 
 ## Still outstanding
 
-- The school site's login API, from the client's
-  tech team; the app is ready for it.
-- Hosting on the EduPyramids server with Docker, and testing one topic with
-  their coordinator and teachers.
+- The school site's login API, from the client's tech team; the app is ready
+  for it. The app itself has run on EduPyramids' own server since 15 October
+  2026 (https://python.edupyramids.org).
+- Testing one topic with their coordinator and teachers.
 - How teachers link to batches in the school data, for class rosters.
 - The client to review the corrected questions (`content/python-mcqs.json`):
   explanations were written by the development team, and the questions moved

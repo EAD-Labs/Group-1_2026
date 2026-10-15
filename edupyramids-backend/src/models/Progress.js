@@ -8,11 +8,9 @@ const Progress = {
   forStudent(studentId) {
     /*
      * The attempt figures are worked out from the attempts table rather than
-     * read from `progress`. The progress row is maintained by the rules engine,
-     * which is Week 7 work; until then it is all zeros, and a dashboard showing
-     * nothing after a student has just finished a quiz looks broken. Counting
-     * the attempts directly is both honest and correct today, and it stays
-     * correct once the rules engine starts filling the row in.
+     * read from `progress`, an early table nothing fills in: XP, levels and
+     * badges come from the attempts themselves (dailyService, the path and
+     * badgeService), so its points and level columns stay at their defaults.
      */
     return query(
       `SELECT t.id AS "topicId", t.name AS topic, t.level,
@@ -41,7 +39,7 @@ const Progress = {
     const rows = await Progress.forStudent(studentId);
     const started = rows.filter((r) => r.attempts > 0);
     // A topic counts as learnt at 80% or better, the same bar the badge rule
-    // will use in Week 7 (HLD Section 6.3).
+    // uses (HLD Section 6.3).
     const learnt = rows.filter((r) => (r.bestPercent ?? 0) >= 80).length;
 
     return {
