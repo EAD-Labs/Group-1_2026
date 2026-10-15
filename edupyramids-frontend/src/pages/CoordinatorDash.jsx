@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import DashboardShell from '../components/DashboardShell';
 import ClassReport from '../components/ClassReport';
 import SchoolPanel from '../components/SchoolPanel';
@@ -72,45 +73,52 @@ export default function CoordinatorDash() {
       </div>
 
       <h2 className="h2">Classes</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Class</th>
-            <th scope="col">Teacher</th>
-            <th scope="col">Students</th>
-            <th scope="col">Started</th>
-            <th scope="col">Average</th>
-            <th scope="col"><span className="sr-only">Open</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          {rollup.map((c) => {
-            const rows = c.report?.byStudent ?? [];
-            const active = rows.filter((s) => s.attempts > 0);
-            const average = active.length
-              ? Math.round(active.reduce((s, x) => s + x.averagePercent, 0) / active.length)
-              : null;
-            return (
-              <tr key={c.id}>
-                <td>{c.name}</td>
-                <td className="muted">{c.teacherName || '—'}</td>
-                <td>{rows.length}</td>
-                <td>{active.length}</td>
-                <td>{average === null ? <span className="muted">No attempts yet</span> : `${average}%`}</td>
-                <td>
-                  <button
-                    className="btn btn--ghost btn--sm"
-                    type="button"
-                    onClick={() => setSelected(selected === c.id ? null : c.id)}
-                  >
-                    {selected === c.id ? 'Hide' : 'Open'}
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      {classes.length === 0 ? (
+        <p className="empty">
+          No classes yet. Add classes, their teachers and students on
+          the <Link to="/manage/people">People</Link> page.
+        </p>
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Class</th>
+              <th scope="col">Teacher</th>
+              <th scope="col">Students</th>
+              <th scope="col">Started</th>
+              <th scope="col">Average</th>
+              <th scope="col"><span className="sr-only">Open</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rollup.map((c) => {
+              const rows = c.report?.byStudent ?? [];
+              const active = rows.filter((s) => s.attempts > 0);
+              const average = active.length
+                ? Math.round(active.reduce((s, x) => s + x.averagePercent, 0) / active.length)
+                : null;
+              return (
+                <tr key={c.id}>
+                  <td>{c.name}</td>
+                  <td className="muted">{c.teacherName || '—'}</td>
+                  <td>{rows.length}</td>
+                  <td>{active.length}</td>
+                  <td>{average === null ? <span className="muted">No attempts yet</span> : `${average}%`}</td>
+                  <td>
+                    <button
+                      className="btn btn--ghost btn--sm"
+                      type="button"
+                      onClick={() => setSelected(selected === c.id ? null : c.id)}
+                    >
+                      {selected === c.id ? 'Hide' : 'Open'}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
 
       {selected && (
         <div className="drill">
@@ -122,13 +130,7 @@ export default function CoordinatorDash() {
         </div>
       )}
 
-      <h2 className="h2">School database</h2>
       <SchoolPanel />
-
-      <p className="muted small note-foot">
-        Editing content is a coordinator's job under Section 4 of the HLD, and
-        those tools arrive in Week 9.
-      </p>
     </DashboardShell>
   );
 }

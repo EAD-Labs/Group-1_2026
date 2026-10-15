@@ -8,6 +8,11 @@ import { client } from '../api/client';
  * EduPyramids database, while this one supplies identity and the roster. It is
  * shown to coordinators only, because it is a roster of over a million real
  * people.
+ *
+ * The connection is optional, and on EduPyramids' own server it is off by
+ * design (the app never touches the school database; sign-in goes through
+ * the login API). When it is not connected the whole section stays hidden
+ * rather than reporting something nobody needs to fix.
  */
 export default function SchoolPanel() {
   const [stats, setStats] = useState(null);
@@ -45,22 +50,13 @@ export default function SchoolPanel() {
     }
   }
 
-  if (error) return <p className="alert" role="alert">{error}</p>;
-  if (!stats) return <p className="muted">Checking the school database…</p>;
-
-  if (!stats.connected) {
-    return (
-      <p className="empty">
-        The school database is not connected. Everything else works without it;
-        only the roster lookup below needs it.
-      </p>
-    );
-  }
+  if (error || !stats || !stats.connected) return null;
 
   const n = (v) => Number(v).toLocaleString();
 
   return (
     <>
+      <h2 className="h2">School database</h2>
       <div className="stat-row">
         <Stat label="Accounts" value={n(stats.accounts)} note="read-only" />
         <Stat label="Student records" value={n(stats.students)}
