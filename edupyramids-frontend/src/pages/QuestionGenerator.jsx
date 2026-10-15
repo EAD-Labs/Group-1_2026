@@ -101,8 +101,9 @@ export default function QuestionGenerator() {
 
       {generator && !generator.configured && (
         <p className="alert" role="alert">
-          Generation is not set up on this server: add <code>GEMINI_API_KEY</code> to its environment.
-          You can still review drafts that already exist.
+          Generating new questions is switched off on this server. The person who looks after the
+          server can switch it on by adding a Gemini key (<code>GEMINI_API_KEY</code>). You can still
+          review drafts that already exist.
         </p>
       )}
 

@@ -55,7 +55,7 @@ export default function StudentHome() {
       {classes.map((c) => <ClassGoalCard key={c.classId} week={c} mine={c.mine} compact />)}
 
       {units.length === 0
-        ? <p className="empty">Nothing to learn yet. Your teacher will add questions soon.</p>
+        ? <p className="empty">Nothing to learn yet. Questions will appear here once they are added.</p>
         : <Pyramid units={units} />}
     </DashboardShell>
   );

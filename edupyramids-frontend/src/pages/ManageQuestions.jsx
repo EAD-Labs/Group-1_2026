@@ -62,8 +62,8 @@ export default function ManageQuestions() {
   return (
     <DashboardShell title="Questions" wide>
       <p className="page-intro muted">
-        Edit the client&apos;s questions or add your own. Changes reach students straight away, and a
-        question edited here is never overwritten by the next import.
+        Edit the course questions or add your own. Changes reach students straight away, and a
+        question edited here is never overwritten when the course content is updated.
       </p>
 
       <div className="manage-bar">

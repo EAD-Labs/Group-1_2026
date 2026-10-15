@@ -14,10 +14,9 @@ function validate({ email, password }) {
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errors.email = 'That does not look like an email address';
   }
+  // No length rule here: a school account's password is whatever the school
+  // site allowed, and only the server can say whether it is right.
   if (!password) errors.password = 'Enter your password';
-  else if (password.length < 6) {
-    errors.password = 'Passwords are at least 6 characters';
-  }
   return errors;
 }
 
@@ -82,6 +81,10 @@ export default function Login() {
           <li>
             <span className="auth-point-icon" aria-hidden="true">📈</span>
             See your progress by topic, and what is worth another look.
+          </li>
+          <li>
+            <span className="auth-point-icon" aria-hidden="true">🎮</span>
+            Games and the lesson videos, all in one place.
           </li>
         </ul>
         <p className="auth-foot">Powered by Spoken Tutorial, EduPyramids, IIT Bombay</p>
