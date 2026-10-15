@@ -681,9 +681,11 @@ tr.is-open > td { border-bottom-color: transparent; }
 
 .note-foot { margin-top: var(--gap-xl); }
 
-/* Tables scroll rather than squashing the page on a narrow screen. */
+/* Tables scroll rather than squashing the page on a narrow screen. The
+   position keeps hidden screen-reader labels inside the scrolling table;
+   without it they hang off the page and the whole page scrolls sideways. */
 @media (max-width: 560px) {
-  .table { display: block; overflow-x: auto; }
+  .table { display: block; overflow-x: auto; position: relative; }
   .chart-row { grid-template-columns: 5.5rem 1fr 4rem; }
 }
 
