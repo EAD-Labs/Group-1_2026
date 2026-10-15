@@ -27,7 +27,7 @@ test('a first sign-in through the API makes the account, with the role the API g
   axios.post.mockReturnValue(ok({ spoken_user_id: 501, email: EMAILS[0], first_name: 'Api', last_name: 'Student', role: 'student' }));
   const res = await login({ email: EMAILS[0], password: 'their-password', role: 'student', ip: '1.1.1.1' });
   expect(res.ok).toBe(true);
-  expect(res.user).toMatchObject({ email: EMAILS[0], name: 'Api Student', role: 'student' });
+  expect(res.user).toMatchObject({ email: EMAILS[0], name: 'Api Student', role: 'student', schoolAccount: true });
   expect(axios.post).toHaveBeenCalledWith(API, { email: EMAILS[0], password: 'their-password' }, expect.anything());
   // Their password is never stored here.
   expect((await queryOne('SELECT password_hash FROM users WHERE email = $1', [EMAILS[0]])).password_hash).toBe('!');
@@ -60,6 +60,7 @@ test('accounts made in this app sign in with their own password, without asking 
     [EMAILS[3], await bcrypt.hash('mango-river-42', 10)]);
   const res = await login({ email: EMAILS[3], password: 'mango-river-42', role: 'teacher', ip: '1.1.1.4' });
   expect(res.ok).toBe(true);
+  expect(res.user.schoolAccount).toBe(false);
   expect(axios.post).not.toHaveBeenCalled();
 });
 

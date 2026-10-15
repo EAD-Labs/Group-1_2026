@@ -9,6 +9,9 @@ import { auth } from '../utils/auth';
  * signs out every other session, so a password someone else saw stops working
  * on their device too; this one carries on with the fresh token the server
  * sends back.
+ *
+ * Someone who signs in with their school account has no password here: it is
+ * their school site password, so it is changed there and the form is not shown.
  */
 export default function Account() {
   const user = auth.getCurrentUser();
@@ -38,32 +41,39 @@ export default function Account() {
       <section className="card account-card">
         <p className="muted">Signed in as <strong>{user?.name}</strong> ({user?.email}).</p>
         <h2 className="h2">Change your password</h2>
-        <p className="muted small">
-          If someone gave you a starting password, change it to one only you know.
-          Changing it signs you out everywhere else.
-        </p>
-        {state.error && <p className="alert" role="alert">{state.error}</p>}
-        {state.done && <p className="manage-notice" role="status">Your password has been changed.</p>}
-        <form onSubmit={save}>
-          <div className="field">
-            <label htmlFor="pw-current">Current password</label>
-            <input id="pw-current" type="password" autoComplete="current-password" required
-              value={form.current} onChange={set('current')} />
-          </div>
-          <div className="field">
-            <label htmlFor="pw-next">New password (at least 8 characters)</label>
-            <input id="pw-next" type="password" autoComplete="new-password" required minLength={8} maxLength={72}
-              value={form.next} onChange={set('next')} />
-          </div>
-          <div className="field">
-            <label htmlFor="pw-again">New password again</label>
-            <input id="pw-again" type="password" autoComplete="new-password" required minLength={8} maxLength={72}
-              value={form.again} onChange={set('again')} />
-          </div>
-          <button className="btn" type="submit" disabled={state.busy}>
-            {state.busy ? 'Changing…' : 'Change password'}
-          </button>
-        </form>
+        {user?.schoolAccount ? (
+          <p>
+            You sign in with your EduPyramids school account, so your password is the
+            one you use on the school website. To change it, change it there.
+          </p>
+        ) : (<>
+          <p className="muted small">
+            If someone gave you a starting password, change it to one only you know.
+            Changing it signs you out everywhere else.
+          </p>
+          {state.error && <p className="alert" role="alert">{state.error}</p>}
+          {state.done && <p className="manage-notice" role="status">Your password has been changed.</p>}
+          <form onSubmit={save}>
+            <div className="field">
+              <label htmlFor="pw-current">Current password</label>
+              <input id="pw-current" type="password" autoComplete="current-password" required
+                value={form.current} onChange={set('current')} />
+            </div>
+            <div className="field">
+              <label htmlFor="pw-next">New password (at least 8 characters)</label>
+              <input id="pw-next" type="password" autoComplete="new-password" required minLength={8} maxLength={72}
+                value={form.next} onChange={set('next')} />
+            </div>
+            <div className="field">
+              <label htmlFor="pw-again">New password again</label>
+              <input id="pw-again" type="password" autoComplete="new-password" required minLength={8} maxLength={72}
+                value={form.again} onChange={set('again')} />
+            </div>
+            <button className="btn" type="submit" disabled={state.busy}>
+              {state.busy ? 'Changing…' : 'Change password'}
+            </button>
+          </form>
+        </>)}
       </section>
     </DashboardShell>
   );

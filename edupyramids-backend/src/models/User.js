@@ -1,12 +1,15 @@
 const { query, queryOne } = require('../config/database');
 
-const PUBLIC_COLUMNS = 'id, email, name, role, school_id AS "schoolId"';
+// schoolAccount: signs in through the school's login API, so has no password
+// here ('!') and changes it on the school site, not on our Account page.
+const PUBLIC_COLUMNS = `id, email, name, role, school_id AS "schoolId",
+  (password_hash = '!') AS "schoolAccount"`;
 
 const User = {
   /** Includes the hash, so this is only for the login path. */
   findByEmailWithHash(email) {
     return queryOne(
-      `SELECT id, email, name, role, school_id AS "schoolId", password_hash AS "passwordHash"
+      `SELECT ${PUBLIC_COLUMNS}, password_hash AS "passwordHash"
          FROM users
         WHERE lower(email) = lower($1)`,
       [email],
