@@ -164,11 +164,6 @@ export default function Login() {
           {loading && <span className="spinner" aria-hidden="true" />}
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
-
-        <p className="muted small">
-          Test accounts: student1@school.com, teacher1@school.com,
-          coordinator@school.com &mdash; password <code>password123</code>
-        </p>
       </form>
       </div>
     </main>
