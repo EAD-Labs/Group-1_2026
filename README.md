@@ -27,13 +27,13 @@ Young learners can lose interest in a video-plus-multiple-choice format: there i
 | **Demo, with test accounts** | https://edupyramids.onrender.com (the first visit can take about a minute while the free server wakes up) |
 | **Hosted by EduPyramids, for school accounts** | https://python.edupyramids.org |
 
-Demo sign-ins, all with the password `password123`. Pick the matching role on the sign-in page.
+Demo sign-ins, with the password `password123`. Pick the matching role on the sign-in page.
 
 | Role | Email |
 |---|---|
 | Student | `student1@school.com` (fresh start), `student2@school.com` (some progress) |
 | Teacher | `teacher1@school.com`, or `anjali.deshpande@demo.example` for a class with three weeks of made-up activity |
-| Coordinator | `coordinator@school.com` |
+| Coordinator | Ask the team. This sign-in is not public, because it can change the demo's questions and accounts. |
 
 ## Run it yourself
 
