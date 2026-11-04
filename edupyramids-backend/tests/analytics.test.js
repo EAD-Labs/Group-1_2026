@@ -3,6 +3,7 @@ const app = require('../src/app');
 const { pool, query, queryOne } = require('../src/config/database');
 const Attempt = require('../src/models/Attempt');
 const { resetThrottle } = require('../src/services/authService');
+const { lessonsFor } = require('../src/services/lessonService');
 
 /*
  * The class report, on attempts this file owns.
@@ -113,4 +114,46 @@ describe('drilling into one student', () => {
     const res = await request(app).get(`/api/analytics/students/${other.id}`).set(auth());
     expect(res.status).toBe(403);
   });
+});
+
+test('a lesson attempt counts only the questions in that lesson, blanks included', async () => {
+  const { id: teacherId } = await queryOne("SELECT id FROM users WHERE email = 'teacher2@school.com'");
+  const { id: topicId } = await queryOne("SELECT id FROM topics WHERE name = 'Loops'");
+  const { id: longQuiz } = await queryOne(
+    "INSERT INTO quizzes (title, topic_id, difficulty) VALUES ('Report test: long quiz', $1, 3) RETURNING id", [topicId],
+  );
+  const { id: ownClass } = await queryOne(
+    "INSERT INTO classes (name, teacher_id, school_id) VALUES ('Report test class', $1, 'school_001') RETURNING id", [teacherId],
+  );
+  try {
+    for (let n = 1; n <= 13; n += 1) {
+      await query(
+        `INSERT INTO questions (quiz_id, text, option_a, option_b, correct_answer, explanation)
+         VALUES ($1, $2, 'yes', 'no', 'a', 'Because.')`,
+        [longQuiz, `Report test question ${n}`],
+      );
+    }
+    await query('INSERT INTO class_students VALUES ($1, $2)', [ownClass, studentId]);
+    const [lesson] = await lessonsFor(longQuiz);
+    const [blank, ...answered] = lesson.questionIds;
+    const answers = Object.fromEntries(answered.map((id) => [id, 'a']));
+    await query(
+      `INSERT INTO attempts (student_id, kind, quiz_id, topic_id, score, max_score, answers, lesson)
+       VALUES ($1, 'quiz', $2, $3, $4, $5, $6, 1)`,
+      [studentId, longQuiz, topicId, answered.length, lesson.questionIds.length, JSON.stringify(answers)],
+    );
+
+    const inLongQuiz = (await Attempt.hardestQuestionsForClass(ownClass, { limit: 100 }))
+      .filter((r) => r.text.startsWith('Report test'));
+
+    // The questions in the other lesson were never shown, so they are not there.
+    expect(inLongQuiz.map((r) => r.id).sort((a, b) => a - b)).toEqual([...lesson.questionIds].sort((a, b) => a - b));
+    expect(inLongQuiz[0]).toMatchObject({ id: blank, seen: 1, correct: 0, percentCorrect: 0 });
+    expect(inLongQuiz.slice(1).every((r) => r.percentCorrect === 100)).toBe(true);
+  } finally {
+    await query('DELETE FROM attempts WHERE quiz_id = $1', [longQuiz]);
+    await query('DELETE FROM class_students WHERE class_id = $1', [ownClass]);
+    await query('DELETE FROM classes WHERE id = $1', [ownClass]);
+    await query('DELETE FROM quizzes WHERE id = $1', [longQuiz]);
+  }
 });

@@ -1,5 +1,6 @@
 const { query } = require('../config/database');
 const { VIDEO_TOPIC } = require('../config/videoTopic');
+const { lessonsForMany } = require('../services/lessonService');
 
 /*
  * Quiz attempts and game attempts live in the same table, told apart by `kind`.
@@ -44,29 +45,60 @@ const Attempt = {
   /**
    * The questions this class gets wrong most often.
    *
-   * Every question the quiz put in front of the student counts, not just the
+   * Every question an attempt put in front of the student counts, not just the
    * ones they filled in. A question the whole class skipped is the strongest
    * sign it needs reteaching, and marking already counts a blank as wrong
-   * (HLD test A5), so the report has to agree with the score.
+   * (HLD test A5), so the report has to agree with the score. A lesson attempt
+   * covers that lesson's questions only: the rest of the quiz was never shown.
    */
-  hardestQuestionsForClass(classId, { limit = 10 } = {}) {
-    return query(
-      `SELECT q.id, q.text, t.name AS topic,
-              count(*)::int AS seen,
-              count(*) FILTER (WHERE a.answers ->> q.id::text = q.correct_answer)::int
-                AS correct,
-              ROUND(100.0 * count(*) FILTER (WHERE a.answers ->> q.id::text = q.correct_answer)
-                    / count(*))::int AS "percentCorrect"
-         FROM attempts a
-         JOIN questions q ON q.quiz_id = a.quiz_id
-         JOIN quizzes   z ON z.id = q.quiz_id
-         JOIN topics    t ON t.id = z.topic_id
-        WHERE a.student_id IN (SELECT student_id FROM class_students WHERE class_id = $1)
-        GROUP BY q.id, q.text, t.name
-        ORDER BY "percentCorrect" ASC, seen DESC, q.id
-        LIMIT $2`,
-      [classId, limit],
+  async hardestQuestionsForClass(classId, { limit = 10 } = {}) {
+    const attempts = await query(
+      `SELECT quiz_id AS "quizId", lesson, answers
+         FROM attempts
+        WHERE quiz_id IS NOT NULL
+          AND student_id IN (SELECT student_id FROM class_students WHERE class_id = $1)`,
+      [classId],
     );
+    const quizIds = [...new Set(attempts.map((a) => a.quizId))];
+    if (!quizIds.length) return [];
+
+    const [questions, lessons] = await Promise.all([
+      query(
+        `SELECT q.id, q.quiz_id AS "quizId", q.text, q.correct_answer AS answer, t.name AS topic
+           FROM questions q
+           JOIN quizzes z ON z.id = q.quiz_id
+           JOIN topics  t ON t.id = z.topic_id
+          WHERE q.quiz_id = ANY($1)`,
+        [quizIds],
+      ),
+      lessonsForMany(quizIds),
+    ]);
+
+    const tally = new Map(questions.map((q) => [q.id, {
+      id: q.id, text: q.text, topic: q.topic, seen: 0, correct: 0,
+    }]));
+    const answerOf = new Map(questions.map((q) => [q.id, q.answer]));
+    const inQuiz = (quizId) => questions.filter((q) => q.quizId === quizId).map((q) => q.id);
+
+    attempts.forEach(({ quizId, lesson, answers }) => {
+      const given = answers || {};
+      // If the lessons have since been redrawn, what was answered is all that is known.
+      const shown = lesson === null
+        ? inQuiz(quizId)
+        : lessons.get(quizId)?.[lesson - 1]?.questionIds ?? Object.keys(given).map(Number);
+      shown.forEach((id) => {
+        const row = tally.get(id);
+        if (!row) return;
+        row.seen += 1;
+        if (given[id] === answerOf.get(id)) row.correct += 1;
+      });
+    });
+
+    return [...tally.values()]
+      .filter((r) => r.seen > 0)
+      .map((r) => ({ ...r, percentCorrect: Math.round((100 * r.correct) / r.seen) }))
+      .sort((a, b) => a.percentCorrect - b.percentCorrect || b.seen - a.seen || a.id - b.id)
+      .slice(0, limit);
   },
 
   /** Per-topic averages for one class, the shape the teacher dashboard needs. */
