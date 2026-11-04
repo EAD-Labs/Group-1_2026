@@ -1,6 +1,6 @@
 const express = require('express');
 const Game = require('../models/Game');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, requireRole } = require('../middleware/auth');
 const {
   getGameForStudent, checkMove, giveHint, markGameAttempt, GameError,
 } = require('../services/gameService');
@@ -50,7 +50,7 @@ router.get('/:id', async (req, res, next) => {
  * have one (memory: { first, second }; trace: { step, value }), with the
  * attempt's clientAttemptId. Recorded, and the marking uses what was checked.
  */
-router.post('/:id/check', async (req, res, next) => {
+router.post('/:id/check', requireRole('student'), async (req, res, next) => {
   const id = idFrom(req, res);
   if (id === null) return undefined;
   const clientAttemptId = req.body?.clientAttemptId;
@@ -72,7 +72,7 @@ router.post('/:id/check', async (req, res, next) => {
  * Parsons puzzle). Recorded against this attempt: any hint costs the third
  * star. Levels go from a nudge up to maxLevel.
  */
-router.post('/:id/hint', async (req, res, next) => {
+router.post('/:id/hint', requireRole('student'), async (req, res, next) => {
   const id = idFrom(req, res);
   if (id === null) return undefined;
   const { clientAttemptId, item, level } = req.body || {};
@@ -103,7 +103,7 @@ router.post('/:id/hint', async (req, res, next) => {
  * Written to the same attempts table as quizzes, with kind = 'game'. The
  * student id comes from the token, never the body.
  */
-router.post('/:id/results', async (req, res, next) => {
+router.post('/:id/results', requireRole('student'), async (req, res, next) => {
   const id = idFrom(req, res);
   if (id === null) return undefined;
 

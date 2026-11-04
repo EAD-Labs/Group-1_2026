@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const request = require('supertest');
 const app = require('../src/app');
 const { pool, query } = require('../src/config/database');
@@ -42,15 +43,19 @@ let games;
 
 beforeAll(async () => {
   resetThrottle();
+  // A student of its own, in no class, so these attempts touch nobody's figures.
+  await query(
+    `INSERT INTO users (email, password_hash, name, role, school_id)
+     VALUES ('gamekinds@school.com', $1, 'Game Kinds Student', 'student', 'school_001')`,
+    [await bcrypt.hash('password123', 4)],
+  );
   const res = await request(app).post('/api/auth/login')
-    .send({ email: 'coordinator@school.com', password: 'password123', role: 'coordinator' });
+    .send({ email: 'gamekinds@school.com', password: 'password123', role: 'student' });
   auth = { Authorization: `Bearer ${res.body.token}` };
   games = await query('SELECT id, kind, title, content FROM games ORDER BY id');
 });
 
 afterAll(async () => {
-  // Coordinator attempts are test noise; leave the student figures untouched.
-  await query("DELETE FROM attempts WHERE student_id = (SELECT id FROM users WHERE email = 'coordinator@school.com')");
   await pool.end();
 });
 

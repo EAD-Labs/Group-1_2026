@@ -1,5 +1,5 @@
 const express = require('express');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, requireRole } = require('../middleware/auth');
 const { listQuizzes, getQuizForStudent, QuizNotFound } = require('../services/quizService');
 const { markQuizAttempt, checkAnswer, ScoringError } = require('../services/scoringService');
 const { recordCheck } = require('../services/checkService');
@@ -58,7 +58,7 @@ router.get('/:id', async (req, res, next) => {
  * that is marked, so checking cannot be used to find the answer and then
  * submit a different one (services/checkService.js).
  */
-router.post('/:id/check', async (req, res, next) => {
+router.post('/:id/check', requireRole('student'), async (req, res, next) => {
   try {
     const { questionId, answer, clientAttemptId } = req.body || {};
     if (!Number.isInteger(Number(questionId))) {
@@ -91,7 +91,7 @@ router.post('/:id/check', async (req, res, next) => {
  * The student id comes from the token, never from the body: taking it from the
  * body would let anyone file an attempt under someone else's name.
  */
-router.post('/:id/attempts', async (req, res, next) => {
+router.post('/:id/attempts', requireRole('student'), async (req, res, next) => {
   try {
     const quizId = Number(req.params.id);
     if (!Number.isInteger(quizId)) {

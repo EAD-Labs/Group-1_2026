@@ -6,6 +6,11 @@ if (!process.env.JWT_SECRET) {
   console.error('JWT_SECRET is not set. Copy .env.example to .env and set it.');
   process.exit(1);
 }
+// The example files' value is public, and anyone holding the key can sign in as anyone.
+if (process.env.NODE_ENV === 'production' && /^change-me/i.test(process.env.JWT_SECRET)) {
+  console.error('JWT_SECRET is still the placeholder from the example file. Set it to a long random value.');
+  process.exit(1);
+}
 
 const app = require('./app');
 const { pool } = require('./config/database');

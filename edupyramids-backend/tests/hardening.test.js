@@ -1,3 +1,6 @@
+const path = require('path');
+const { spawnSync } = require('child_process');
+const bcrypt = require('bcryptjs');
 const request = require('supertest');
 const app = require('../src/app');
 const { pool, query } = require('../src/config/database');
@@ -14,6 +17,89 @@ const {
 afterAll(async () => {
   resetThrottle();
   await pool.end();
+});
+
+describe('values the database refuses are the caller\'s mistake', () => {
+  const auth = async (email, role) => {
+    resetThrottle();
+    const res = await request(app).post('/api/auth/login').send({ email, password: 'password123', role });
+    return { Authorization: `Bearer ${res.body.token}` };
+  };
+
+  test('an id too big for its column, or not a number, is a 400', async () => {
+    const student = await auth('student1@school.com', 'student');
+    const teacher = await auth('teacher1@school.com', 'teacher');
+    expect((await request(app).get('/api/quizzes/99999999999').set(student)).status).toBe(400);
+    expect((await request(app).get('/api/games/99999999999').set(student)).status).toBe(400);
+    expect((await request(app).get('/api/progress/abc').set(teacher)).status).toBe(400);
+  });
+
+  test('a name too long for its column is a 400', async () => {
+    const coordinator = await auth('coordinator@school.com', 'coordinator');
+    const res = await request(app).post('/api/people/teachers').set(coordinator)
+      .send({ name: 'n'.repeat(3000), email: 'too.long@test.example' });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('That value is too long');
+  });
+
+  test('a real server error still says nothing about why', () => {
+    const errorHandler = require('../src/middleware/errorHandler');
+    const json = jest.fn();
+    const res = { status: jest.fn(() => ({ json })) };
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    errorHandler(Object.assign(new Error('relation "users" is missing'), { code: '42P01' }), { method: 'GET', originalUrl: '/x' }, res);
+    spy.mockRestore();
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(json).toHaveBeenCalledWith({ error: 'Something went wrong' });
+  });
+});
+
+describe('signing in', () => {
+  test('a password or email that is not text is a plain 400', async () => {
+    resetThrottle();
+    const send = (body) => request(app).post('/api/auth/login').send(body);
+    expect((await send({ email: 'student1@school.com', password: 123 })).status).toBe(400);
+    expect((await send({ email: ['student1@school.com'], password: ['x'] })).status).toBe(400);
+    expect((await send({ email: { a: 1 }, password: 'x' })).status).toBe(400);
+  });
+
+  test('an unknown email is really compared, so timing does not reveal who has an account', async () => {
+    resetThrottle();
+    const spy = jest.spyOn(bcrypt, 'compare');
+    await request(app).post('/api/auth/login')
+      .send({ email: 'nobody.here@test.example', password: 'wrong', role: 'student' });
+    const [, hash] = spy.mock.calls[0];
+    spy.mockRestore();
+    expect(hash).toHaveLength(60);
+    expect(bcrypt.getRounds(hash)).toBe(10);
+  });
+});
+
+describe('the signing key', () => {
+  test('a production server refuses the example file\'s placeholder', () => {
+    const run = spawnSync(process.execPath, ['src/server.js'], {
+      cwd: path.join(__dirname, '..'),
+      env: { ...process.env, NODE_ENV: 'production', JWT_SECRET: 'change-me' },
+      encoding: 'utf8',
+      timeout: 20000,
+    });
+    expect(run.status).toBe(1);
+    expect(run.stderr).toMatch(/still the placeholder/);
+  });
+});
+
+describe('only students record attempts', () => {
+  test('a teacher is refused, and can still read a quiz', async () => {
+    resetThrottle();
+    const login = await request(app).post('/api/auth/login')
+      .send({ email: 'teacher1@school.com', password: 'password123', role: 'teacher' });
+    const teacher = { Authorization: `Bearer ${login.body.token}` };
+    const [{ id: quizId }] = await query('SELECT id FROM quizzes ORDER BY id LIMIT 1');
+    const [{ id: gameId }] = await query('SELECT id FROM games ORDER BY id LIMIT 1');
+    expect((await request(app).get(`/api/quizzes/${quizId}`).set(teacher)).status).toBe(200);
+    expect((await request(app).post(`/api/quizzes/${quizId}/attempts`).set(teacher).send({ answers: {} })).status).toBe(403);
+    expect((await request(app).post(`/api/games/${gameId}/results`).set(teacher).send({ answers: {} })).status).toBe(403);
+  });
 });
 
 describe('security headers', () => {

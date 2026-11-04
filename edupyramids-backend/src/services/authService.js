@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -56,6 +57,11 @@ async function schoolLogin(email, password, role) {
  * exists and what the account is for. HLD test A2 requires the opposite.
  */
 const GENERIC_FAILURE = 'Invalid email or password';
+
+// Compared against when there is no password to check, so that takes as long
+// as a wrong password. It must be a real hash: bcrypt answers at once, without
+// hashing, for anything that is not 60 characters.
+const NOTHING_TO_MATCH = bcrypt.hashSync(crypto.randomBytes(16).toString('hex'), 10);
 
 // email+IP -> { count, firstAt }. In memory on purpose: this is a single
 // process at pilot scale. A second instance needs this moved to the database
@@ -201,7 +207,7 @@ function signToken(user) {
  * @returns {{ ok: true, user, token } | { ok: false, status: number, error: string }}
  */
 async function login({ email, password, role, ip }) {
-  if (!email || !password) {
+  if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
     return { ok: false, status: 400, error: 'Email and password are required' };
   }
 
@@ -221,9 +227,9 @@ async function login({ email, password, role, ip }) {
   };
 
   // 1. An account made in this app (the People page, test accounts) has its
-  // own password. Hash a throwaway string when there is no account, so a
-  // missing account and a wrong password take about the same time to answer.
-  const hash = user ? user.passwordHash : '$2a$10$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinva';
+  // own password. With no account, or a school account with no password here,
+  // the comparison still runs, so all three take about the same time to answer.
+  const hash = user?.passwordHash?.length === 60 ? user.passwordHash : NOTHING_TO_MATCH;
   if (await bcrypt.compare(password, hash) && roleFits(user.role)) return success(user);
 
   // 2. The school's login API: null (not set up, or unreachable), false
