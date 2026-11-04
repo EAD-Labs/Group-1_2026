@@ -211,3 +211,32 @@ test('the path is for students only', async () => {
   const teacher = { Authorization: `Bearer ${res.body.token}` };
   expect((await request(app).get('/api/path').set(teacher)).status).toBe(403);
 });
+
+test('a keystone ticket works once, so answers shown by a result cannot be sent back', async () => {
+  const { units } = await path(other);
+  const { topicId } = units[0];
+  const cp = (await request(app).get(`/api/path/checkpoints/${topicId}`).set(other)).body.data;
+  const send = (answers) => request(app).post(`/api/path/checkpoints/${topicId}`).set(other).send({ ticket: cp.ticket, answers });
+
+  const failed = await send({});
+  expect(failed.status).toBe(201);
+  expect(failed.body.data).toMatchObject({ score: 0, passed: false });
+  const before = (await request(app).get('/api/me/daily').set(other)).body.data.xp.total;
+
+  const revealed = Object.fromEntries(failed.body.data.feedback.map((f) => [f.questionId, f.correctAnswer]));
+  const again = await send(revealed);
+  expect(again.status).toBe(409);
+  expect(again.body.error).toMatch(/already finished/);
+
+  const after = await path(other);
+  expect(after.units[0].checkpoint).toMatchObject({ passed: false, tries: 1 });
+  expect((await request(app).get('/api/me/daily').set(other)).body.data.xp.total).toBe(before);
+
+  // A new keystone, on a new ticket, is still open to them.
+  const fresh = (await request(app).get(`/api/path/checkpoints/${topicId}`).set(other)).body.data;
+  expect(fresh.ticket).not.toBe(cp.ticket);
+  const retry = await request(app).post(`/api/path/checkpoints/${topicId}`).set(other)
+    .send({ ticket: fresh.ticket, answers: await answersFor(fresh, 7) });
+  expect(retry.status).toBe(201);
+  expect(retry.body.data.passed).toBe(true);
+});

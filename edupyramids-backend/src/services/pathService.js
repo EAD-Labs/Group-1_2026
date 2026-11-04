@@ -280,27 +280,37 @@ async function finishCheckpoint({ studentId, topicId, ticket, answers = {} }) {
     )).rows;
     const byId = new Map(rows.map((r) => [r.id, r]));
 
-    const changes = [];
-    const feedback = [];
-    for (const id of ids) {
+    const feedback = ids.filter((id) => byId.has(id)).map((id) => {
       const q = byId.get(id);
-      if (!q) continue;
       const given = answers[id] ?? answers[String(id)] ?? null;
-      const correct = given === q.correct;
-      feedback.push({
-        questionId: id, text: q.text, given, correct, correctAnswer: q.correct, explanation: q.explanation, topic: q.topic,
-      });
-      // eslint-disable-next-line no-await-in-loop
-      changes.push(await recordResponse(client, { studentId, questionId: id, correct, source: 'checkpoint' }));
-    }
+      return {
+        questionId: id, text: q.text, given, correct: given === q.correct, correctAnswer: q.correct, explanation: q.explanation, topic: q.topic,
+      };
+    });
+    if (!feedback.length) throw new PathError('These questions have changed. Start the keystone again.', 409);
 
     const score = feedback.filter((f) => f.correct).length;
     const maxScore = feedback.length;
-    const passed = maxScore > 0 && score / maxScore >= CHECKPOINT.passAt;
-    await client.query(
-      'INSERT INTO checkpoint_attempts (student_id, topic_id, score, max_score, passed) VALUES ($1, $2, $3, $4, $5)',
-      [studentId, topicId, score, maxScore, passed],
+    const passed = score / maxScore >= CHECKPOINT.passAt;
+
+    // The result reveals the answers, so a ticket counts once. The unique index
+    // also makes a second click wait for the first and then come back empty.
+    const saved = await client.query(
+      `INSERT INTO checkpoint_attempts (student_id, topic_id, score, max_score, passed, ticket_hash)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT (ticket_hash) WHERE ticket_hash IS NOT NULL DO NOTHING
+       RETURNING id`,
+      [studentId, topicId, score, maxScore, passed, crypto.createHash('sha256').update(ticket).digest('hex')],
     );
+    if (!saved.rows.length) throw new PathError('This keystone is already finished. Start a new one to try again.', 409);
+
+    const changes = [];
+    for (const f of feedback) {
+      // eslint-disable-next-line no-await-in-loop
+      changes.push(await recordResponse(client, {
+        studentId, questionId: f.questionId, correct: f.correct, source: 'checkpoint',
+      }));
+    }
     await client.query('COMMIT');
 
     return {
