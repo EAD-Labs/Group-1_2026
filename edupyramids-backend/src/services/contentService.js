@@ -1,5 +1,6 @@
 const path = require('path');
 const { pool, query, queryOne } = require('../config/database');
+const { VIDEO_TOPIC } = require('../config/videoTopic');
 const gemini = require('./geminiService');
 
 /*
@@ -8,7 +9,8 @@ const gemini = require('./geminiService');
  * generate  subtitles -> transcript -> Gemini -> checked -> drafts
  * review    a teacher edits, then approves or rejects each draft
  * approve   the draft becomes a real question in that video's quiz, tagged
- *           with its concepts, so it also enters adaptive practice
+ *           with its concepts, which is how students meet it: in adaptive
+ *           practice. That quiz is a store, not a brick on the pyramid.
  *
  * Spoken Tutorial content is CC BY-SA 4.0; every quiz made this way names
  * the video it came from.
@@ -16,7 +18,6 @@ const gemini = require('./geminiService');
 
 const VIDEOS = require(path.join(__dirname, '..', '..', 'content', 'spoken-tutorial-videos.json'));
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
-const VIDEO_TOPIC = 'Spoken Tutorial videos';
 
 class ContentError extends Error {
   constructor(message, status = 400) {

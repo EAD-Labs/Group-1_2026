@@ -96,7 +96,7 @@ export default function QuestionGenerator() {
       <p className="gen-intro muted">
         Pick a Spoken Tutorial video. Gemini reads its narration and writes multiple-choice questions
         about what the video teaches. <strong>Nothing reaches students until you approve it.</strong>{' '}
-        Approved questions go into a quiz for that video and into adaptive practice.
+        Approved questions join Practice under their concepts. The levels on the pyramid do not change.
       </p>
 
       {generator && !generator.configured && (

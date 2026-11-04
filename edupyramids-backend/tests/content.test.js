@@ -180,6 +180,42 @@ describe('generating and reviewing', () => {
     expect((await request(app).post(`/api/content/drafts/${draft.id}/approve`).set(teacher)).status).toBe(409);
   });
 
+  test('approved questions reach Practice and leave the pyramid and level counts alone', async () => {
+    const student = await login('student1@school.com', 'student');
+    const { id: studentId } = await queryOne("SELECT id FROM users WHERE email = 'student1@school.com'");
+    const realLast = await queryOne(
+      `SELECT t.id FROM topics t
+        WHERE t.name <> 'Spoken Tutorial videos'
+          AND (EXISTS (SELECT 1 FROM quizzes q WHERE q.topic_id = t.id)
+           OR EXISTS (SELECT 1 FROM games g WHERE g.topic_id = t.id))
+        ORDER BY t.sort_order DESC, t.level DESC, t.id DESC LIMIT 1`,
+    );
+
+    // No new level: the real last level stays last, so it stays whole with no keystone.
+    const { units } = (await request(app).get('/api/path').set(student)).body.data;
+    expect(units.map((u) => u.topic)).not.toContain('Spoken Tutorial videos');
+    expect(units[units.length - 1].topicId).toBe(realLast.id);
+    expect(units[units.length - 1].hasCheckpoint).toBe(false);
+
+    // Not counted as a level either.
+    const progress = await request(app).get(`/api/progress/${studentId}`).set(student);
+    expect(progress.body.data.topics.map((t) => t.topic)).not.toContain('Spoken Tutorial videos');
+
+    // A student still meets the question, through Practice.
+    const { id: questionId } = await queryOne(
+      `SELECT q.id FROM questions q JOIN quizzes z ON z.id = q.quiz_id WHERE z.title = 'Video: Loops'`,
+    );
+    const others = await query(
+      `SELECT qc.question_id AS id FROM question_concepts qc JOIN concepts c ON c.id = qc.concept_id
+        WHERE c.slug = 'loops' AND qc.question_id <> $1`,
+      [questionId],
+    );
+    const seen = await request(app)
+      .get(`/api/practice/next?focus=loops&exclude=${others.map((o) => o.id).join(',')}`).set(student);
+    expect(seen.status).toBe(200);
+    expect(seen.body.data.question.id).toBe(questionId);
+  });
+
   test('a rate limit from Gemini is reported plainly', async () => {
     geminiStatus = 429;
     const res = await request(app).post('/api/content/videos/loops/generate').set(teacher).send({ count: 2 });

@@ -1,4 +1,5 @@
 const { query } = require('../config/database');
+const { VIDEO_TOPIC } = require('../config/videoTopic');
 
 const Progress = {
   /**
@@ -24,13 +25,14 @@ const Progress = {
          FROM topics t
          LEFT JOIN progress p ON p.topic_id = t.id AND p.student_id = $1
          LEFT JOIN attempts a ON a.topic_id = t.id AND a.student_id = $1
-        -- A topic with nothing in it is nothing to finish.
-        WHERE EXISTS (SELECT 1 FROM quizzes q WHERE q.topic_id = t.id)
-           OR EXISTS (SELECT 1 FROM games g WHERE g.topic_id = t.id)
+        -- A topic with nothing in it is nothing to finish, and the video store is not a level.
+        WHERE t.name <> $2
+          AND (EXISTS (SELECT 1 FROM quizzes q WHERE q.topic_id = t.id)
+           OR EXISTS (SELECT 1 FROM games g WHERE g.topic_id = t.id))
         GROUP BY t.id, t.name, t.level, t.sort_order,
                  p.points, p.level, p.percent_done
         ORDER BY t.sort_order, t.id`,
-      [studentId],
+      [studentId, VIDEO_TOPIC],
     );
   },
 

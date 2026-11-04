@@ -1,4 +1,5 @@
 const { query } = require('../config/database');
+const { VIDEO_TOPIC } = require('../config/videoTopic');
 
 /*
  * Quiz attempts and game attempts live in the same table, told apart by `kind`.
@@ -81,11 +82,13 @@ const Attempt = {
           AND a.student_id IN (SELECT student_id FROM class_students WHERE class_id = $1)
         -- A topic with no quiz and no game has nothing to report, and listing
         -- it as "no attempts" makes a class look further behind than it is.
-        WHERE EXISTS (SELECT 1 FROM quizzes q WHERE q.topic_id = t.id)
-           OR EXISTS (SELECT 1 FROM games g WHERE g.topic_id = t.id)
+        -- The same goes for the video store, which students meet through Practice.
+        WHERE t.name <> $2
+          AND (EXISTS (SELECT 1 FROM quizzes q WHERE q.topic_id = t.id)
+           OR EXISTS (SELECT 1 FROM games g WHERE g.topic_id = t.id))
         GROUP BY t.id, t.name, t.sort_order
         ORDER BY t.sort_order, t.id`,
-      [classId],
+      [classId, VIDEO_TOPIC],
     );
   },
 

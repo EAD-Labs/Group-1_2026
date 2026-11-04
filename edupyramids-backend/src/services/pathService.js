@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { pool, query } = require('../config/database');
+const { VIDEO_TOPIC } = require('../config/videoTopic');
 const Game = require('../models/Game');
 const { recordResponse, summariseChanges, masteryFor } = require('./masteryService');
 const { shuffle } = require('../games/common');
@@ -44,7 +45,7 @@ class PathError extends Error {
 
 async function unitsWithContent(studentId) {
   const [topics, quizzes, games, checkpoints] = await Promise.all([
-    query('SELECT id, name, level, sort_order FROM topics ORDER BY sort_order, level, id'),
+    query('SELECT id, name, level, sort_order FROM topics WHERE name <> $1 ORDER BY sort_order, level, id', [VIDEO_TOPIC]),
     query(
       `SELECT q.id, q.title, q.topic_id AS "topicId",
               COUNT(a.id)::int AS attempts,
