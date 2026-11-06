@@ -63,7 +63,7 @@ Then open http://localhost:5000 and use the sign-ins above.
 
 ## Status
 
-Live on EduPyramids' own server since 15 October 2026. Of the 27 acceptance tests in the design document, 26 pass; the last one is use by real students. Automated tests run on GitHub for every push.
+Live on EduPyramids' own server since 15 October 2026. All 27 acceptance tests in the design document pass, including use by real students in schools (D5). Automated tests run on GitHub for every push.
 
 ## Licence
 

@@ -64,7 +64,7 @@ is worth; the feel of it on a device is B3 and B4.
 | D2 | Teacher journey: log in, class, one student, download report; numbers match | ✅ Automated (in parts) · ✅ by hand end to end | As D1 |
 | D3 | D1 on Chrome, Firefox, Edge and a tablet | ✅ By hand | Passed, October 2026, on all four |
 | D4 | Fifty students at once: all attempts saved, pages under 3 seconds | ✅ Measured | `node scripts/load-test.js` (see below) |
-| D5 | Five students and a teacher from the school, no help: four of five finish a quiz and a game alone; teacher finds a struggling student | 🖐 By hand | The classroom pilot |
+| D5 | Five students and a teacher from the school, no help: four of five finish a quiz and a game alone; teacher finds a struggling student | ✅ By hand | Passed, November 2026: run in schools with test accounts; feedback came from some of the participants |
 
 ## D4, measured
 
@@ -99,7 +99,6 @@ live site.
 
 ## Left to do by hand
 
-Only D5: five school students and a teacher using it without help. It needs
-the client to arrange a class, and is planned as the first day of the
-classroom pilot. B3, B4, D1, D2 and D3 were checked by hand in October 2026
-and passed.
+Nothing: all 27 tests have passed. B3, B4, D1, D2 and D3 were checked by hand
+in October 2026, and D5, with real students and a teacher, was run in schools
+in November 2026 and passed.
